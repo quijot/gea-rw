@@ -2,7 +2,7 @@ Django==1.8.9
 django-extensions==1.7.6
 django-grappelli==2.8.1
 django-nested-admin==2.1.8
-gea==0.2.4
+gea==0.2.5
 psycopg2==2.6.2
 python-monkey-business==1.0.0
 six==1.10.0
