@@ -4,3 +4,4 @@ __pycache__
 staticfiles
 .env
 gea.sqlite3
+media
