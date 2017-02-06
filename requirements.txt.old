@@ -1,15 +1,11 @@
-appdirs==1.4.0
 dj-database-url==0.4.2
 Django==1.8.9
 django-extensions==1.7.6
-django-filebrowser==3.6.4
-django-grappelli==2.7.3
+django-grappelli==2.8.1
 django-nested-admin==2.1.8
-gea==0.2.7
+gea==0.2.6
 gunicorn==19.6.0
-olefile==0.44
 packaging==16.8
-Pillow==4.0.0
 psycopg2==2.6.2
 pyparsing==2.1.10
 six==1.10.0
