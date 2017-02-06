@@ -5,7 +5,7 @@ django-extensions==1.7.6
 django-filebrowser==3.6.4
 django-grappelli==2.7.3
 django-nested-admin==2.1.8
-gea==0.2.7.1
+gea==0.2.7.2
 gunicorn==19.6.0
 olefile==0.44
 packaging==16.8
