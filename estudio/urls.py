@@ -10,7 +10,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
-    url(r'^accounts/login/$', auth_views.login),
+    url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^admin/', admin.site.urls),
     url(r'^gea/', include('gea.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
