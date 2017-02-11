@@ -145,3 +145,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 GRAPPELLI_ADMIN_TITLE = "GEA"
 
+LOGIN_REDIRECT_URL = "/"
+
