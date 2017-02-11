@@ -15,6 +15,7 @@ SECRET_KEY = '+g^%j#uc+n8-0_ski8w3o_8+-07l=24-4tt#n0a$k^co9!3f&x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'estudio.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,5 +146,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 GRAPPELLI_ADMIN_TITLE = "GEA"
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "home"
 
