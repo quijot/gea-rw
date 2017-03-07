@@ -13,7 +13,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = '+g^%j#uc+n8-0_ski8w3o_8+-07l=24-4tt#n0a$k^co9!3f&x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 try:
     from estudio.local_settings import DEBUG
 except ImportError as e:
