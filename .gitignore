@@ -5,3 +5,4 @@ staticfiles
 .env
 gea.sqlite3
 media
+estudio/local_settings.py
