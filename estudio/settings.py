@@ -5,7 +5,6 @@ import dj_database_url
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -14,16 +13,10 @@ SECRET_KEY = '+g^%j#uc+n8-0_ski8w3o_8+-07l=24-4tt#n0a$k^co9!3f&x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-try:
-    from estudio.local_settings import DEBUG
-except ImportError as e:
-    pass
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = (
     'grappelli',
     'filebrowser',
@@ -40,8 +33,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'gea.apps.GeaConfig',
     'nested_admin',
-    #'django_extensions',
-    #'dbbackup',
 )
 
 MIDDLEWARE_CLASSES = [
@@ -77,10 +68,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'estudio.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -88,37 +77,30 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
+dcapv = 'django.contrib.auth.password_validation.%s'
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': dcapv % 'UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': dcapv % 'MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': dcapv % 'CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': dcapv % 'NumericPasswordValidator',
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
-
 LANGUAGE_CODE = 'es-AR'
-
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Update database configuration with $DATABASE_URL.
@@ -133,7 +115,6 @@ ALLOWED_HOSTS = ['*']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
@@ -148,7 +129,14 @@ STATICFILES_DIRS = [
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Grappelli customization
 GRAPPELLI_ADMIN_TITLE = "GEA"
 
+# Redirection after login
 LOGIN_REDIRECT_URL = "home"
 
+# Load local settings
+try:
+    from estudio.local_settings import DEBUG, DATABASES
+except ImportError as e:
+    pass
