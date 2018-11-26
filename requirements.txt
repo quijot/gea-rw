@@ -1,6 +1,6 @@
 appdirs==1.4.0
 dj-database-url==0.4.2
-django-heroku
+#django-heroku
 Django==1.8.9
 django-extensions==1.7.6
 django-filebrowser==3.6.4
