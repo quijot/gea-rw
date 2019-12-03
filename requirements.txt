@@ -6,12 +6,12 @@ django-extensions==1.7.6
 django-filebrowser==3.6.4
 django-grappelli==2.7.3
 django-nested-admin==2.1.8
-gea==0.2.25
+gea==0.2.26
 gunicorn==19.6.0
 olefile==0.44
 packaging==16.8
 Pillow==4.0.0
-psycopg2==2.7.6.1
+psycopg2==2.8.4
 pyparsing==2.1.10
 six==1.10.0
 whitenoise==3.2.3
