@@ -100,7 +100,7 @@ db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES["default"].update(db_from_env)
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Allow all host headers
 ALLOWED_HOSTS = ["*"]
@@ -109,8 +109,8 @@ ALLOWED_HOSTS = ["*"]
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
 STATIC_URL = "/static/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, "media")
-MEDIA_URL = "/"
+# MEDIA_ROOT = os.path.join(PROJECT_ROOT, "media")
+# MEDIA_URL = "/"
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = [
