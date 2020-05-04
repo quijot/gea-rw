@@ -52,7 +52,7 @@ ROOT_URLCONF = "estudio.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates"),],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -61,7 +61,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
-            "debug": DEBUG,
         },
     },
 ]
@@ -72,8 +71,8 @@ WSGI_APPLICATION = "estudio.wsgi.application"
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "gea.sqlite3"),
+        # "ENGINE": "django.db.backends.sqlite3",
+        # "NAME": os.path.join(BASE_DIR, "gea.sqlite3"),
     }
 }
 
@@ -102,8 +101,6 @@ DATABASES["default"].update(db_from_env)
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Allow all host headers
-ALLOWED_HOSTS = ["*"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
