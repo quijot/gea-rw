@@ -126,6 +126,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 LOGIN_REDIRECT_URL = "home"
 
 # Heroku
+HEROKUAPP_NAME = os.environ.get("DJANGO_HEROKUAPP_NAME", "gea-pestarini")
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", SECRET_KEY)
 DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
-ALLOWED_HOSTS = ["gea-pestarini.herokuapp.com", "127.0.0.1"]
+CUSTOM_DOMAIN_NAME = os.environ.get("CUSTOM_DOMAIN_NAME", "gea.pestarini.com.ar")
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    f"{HEROKUAPP_NAME}.herokuapp.com",
+    CUSTOM_DOMAIN_NAME,
+]
