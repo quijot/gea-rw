@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "nested_admin",
     "django_extensions",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,7 @@ ALLOWED_HOSTS = [
     f"{HEROKUAPP_NAME}.herokuapp.com",
     CUSTOM_DOMAIN_NAME,
 ]
+
+# Crispy Forms
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_FAIL_SILENTLY = not DEBUG

@@ -1,6 +1,6 @@
 dj-database-url==0.5.0
-gea==0.2.40
+gea==0.2.50
 gunicorn==20.0.4
 Pillow>=6.2.0
-psycopg2==2.8.5
-whitenoise==5.0.1
+psycopg2==2.8.6
+whitenoise==5.2.0
