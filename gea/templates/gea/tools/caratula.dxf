@@ -3005,7 +3005,7 @@ AcDbText
  40
 3.0
   1
-LUGAR: {% for el in e.expedientelugar_set.all %}{{ el.lugar.nombre|upper }}{% if not forloop.last %}, {% endif %}{% endfor %}
+LUGAR: {% for el in e.lugares.all %}{{ el.nombre|upper }}{% if not forloop.last %}, {% endif %}{% endfor %}
 100
 AcDbText
   0

@@ -119,8 +119,8 @@
     </div>
     <!-- Lugar -->
     <div>LUGAR:
-        {% for el in e.expedientelugar_set.all %}
-        <a href="/admin/gea/lugar/{{ el.lugar.id }}/"><strong>{{ el.lugar.nombre|upper }}</strong></a>{% if not forloop.last %}, {% endif %}
+        {% for el in e.lugares.all %}
+        <a href="/admin/gea/lugar/{{ el.id }}/"><strong>{{ el.nombre|upper }}</strong></a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
     </div>
     <!-- Catastro Local -->

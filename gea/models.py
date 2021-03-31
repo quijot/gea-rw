@@ -267,6 +267,8 @@ class Expediente(TimeStampedModel):
     # )
     objetos = models.ManyToManyField(Objeto)
     profesionales_firmantes = models.ManyToManyField(Profesional)
+    personas = models.ManyToManyField("Persona", through="ExpedientePersona", blank=True)
+    lugares = models.ManyToManyField("Lugar", through="ExpedienteLugar", blank=True)
 
     def get_absolute_url(self):
         return reverse("expediente", kwargs={"pk": self.pk})

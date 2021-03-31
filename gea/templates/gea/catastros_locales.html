@@ -111,8 +111,7 @@ Catastros Locales
             <tr>
               <td>
                 <!-- EXPEDIENTE -->
-                <a href="/admin/gea/expediente/{{ e.id }}/">{{ e.id }}</a>
-                <!--<a href="{% url 'expediente' e.id %}">{{ e.id }}</a>-->
+                <a href="{{ e.get_absolute_url }}">{{ e.id }}</a>
               </td>
               <td>
                 <!-- PERSONAS -->
@@ -124,18 +123,15 @@ Catastros Locales
                 <span class="badge badge-danger">CANCELADO</span>
                 {{ e.cancelado_por }}<br>
                 {% endif %}
-                {% if e.expedientepersona_set %}
                 {% for ep in e.expedientepersona_set.all %}
-                <a href="/admin/gea/persona/{{ ep.persona.id }}/">{{ ep.persona.nombre_completo }}</a>
+                <a href="{{ ep.persona.get_absolute_url }}">{{ ep.persona.nombre_completo }}</a>
                 {% if ep.comitente %}<span class="badge badge-primary">COMITENTE</span>{% endif %}
                 {% if ep.persona.telefono %}({{ ep.persona.telefono }}){% endif %}
                 {% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
-                {% endif %}
               </td>
               <td>
                 <!-- LUGARES -->
-                {% if e.expedientelugar_set %}
                 {% for el in e.expedientelugar_set.all %}
                 <a href="/admin/gea/lugar/{{ el.lugar.id }}/">{{ el.lugar.nombre }}</a>
                 {% for cl in el.catastrolocal_set.all %}<br>
@@ -143,18 +139,15 @@ Catastros Locales
                 {% endfor %}
                 {% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
-                {% endif %}
               </td>
               <td>
                 <!-- PARTIDAS -->
-                {% if e.expedientepartida_set %}
                 {% for ep in e.expedientepartida_set.all %}
                 {% if ep.set_ruta %}<a href="{{ ep.set_ruta }}">{% endif %}
                   {{ ep.partida.sd }}-{{ ep.partida }}
                   {% if ep.set_ruta %}</a>{% endif %}
                 {% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
-                {% endif %}
               </td>
               <td>
                 <!-- PLANO -->
