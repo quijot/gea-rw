@@ -1,64 +1,209 @@
 {% extends "base.html" %}
-{% block title %}GEA | Expediente {{ object.id }}{% endblock title %}
+{% block title %}{{ object }}{% endblock title %}
 
-{% block float %}
-<div class="well" style="position: fixed; margin: 0em 0em; transform-origin: 50% 65%; transform: rotate(-90deg);">
-    <h3>
-        <i class="fas fa-fw fa-folder"></i>
-        N&ordm; <strong>{{ expediente.id }}</strong>
-    </h3>
+{% block page-title %}
+<i class="fas fa-fw fa-folder-open"></i>
+Expediente <span class="badge badge-dark">{{ object }}</span>
+{% endblock %}
+{% block page-heading-buttons %}
+<div class="btn-group d-print-none shadow" role="group" aria-label="Actions">
+  <a href="{% url 'caratula' object.id  %}" class="d-sm-inline-block btn btn-outline-dark">
+    <i class="far fa-fw fa-file-alt"></i> Carátula
+  </a>
+  <a href="{% url 'solicitud' object.id  %}" class="d-sm-inline-block btn btn-outline-dark">
+    <i class="fas fa-fw fa-file-signature"></i> Solicitud
+  </a>
+  <a href="{% url 'visacion' object.id  %}" class="d-sm-inline-block btn btn-outline-dark">
+    <i class="far fa-fw fa-file"></i> Visación
+  </a>
+  <a onclick="window.print();" class="d-sm-inline-block btn btn-secondary">
+    <i class="fas fa-fw fa-print text-white-50"></i> Imprimir
+  </a>
+  <!-- <a href="{{ object.get_delete_url }}" class="d-sm-inline-block btn btn-danger">
+    <i class="fas fa-fw fa-trash text-white-50"></i> Eliminar
+  </a>
+  <a href="{{ object.get_update_url }}" class="d-sm-inline-block btn btn-primary">
+    <i class="fas fa-fw fa-pen text-white-50"></i> Editar
+  </a> -->
 </div>
-{% endblock float %}
+{% endblock %}
 
 {% block content %}
-{% load static %}
 
-<div class="col-lg-8">
-    <div class="column">
-        <!-- Expediente -->
-        <h1><i class="fas fa-fw fa-folder"></i> Expediente N&ordm; {{ object.id }}</h1>
-        <!-- Comitentes -->
-        {% if object.comitentes_count %}
-        <h2><i class="fas fa-fw fa-file-signature"></i> Comitente{% if object.comitentes_count > 1%}s{% endif %}:
-        {% for p in object.comitentes %}
-            <a href="{% url 'persona' p.persona.id %}">{{ p.persona.nombre_completo }}</a>{% if not forloop.last %},{% endif %}
-        {% endfor %}
-        </h2>
-        {% endif %}
-        <!-- Propietarios -->
-        {% if object.propietarios_count %}
-        <h3>{% if object.propietarios_count > 1 %}<i class="fas fa-fw fa-users"></i> Propietarios:{% else %}<i class="fas fa-fw fa-user"></i> Propietario:{% endif %}
-        {% for p in object.propietarios %}
-            <a href="{% url 'persona' p.persona.id %}">{{ p.persona.nombre_completo }}</a>{% if not forloop.last %},{% endif %}
-        {% endfor %}
-        </h3>
-        {% endif %}
-        <h3>{{ object.expedientelugar_set.first }}</h3>
+<div class="row">
+
+  <div class="col-md-4">
+    <div class="card bg-light shadow mb-2">
+      <div class="card-header">
+        <span class="float-right">
+          <a href="{{ object.get_delete_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-danger"
+            title="Eliminar">
+            <i class="fas fa-fw fa-trash fa-sm"></i>
+          </a>
+          <a href="{{ object.get_update_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-primary"
+            title="Editar">
+            <i class="fas fa-fw fa-pen fa-sm"></i>
+          </a>
+        </span>
+        <i class="fas fa-fw fa-folder"></i>
+        <span class="lead font-weight-bold">Expediente Nº {{ object }}</span>
+        <div class="font-weight-light">
+          <span class="font-weight-bold">
+            <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
+              <i class="far fa-fw fa-map"></i>
+              {% if object.duplicado %}Dup.{% endif %}
+              {{ object.inscripcion_numero|default:"<span class='text-warning'>¡PENDIENTE!</span>" }}
+            </a>
+          </span>&nbsp;
+          <small>{{ object.inscripcion_fecha|default:"" }}</small>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="font-weight-light">
+          {% for el in object.expedientelugar_set.all %}
+          {{ el.lugar }}<br>
+          <small>
+            {% for cl in el.catastros_locales_list %}
+            {{ cl }}<br>
+            {% endfor %}
+          </small>
+          <br>
+          {% endfor %}
+          {% for o in object.objetos.all %}
+          {{ o }}<br>
+          {% endfor %}
+          <br>
+          {% for p in object.partidas_list %}
+          <span class="badge badge-primary p-1">{{ p }}</span>
+          {% endfor %}
+          <br><br>
+          <span class="badge badge-danger p-1 mr-1">CoPA {{ object.orden_numero|default:"S/N" }}</span>
+          <small>{{ object.orden_fecha|default:"" }}</small>
+          <hr>
+          Medición: {{ object.fecha_medicion|default:"<em>PENDIENTE</em>" }}
+          <br>
+          {% for p in object.profesionales_firmantes.all %}
+          {{ p.titulo }} {{ p }}<br>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-    </br>
-    <table class="table table-user-information">
-        <tbody>
-            <tr>
-                <th class="col-md-3 text-right">Alta</th>
-                <td>{{ object.created }}</td>
-            </tr>
-            <tr>
-                <th class="col-md-3 text-right">Lugar</th>
-                <td>{{ object.expedientelugar_set.first }}</td>
-            </tr>
-            <tr>
-                <th class="col-md-3 text-right">Fecha</th>
-                <td>{{ object.inscripcion_fecha }}</td>
-            </tr>
-            <tr>
-                <th class="col-md-3 text-right">Plano</th>
-                <td><a href="{{ object.plano_ruta }}">{{ object.inscripcion_numero }}</a></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="col-md-2 column">
-    <img src="{% static 'img/globe.png' %}" class="img-square" />
+  </div>
+
+  <div class="col-md-8">
+    <div class="card bg-light shadow mb-2">
+      <div class="card-header">
+        <i class="fas fa-fw fa-folder-open"></i>
+        <span class="lead font-weight-bold">Personas ({{ object.expedientepersona_set.count }})</span>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for ep in object.expedientepersona_set.all %}
+          <li class="list-group-item bg-light">
+            <div class="row">
+              <div class="col-lg-6">
+                <a href="{{ ep.persona.get_absolute_url }}">{{ ep.persona }}</a>
+                <br>
+                <small>
+                  {% if ep.persona.telefono %}
+                  <i class="fas fa-fw fa-phone"></i>
+                  <a href="tel:{{ ep.persona.telefono }}">{{ ep.persona.telefono }}</a>
+                  {% endif %}
+                  {% if ep.persona.email %}
+                  <i class="far fa-fw fa-envelope"></i>
+                  <a href="mailto:{{ ep.persona.email }}">{{ ep.persona.email }}</a><br>
+                  {% endif %}
+                </small>
+              </div>
+              <div class="col-lg-6">
+                <a href="{{ ep.get_delete_url }}" class="btn btn-sm btn-outline-danger float-right">
+                  <i class="fas fa-fw fa-user-times fa-sm" title="Desvincular"></i>
+                </a>
+                {% if ep.comitente %}
+                <span class="badge badge-warning">COMITENTE</span>
+                {% endif %}
+                {% if ep.propietario %}
+                <span class="badge badge-primary">
+                  {% if ep.nuda_propiedad %}
+                  NUDO PROPIETARIO
+                  {% else %}
+                  PROPIETARIO
+                  {% endif %}
+                  {% if ep.partes_indivisas_propias %}
+                  ({{ ep.partes_indivisas_propias }}/{{ ep.partes_indivisas_total }})
+                  {% endif %}
+                </span>
+                {% endif %}
+                {% if ep.poseedor %}
+                <span class="badge badge-danger">POSEEDOR</span>
+                {% endif %}
+                {% if ep.sucesor %}
+                <span class="badge badge-info">SUCESOR</span>
+                {% endif %}
+                {% if ep.sucesion %}
+                <span class="badge badge-info">HOY SUCESORES</span>
+                {% endif %}
+                {% if ep.usufructo %}
+                <span class="badge badge-warning">USUFRUCTO</span>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+          {% empty %}
+          <span class="text-danger">No registra expedientes.</span>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}
+
+<div class="col-lg-8">
+  <div class="column">
+    <!-- Comitentes -->
+    {% if object.comitentes_count %}
+    <h2><i class="fas fa-fw fa-file-signature"></i> Comitente{% if object.comitentes_count > 1%}s{% endif %}:
+      {% for p in object.comitentes %}
+      <a href="{{ p.persona.get_absolute_url }}">
+        {{ p.persona.nombre_completo }}
+      </a>{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    </h2>
+    {% endif %}
+    <!-- Propietarios -->
+    {% if object.propietarios_count %}
+    <h3>{% if object.propietarios_count > 1 %}<i class="fas fa-fw fa-users"></i> Propietarios:{% else %}<i
+        class="fas fa-fw fa-user"></i> Propietario:{% endif %}
+      {% for p in object.propietarios %}
+      <a href="{{ p.persona.get_absolute_url }}">
+        {{ p.persona.nombre_completo }}
+      </a>{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    </h3>
+    {% endif %}
+    <h3>{{ object.expedientelugar_set.first }}</h3>
+  </div>
+  </br>
+  <table class="table table-user-information">
+    <tbody>
+      <tr>
+        <th class="col-md-3 text-right">Alta</th>
+        <td>{{ object.created }}</td>
+      </tr>
+      <tr>
+        <th class="col-md-3 text-right">Lugar</th>
+        <td>{{ object.expedientelugar_set.first }}</td>
+      </tr>
+      <tr>
+        <th class="col-md-3 text-right">Fecha</th>
+        <td>{{ object.inscripcion_fecha }}</td>
+      </tr>
+      <tr>
+        <th class="col-md-3 text-right">Plano</th>
+        <td><a href="{{ object.plano_ruta }}">{{ object.inscripcion_numero }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
