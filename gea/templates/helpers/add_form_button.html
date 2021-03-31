@@ -1,0 +1,11 @@
+<script>
+  function add_form(formset) {
+    let total = $("#id_" + formset + "-TOTAL_FORMS").val();
+    let row = $("#" + formset + "_table tr:last")[0]; // find row to copy
+    let table = $("#" + formset + "_table tbody")[0]; // find table to append to
+    let clone = row.cloneNode(true); // copy children too
+    clone.innerHTML = clone.innerHTML.replaceAll("-" + (total - 1) + "-", "-" + total + "-");
+    table.appendChild(clone); // add new row to end of table
+    $("#id_" + formset + "-TOTAL_FORMS").val(++total);
+  }
+</script>

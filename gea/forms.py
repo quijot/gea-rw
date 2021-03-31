@@ -6,6 +6,109 @@ from django.urls import reverse_lazy
 
 from . import gea_vars as gv
 from . import models
+from .formset_layout import Formset
+
+
+class PersonasForm(forms.ModelForm):
+    class Meta:
+        model = models.ExpedientePersona
+        fields = "__all__"
+
+
+PersonasInlineFormSet = forms.inlineformset_factory(
+    models.Expediente,
+    models.ExpedientePersona,
+    form=PersonasForm,
+    fields="__all__",
+    extra=1,
+)
+
+
+LugaresInlineFormSet = forms.inlineformset_factory(
+    models.Expediente,
+    models.ExpedienteLugar,
+    fields=(
+        "id",
+        "lugar",
+    ),
+    extra=1,
+)
+
+
+class ExpedienteForm(forms.ModelForm):
+    class Meta:
+        model = models.Expediente
+        fields = [
+            "id",
+            "inscripcion_numero",
+            "duplicado",
+            "sin_inscripcion",
+            "orden_numero",
+            "cancelado",
+            "cancelado_por",
+            "objetos",
+            "profesionales_firmantes",
+            "fecha_plano",
+            "fecha_medicion",
+            "inscripcion_fecha",
+            "orden_fecha",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Fieldset(
+                "",
+                Row(
+                    Div("id", css_class="col-md-2"),
+                    Div(Field("fecha_plano", css_class="date", id="datepicker"), css_class="col-md-2"),
+                    Div(Field("fecha_medicion", css_class="date", id="datepicker"), css_class="col-md-2"),
+                    Div("inscripcion_numero", css_class="col-md-2"),
+                    Div(Field("inscripcion_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
+                    Div("duplicado", css_class="col-md-2"),
+                    Div("sin_inscripcion", css_class="col-md-2"),
+                    Div("orden_numero", css_class="col-md-2"),
+                    Div(Field("orden_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
+                    Div("cancelado", css_class="col-md-2"),
+                    Div("cancelado_por", css_class="col-md-2"),
+                    Div("objetos", css_class="col-md-6"),
+                    Div("profesionales_firmantes", css_class="col-md-6"),
+                ),
+            ),
+            Fieldset(
+                "Lugares",
+                Button(
+                    "add-lugar",
+                    "&plus; Lugar",
+                    css_class="btn-sm btn-primary",
+                    title="Agregar otro Lugar",
+                    onclick="add_form('lugares')",
+                ),
+                Formset("lugares"),
+            ),
+            Fieldset(
+                "Personas involucradas",
+                Button(
+                    "add-persona",
+                    "&plus; Persona",
+                    css_class="btn-sm btn-primary",
+                    title="Agregar otra Persona",
+                    onclick="add_form('personas')",
+                ),
+                Formset("personas"),
+            ),
+            FormActions(
+                Button(
+                    "cancel",
+                    "Cancelar",
+                    css_class="btn-secondary",
+                    onclick=f"window.location.href = '{reverse_lazy('personas')}';",
+                ),
+                Submit("save", "Guardar"),
+                style="text-align: right;",
+            ),
+        )
 
 
 class PersonaForm(forms.ModelForm):

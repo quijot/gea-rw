@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -28,6 +29,32 @@ class PaginateByMixin:
         property value.
         """
         return self.request.GET.get("paginate_by", self.paginate_by)
+
+
+class ChildrenContextMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for child, fs in self.children:
+            if self.request.POST:
+                context[child] = fs(self.request.POST, instance=self.object)
+            else:
+                context[child] = fs(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = [context[child] for child, fs in self.children]
+        with transaction.atomic():
+            if form.is_valid() and all([fs.is_valid() for fs in formset]):
+                # Save parent only if each formset is valid
+                self.object = form.save()
+                # Set instance and save formset
+                for fs in formset:
+                    fs.instance = self.object
+                    fs.save()
+            else:
+                return render(self.request, context["view"].get_template_names(), context)
+        return super().form_valid(form)
 
 
 class SuccessDeleteMessageMixin:
@@ -120,6 +147,26 @@ class ExpedienteListView(LoginRequiredMixin, PaginateByMixin, CounterMixin, Sear
 
 class ExpedienteDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.Expediente
+
+
+class ExpedienteCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenContextMixin, generic.CreateView):
+    model = models.Expediente
+    form_class = forms.ExpedienteForm
+    success_message = "¡Expediente creado con éxito!"
+    children = [("personas", forms.PersonasInlineFormSet), ("lugares", forms.LugaresInlineFormSet)]
+
+
+class ExpedienteUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenContextMixin, generic.UpdateView):
+    model = models.Expediente
+    form_class = forms.ExpedienteForm
+    success_message = "¡Expediente modificado con éxito!"
+    children = [("personas", forms.PersonasInlineFormSet), ("lugares", forms.LugaresInlineFormSet)]
+
+
+class ExpedienteDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
+    model = models.Expediente
+    success_url = reverse_lazy("expedientes")
+    success_message = "Expdiente eliminado con éxito."
 
 
 class NombreSearchMixin(object):
