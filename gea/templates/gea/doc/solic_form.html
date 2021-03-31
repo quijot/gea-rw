@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Solicitud de Inscripción SCIT{% endblock %}
+
+{% block page-title %}
+<i class="fas fa-fw fa-sticky-note"></i>
+Generar Solicitud de Inscripción SCIT
+{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4 col-lg-6" style="background-color: #e9ecef;">
+  <div class="card-body">
+    {% crispy form %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Personas{% endblock title %}
+
+{% block page-title %}
+<i class="fas fa-fw fa-users"></i>
+Personas
+{% endblock %}
+{% block page-heading-buttons %}
+<div class="btn-group shadow">
+  <a href="{% url 'persona_create' %}" class="btn btn-success">
+    <i class="fas fa-fw fa-user-plus"></i> Agregar
+  </a>
+</div>
+{% endblock %}
+
+{% load tags %}
+{% block content %}
+<div class="card bg-light shadow mb-2">
+  <div class="card-body">
+    <div class="row">
+      <!-- Filter -->
+      <div class="col-sm-12 col-md-5">
+        <div class="d-flex justify-content-start align-items-start">
+          <label>
+            Mostrar
+            <div class="btn-group">
+              <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                {{ request.GET.paginate_by|default:10 }}
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 10 %}">10</a>
+                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 25 %}">25</a>
+                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 50 %}">50</a>
+                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 100 %}">100</a>
+              </div>
+            </div>
+            registros
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-7">
+        <div class="d-flex justify-content-end align-items-start">
+          <form class="form-inline" action="." method="get">
+            <div class="input-group mb-2">
+              <input type="text" id="search" name="search" placeholder="Persona/Expediente/Lugar/PII/Plano"
+                class="form-control" value="{{ request.GET.search }}" size="35">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-sm btn-primary">
+                  <i class="fas fa-fw fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Data -->
+      <div class="col-sm-12">
+        <table class="table table-sm table-striped table-hover table-responsive-md">
+          <thead>
+            <tr>
+              <th>Persona</th>
+              <th>Expediente(s)</th>
+              <th>Domicilio</th>
+              <th>Documento</th>
+              <th>CUIT/CUIL</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for object in object_list %}
+            <tr>
+              <td>
+                <a href="{{ object.get_absolute_url }}">{{ object.nombre_completo }}</a>
+              </td>
+              <td>
+                {% for ep in object.expedientepersona_set.all %}
+                <a href="{{ ep.expediente.get_absolute_url }}" class="badge badge-dark">
+                  <strong>{{ ep.expediente.id }}</strong>
+                </a>
+                {% empty %}
+                &ndash;
+                {% endfor %}
+              </td>
+              <td>
+                {{ object.domicilio|default:"&ndash;" }}
+              </td>
+              <td>
+                {{ object.documento_completo|default:"&ndash;" }}
+              </td>
+              <td>
+                {{ object.cuit_link }}
+              </td>
+              <td>
+                {{ object.telefono|default:"&ndash;" }}
+              </td>
+              <td>
+                {{ object.email|default:"&ndash;" }}
+              </td>
+              <td>
+                <div class="btn-group">
+                  <a href="{{ object.get_absolute_url }}" class="btn btn-info btn-sm" title="Ver">
+                    <i class="fas fa-fw fa-info"></i>
+                  </a>
+                  <a href="{{ object.get_update_url }}" class="btn btn-primary btn-sm" title="Editar">
+                    <i class="fas fa-fw fa-pen"></i>
+                  </a>
+                  <a href="{{ object.get_delete_url }}" class="btn btn-danger btn-sm" title="Eliminar">
+                    <i class="fas fa-fw fa-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <div class="alert alert-info" role="alert">
+              <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
+              <span class="sr-only">Información:</span>
+              No se encontraron Personas.
+            </div>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Filter -->
+      <div class="col-sm-12 col-md-4">
+        <div class="d-flex justify-content-start align-items-start">
+          <label>
+            Mostrando
+            <strong>{{ object_list.count }}</strong>
+            de
+            <strong>{{ count }}</strong>
+            registro{% if count > 1 %}s{% endif %}
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-8">
+        <div class="d-flex justify-content-end align-items-start">
+          {% include "includes/_pagination.html" %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

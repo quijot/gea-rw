@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}GEA | Buscar Planos por Número de Inscripción{% endblock %}
+
+{% block content %}
+<form class="form-horizontal col-lg-6" method="post">{% csrf_token %}
+  <legend><i class="fas fa-fw fa-map"></i> Buscar Planos por Número de Inscripción</legend>
+  <fieldset>
+    <div class="form-group">
+      <table class="table table-condensed table-hover">
+      {{ form.as_table }}
+      </table>
+      <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-fw fa-search"></i> Buscar</button>
+    </div>
+  </fieldset>
+</form>
+{% endblock %}

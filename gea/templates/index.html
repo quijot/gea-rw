@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block page-title %}
+<a href="{% url 'home' %}"><span class="font-weight-bold">GEA</span></a> | Panel principal
+{% endblock %}
+
+{% block content %}
+<!-- Status -->
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-lg mb-4 border-success">
+      <div class="card-header bg-success text-white">
+        <h3 class="card-title">
+          <i class="fas fa-fw fa-compass"></i>
+          <strong>Relevamientos</strong>
+        </h3>
+        <span>Últimos 5 de {{ relev_list.count }} relevamientos.</span>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for e in relev_list|slice:":5" %}
+          <li class="list-group-item">
+            <span class="badge badge-primary float-right">
+              {{ e.fecha_medicion }}
+            </span>
+            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a> -
+            <strong>{{ e.expedientepersona_set.first.persona.apellidos }}</strong> -
+            <em>{{ e.expedientelugar_set.first.lugar.nombre }}</em>
+          </li>
+          {% empty %}
+          <li class="list-group-item active">
+            No hay Expedientes en este Estado.
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-lg mb-4 border-primary">
+      <div class="card-header bg-primary text-white">
+        <span class="float-right">
+          <a href="/admin/gea/expediente/?inscripto=si" class="btn btn-primary" title="Ver todos">
+            <i class="fas fa-fw fa-plus"></i>
+          </a>
+        </span>
+        <h3 class="card-title">
+          <i class="fas fa-fw fa-map"></i>
+          <strong>Planos inscriptos</strong>
+        </h3>
+        <span>Últimos 5 de {{ insc_list.count }} planos inscriptos.</span>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for e in insc_list|slice:":5" %}
+          <li class="list-group-item">
+            <span class="badge badge-primary float-right">
+              {{ e.inscripcion_fecha }}
+            </span>
+            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a>
+            - Plano Nº <strong>{{ e.inscripcion_numero }}</strong>
+          </li>
+          {% empty %}
+          <li class="list-group-item active">
+            No hay Expedientes en este Estado.
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-lg mb-4 border-warning">
+      <div class="card-header bg-warning text-white">
+        <span class="float-right">
+          <a href="/admin/gea/expediente/?cancelado__exact=0&orden_pendiente=si&sin_inscripcion__exact=0"
+            class="btn btn-warning" title="Ver todos">
+            <i class="fas fa-fw fa-plus"></i>
+          </a>
+        </span>
+        <h3 class="card-title">
+          <i class="fas fa-fw fa-file-signature"></i>
+          <strong>Órdenes de trabajo</strong>
+        </h3>
+        <span>Últimas 10 de {{ ord_list.count }} órdenes pendientes.</span>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for e in ord_list|slice:":10" %}
+          <li class="list-group-item">
+            <span class="badge badge-primary float-right">
+              {{ e.orden_fecha }}
+            </span>
+            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a>
+            - CoPA Nº <strong>{{ e.orden_numero }}</strong>
+          </li>
+          {% empty %}
+          <li class="list-group-item active">
+            No hay Expedientes en este Estado.
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card shadow-lg mb-4 border-info">
+      <div class="card-header bg-info text-white">
+        <h3 class="card-title">
+          <i class="fas fa-fw fa-folder-open"></i>
+          <strong>Alta de Expedientes</strong>
+        </h3>
+        <span>Últimas 10 de {{ open_list.count }} altas.</span>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for e in open_list|slice:":10" %}
+          <li class="list-group-item">
+            <span class="badge badge-primary float-right">
+              {{ e.created }}
+            </span>
+            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a> -
+            <strong>{{ e.expedientepersona_set.first.persona.apellidos }}</strong> -
+            <em>{{ e.expedientelugar_set.first.lugar.nombre }}</em>
+          </li>
+          {% empty %}
+          <li class="list-group-item active">
+            No hay Expedientes en este Estado.
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

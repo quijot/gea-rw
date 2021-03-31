@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}GEA | {{ object.nombre_completo }}{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8">
+    <div class="col-md-2 column">
+        <i class="fas fa-fw fa-user"></i>
+    </div>
+    <div class="col-md-offset-3 column">
+        <h1>{{ object.nombre_completo }}</h1>
+        <h4><i class="fas fa-fw fa-user"></i> <a href="#">{{ object.documento }}</a></h4>
+    </div>
+    </br>
+    <table class="table table-user-information">
+        <tbody>
+            <tr>
+                <th class="col-md-3 text-right">Domicilio</th>
+                <td>{{ object.domicilio }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-3 text-right">Teléfono</th>
+                <td>{{ object.telefono }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-3 text-right">Documento</th>
+                <td>{% for d in object.TIPO_DOC %}{% if d.0 == object.tipo_doc %}{{d.1}}{% endif %}{% endfor %} {{ object.documento }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-3 text-right">CUIT/CUIL/CDI</th>
+                <td>{{ object.cuit_cuil }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
