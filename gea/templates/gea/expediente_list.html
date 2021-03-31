@@ -5,6 +5,13 @@
 <i class="fas fa-fw fa-folder"></i>
 Expedientes
 {% endblock %}
+{% block page-heading-buttons %}
+<div class="btn-group shadow">
+  <a href="{% url 'expediente_create' %}" class="btn btn-success">
+    <i class="fas fa-fw fa-folder-plus"></i> Agregar
+  </a>
+</div>
+{% endblock %}
 
 {% load tags %}
 {% block content %}
@@ -70,17 +77,18 @@ Expedientes
               </td>
               <td>
                 <!-- PERSONAS -->
-                {% if e.orden_numero and not e.inscripcion_numero %}
-                <span class="badge badge-warning">PENDIENTE</span>
-                Orden N&ordm; {{ e.orden_numero }} - {{ e.orden_fecha }}<br>
-                {% endif %}
                 {% if e.cancelado %}
                 <span class="badge badge-danger">CANCELADO</span> {{ e.cancelado_por }}<br>
                 {% endif %}
                 {% for ep in e.expedientepersona_set.all %}
                 <a href="{{ ep.persona.get_absolute_url }}">{{ ep.persona.nombre_completo }}</a>
-                {% if ep.comitente %}<span class="badge badge-primary">COMITENTE</span>{% endif %}
-                {% if ep.persona.telefono %}({{ ep.persona.telefono }}){% endif %}
+                {% if ep.comitente %}<span class="badge badge-warning">COMITENTE</span>{% endif %}
+                {% if ep.persona.telefono %}
+                <small>
+                  <a href="tel:{{ ep.persona.telefono }}" style="color: unset;">
+                    {{ ep.persona.telefono }}
+                  </a>
+                </small>
                 {% endif %}
                 {% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
@@ -90,28 +98,30 @@ Expedientes
                 {% for el in e.expedientelugar_set.all %}
                 <a href="/admin/gea/lugar/{{ el.lugar.id }}/">{{ el.lugar.nombre }}</a>
                 {% for cl in el.catastrolocal_set.all %}
-                <br>{{ cl }}
+                <br><small>{{ cl }}</small>
                 {% endfor %}{% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
               </td>
               <td>
                 <!-- PARTIDAS -->
                 {% for p in e.partidas_list %}
-                {% for ep in e.expedientepartida_set.all %}
-                <a
-                  href="http://scit.santafe.gov.ar/mycv2/l_muestra_grafica2.php?cla={{ ep.partida.sd }}{{ ep.partida.pii|stringformat:'06d' }}{{ ep.partida.subpii|stringformat:'04d' }}">
-                  {{ ep.partida.sd }}-{{ ep.partida }}
-                </a>
-                {% if not forloop.last %}<br>{% endif %}
+                <span class="badge badge-primary p-1">{{ p }}</span><br>
                 {% endfor %}
               </td>
               <td>
                 <!-- PLANO -->
-                {% if e.plano_ruta %}<a href="{{ e.plano_ruta }}">{% endif %}
+                {% if e.orden_numero %}
+                <span class="badge badge-danger">CoPA {{ e.orden_numero|default:"S/N" }}</span>
+                <small>{{ e.orden_fecha|default:"" }}</small><br>
+                {% endif %}
+                <i class="far fa-fw fa-map"></i>
+                <a href="{{ e.plano_ruta|default:'#' }}" style="color: unset;">
                   {% if e.duplicado %}Dup.{% endif %}
-                  {% if e.inscripcion_numero %}{{ e.inscripcion_numero }}{% endif %}
-                  {% if e.plano_ruta %}</a>{% endif %}
-                {% if e.inscripcion_fecha %}({{ e.inscripcion_fecha }}){% endif %}
+                  <span class="font-weight-bold">
+                    {{ e.inscripcion_numero|default:"PENDIENTE" }}
+                  </span>
+                </a>
+                <small>{{ e.inscripcion_fecha|default:"" }}</small>
                 {% if e.sin_inscripcion %}
                 <span class="badge badge-info">NO REQUIERE</span>
                 {% endif %}
@@ -121,7 +131,7 @@ Expedientes
             <div class="alert alert-info" role="alert">
               <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
               <span class="sr-only">Información:</span>
-              No se encontraron Expedientes.
+              No se encontraron registros.
             </div>
             {% endfor %}
           </tbody>
@@ -134,10 +144,9 @@ Expedientes
         <div class="d-flex justify-content-start align-items-start">
           <label>
             Mostrando
-            <strong>{{ object_list.count }}</strong>
-            de
-            <strong>{{ count }}</strong>
-            registro{% if count > 1 %}s{% endif %}
+            {{ page_obj.start_index }} a {{ page_obj.end_index }} de
+            <strong>{{ paginator.count }}</strong>
+            registro{% if paginator.count > 1 %}s{% endif %}
           </label>
         </div>
       </div>

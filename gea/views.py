@@ -157,6 +157,9 @@ class PersonaFilterMixin(object):
                 | Q(cuit_cuil__contains=w)
                 | Q(telefono__contains=w)
                 | Q(expedientepersona__expediente__id__contains=w)
+                | Q(expedientepersona__expediente__inscripcion_numero__contains=w)
+                | Q(expedientepersona__expediente__expedientepartida__partida__pii__contains=w)
+                | Q(expedientepersona__expediente__expedientelugar__lugar__nombre__icontains=w)
             ).distinct()
         return q
 
