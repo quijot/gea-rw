@@ -9,7 +9,7 @@ homepage = "https://github.com/quijot/gea-package"
 packages = [{ include = "gea" }]
 
 [tool.poetry.dependencies]
-python = "^3.7.10"
+python = "3.7.10"
 Django = "^3.1.7"
 django-nested-admin = "^3.3.0"
 django-extensions = "^2.2.9"
