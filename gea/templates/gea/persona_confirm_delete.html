@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Instrumentos{% endblock %}
+{% block title %}Persona{% endblock %}
 
 {% block page-title %}
 <i class="fas fa-fw fa-user-times text-danger"></i>
@@ -16,13 +16,13 @@ Persona |
       <h2 class="pb-4">
         ¿Confirma la eliminación de <span class="text-danger">{{ object }}</span>?
       </h2>
-        <h3 class="lead text-danger font-weight-bold">¡ATENCIÓN!</h3>
-        <p>Se ELIMINARÁ de los siguientes Expedientes:</p>
-        <ul>
-          {% for ep in object.expedientepersona_set.all %}
-          <li>{{ ep.expediente }}</li>
-          {% endfor %}
-        </ul>
+      <h3 class="lead text-danger font-weight-bold">¡ATENCIÓN!</h3>
+      <p>Se ELIMINARÁ de los Expedientes:</p>
+      <ul>
+        {% for ep in object.expedientepersona_set.all %}
+        <li><strong>{{ ep.expediente }}</strong> {{ ep.expediente.lugares_str }}</li>
+        {% endfor %}
+      </ul>
       <div class="form-group text-right">
         <a href="{{ view.get_success_url }}" name="cancel" class="btn btn-dark" id="cancel-id-delete">Cancelar</a>
         <input type="submit" name="delete" value="Eliminar" class="btn btn-danger" id="submit-id-delete">
