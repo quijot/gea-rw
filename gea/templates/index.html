@@ -13,10 +13,10 @@
   <div class="col-lg-8">
     <div class="card shadow-lg mb-4 border-success">
       <div class="card-header bg-success text-white">
-        <h3 class="card-title">
+        <h4 class="card-title">
           <i class="fas fa-fw fa-compass"></i>
           <strong>Relevamientos</strong>
-        </h3>
+        </h4>
         <span>Últimos 5 de {{ relev_list.count }} relevamientos.</span>
       </div>
       <div class="card-body">
@@ -26,13 +26,13 @@
             <span class="badge badge-primary float-right">
               {{ e.fecha_medicion }}
             </span>
-            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a> -
+            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
             <strong>{{ e.personas.first.apellidos }}</strong> -
             <em>{{ e.lugares.first.nombre }}</em>
           </li>
           {% empty %}
-          <li class="list-group-item active">
-            No hay Expedientes en este Estado.
+          <li class="list-group-item">
+            No hay Expedientes en este estado.
           </li>
           {% endfor %}
         </ul>
@@ -47,10 +47,10 @@
             <i class="fas fa-fw fa-plus"></i>
           </a>
         </span>
-        <h3 class="card-title">
+        <h4 class="card-title">
           <i class="fas fa-fw fa-map"></i>
           <strong>Planos inscriptos</strong>
-        </h3>
+        </h4>
         <span>Últimos 5 de {{ insc_list.count }} planos inscriptos.</span>
       </div>
       <div class="card-body">
@@ -60,12 +60,12 @@
             <span class="badge badge-primary float-right">
               {{ e.inscripcion_fecha }}
             </span>
-            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a>
-            - Plano Nº <strong>{{ e.inscripcion_numero }}</strong>
+            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
+            <i class="far fa-fw fa-map"></i> <strong>{{ e.inscripcion_numero }}</strong>
           </li>
           {% empty %}
-          <li class="list-group-item active">
-            No hay Expedientes en este Estado.
+          <li class="list-group-item">
+            No hay Expedientes en este estado.
           </li>
           {% endfor %}
         </ul>
@@ -81,10 +81,10 @@
             <i class="fas fa-fw fa-plus"></i>
           </a>
         </span>
-        <h3 class="card-title">
+        <h4 class="card-title">
           <i class="fas fa-fw fa-file-signature"></i>
           <strong>Órdenes de trabajo</strong>
-        </h3>
+        </h4>
         <span>Últimas 10 de {{ ord_list.count }} órdenes pendientes.</span>
       </div>
       <div class="card-body">
@@ -94,12 +94,12 @@
             <span class="badge badge-primary float-right">
               {{ e.orden_fecha }}
             </span>
-            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a>
-            - CoPA Nº <strong>{{ e.orden_numero }}</strong>
+            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
+            <span class="badge badge-danger">CoPA <strong>{{ e.orden_numero }}</strong></span>
           </li>
           {% empty %}
-          <li class="list-group-item active">
-            No hay Expedientes en este Estado.
+          <li class="list-group-item">
+            No hay Expedientes en este estado.
           </li>
           {% endfor %}
         </ul>
@@ -109,10 +109,10 @@
   <div class="col-lg-8">
     <div class="card shadow-lg mb-4 border-info">
       <div class="card-header bg-info text-white">
-        <h3 class="card-title">
+        <h4 class="card-title">
           <i class="fas fa-fw fa-folder-open"></i>
           <strong>Alta de Expedientes</strong>
-        </h3>
+        </h4>
         <span>Últimas 10 de {{ open_list.count }} altas.</span>
       </div>
       <div class="card-body">
@@ -122,13 +122,13 @@
             <span class="badge badge-primary float-right">
               {{ e.created }}
             </span>
-            <a href="{{ e.get_absolute_url }}">{{ e.id }}</a> -
+            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
             <strong>{{ e.personas.first.apellidos }}</strong> -
             <em>{{ e.lugares.first.nombre }}</em>
           </li>
           {% empty %}
-          <li class="list-group-item active">
-            No hay Expedientes en este Estado.
+          <li class="list-group-item">
+            No hay Expedientes en este estado.
           </li>
           {% endfor %}
         </ul>
