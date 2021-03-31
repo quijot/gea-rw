@@ -15,7 +15,7 @@ def capitalize_phrase(string):
 class Antecedente(models.Model):
     expediente = models.ForeignKey("Expediente", on_delete=models.CASCADE)
     expediente_modificado = models.ForeignKey(
-        "Expediente", blank=True, null=True, on_delete=models.CASCADE, related_name="expediente_modificado",
+        "Expediente", blank=True, null=True, on_delete=models.CASCADE, related_name="expediente_modificado"
     )
     inscripcion_numero = models.IntegerField()
     duplicado = models.BooleanField(default=False)
@@ -58,7 +58,10 @@ class CatastroLocal(models.Model):
         verbose_name_plural = "catastros locales"
 
     def __str__(self):
-        return f"S:{self.seccion} - M:{self.manzana} - P:{self.parcela}"
+        s = f"S:{self.seccion}" if self.seccion else ""
+        m = f"M:{self.manzana}" if self.manzana else ""
+        p = f"P:{self.parcela}" if self.parcela else ""
+        return f"{s} {m} {p}".strip()
 
 
 class Circunscripcion(models.Model):
@@ -151,7 +154,7 @@ class Sd(models.Model):
     id = models.AutoField(primary_key=True)
     ds = models.ForeignKey(Ds, db_column="ds", on_delete=models.PROTECT)
     sd = models.IntegerField()
-    nombre = models.CharField(max_length=50, blank=True, verbose_name="nombre subdistrito",)
+    nombre = models.CharField("nombre subdistrito", max_length=50, blank=True)
 
     @property
     def subdistrito(self):
@@ -173,8 +176,12 @@ class Sd(models.Model):
         verbose_name_plural = "subdistritos"
         ordering = ["ds", "sd"]
 
-    def __str__(self):
+    @property
+    def completo(self):
         return f"{self.ds.dp}{self.ds}{self.sd:02d}"
+
+    def __str__(self):
+        return self.completo
 
     nomenclatura = property(__str__)
 
@@ -270,8 +277,20 @@ class Expediente(TimeStampedModel):
     personas = models.ManyToManyField("Persona", through="ExpedientePersona", blank=True)
     lugares = models.ManyToManyField("Lugar", through="ExpedienteLugar", blank=True)
 
+    class Meta:
+        ordering = ["-id"]
+
+    def __str__(self):
+        return f"{self.id}"
+
     def get_absolute_url(self):
         return reverse("expediente", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("expediente_update", kwargs={"pk": self.pk})
+
+    def get_delete_url(self):
+        return reverse("expediente_delete", kwargs={"pk": self.pk})
 
     def inscripto(self):
         return self.inscripcion_numero != 0
@@ -305,11 +324,25 @@ class Expediente(TimeStampedModel):
         """Devuelve las personas que figuran como comitentes."""
         return self.expedientepersona_set.filter(comitente=True)
 
-    class Meta:
-        ordering = ["-id"]
+    @property
+    def partidas_list(self):
+        """Devuelve la list() de las partidas intervinientes."""
+        return [ep.partida.partida_completa for ep in self.expedientepartida_set.all()]
 
-    def __str__(self):
-        return f"{self.id}"
+    @property
+    def partidas_str(self):
+        """Devuelve la lista de partidas intervinientes separadas por ", "."""
+        return ", ".join(self.partidas_list)
+
+    @property
+    def lugares_list(self):
+        """Devuelve la list() de los lugares."""
+        return [el.lugar.nombre for el in self.expedientelugar_set.all()]
+
+    @property
+    def lugares_str(self):
+        """Devuelve la lista de lugares separados por ", "."""
+        return ", ".join(self.lugares_list)
 
 
 class ExpedienteLugar(models.Model):
@@ -323,6 +356,14 @@ class ExpedienteLugar(models.Model):
 
     def __str__(self):
         return self.lugar.nombre
+
+    @property
+    def catastros_locales_list(self):
+        return [cl.__str__() for cl in self.catastrolocal_set.all()]
+
+    @property
+    def catastros_locales_str(self):
+        return ", ".join(self.catastros_locales_list)
 
 
 class ExpedientePartida(models.Model):
@@ -360,14 +401,17 @@ class ExpedientePersona(models.Model):
     class Meta:
         verbose_name = "persona involucrada"
         verbose_name_plural = "personas involucradas"
-        ordering = ["persona__apellidos", "persona__nombres"]
+        ordering = ["expediente", "persona__apellidos", "persona__nombres"]
 
     def __str__(self):
         return f"{self.expediente.id} - {self.persona.apellidos} {self.persona.nombres}"
 
+    def get_delete_url(self):
+        return reverse("expedientepersona_delete", kwargs={"pk": self.pk})
+
 
 class Partida(models.Model):
-    sd = models.ForeignKey("Sd", db_column="sd", blank=True, null=True, default=None, on_delete=models.SET_NULL,)
+    sd = models.ForeignKey("Sd", db_column="sd", blank=True, null=True, default=None, on_delete=models.SET_NULL)
     pii = models.IntegerField()
     subpii = models.IntegerField(blank=True)
     api = models.SmallIntegerField()
@@ -454,9 +498,28 @@ class Persona(models.Model):
     def get_delete_url(self):
         return reverse("persona_delete", kwargs={"pk": self.pk})
 
+    def save(self, *args, **kwargs):
+        self.apellidos = self.apellidos.upper().strip()
+        self.apellidos_alternativos = self.apellidos_alternativos.upper().strip()
+        self.nombres = capitalize_phrase(self.nombres)
+        self.nombres_alternativos = capitalize_phrase(self.nombres_alternativos)
+        super().save(*args, **kwargs)
+
     @property
     def nombre_completo(self):
-        return f"{self.apellidos} {self.nombres}".strip()
+        return f"{self.apellidos} {self.nombres or ''}".strip()
+
+    @property
+    def nombre_alternativo(self):
+        if self.apellidos_alternativos or self.nombres_alternativos:
+            return (
+                f"{self.apellidos_alternativos or self.apellidos} {self.nombres_alternativos or self.nombres}".strip()
+            )
+
+    @property
+    def domicilio_completo(self):
+        localidad = f", {self.lugar}" if self.lugar and self.domicilio else self.lugar or ""
+        return f"{self.domicilio}{localidad}".strip() if self.domicilio else localidad
 
     @property
     def documento_completo(self):
@@ -476,13 +539,6 @@ class Persona(models.Model):
             return mark_safe(url % (self.nombre_completo, "buscar"))
         else:
             return ""
-
-    def save(self, *args, **kwargs):
-        self.apellidos = self.apellidos.upper().strip()
-        self.apellidos_alternativos = self.apellidos_alternativos.upper().strip()
-        self.nombres = capitalize_phrase(self.nombres)
-        self.nombres_alternativos = capitalize_phrase(self.nombres_alternativos)
-        super().save(*args, **kwargs)
 
 
 class Zona(models.Model):
