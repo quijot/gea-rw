@@ -80,10 +80,9 @@ Catastros Locales
         <div class="d-flex justify-content-start align-items-start">
           <label>
             Mostrando
-            <strong>{{ object_list.count }}</strong>
-            de
-            <strong>{{ count }}</strong>
-            registro{% if count > 1 %}s{% endif %}
+            {{ page_obj.start_index }} a {{ page_obj.end_index }} de
+            <strong>{{ paginator.count }}</strong>
+            registro{% if paginator.count > 1 %}s{% endif %}
           </label>
         </div>
       </div>
