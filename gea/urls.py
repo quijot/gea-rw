@@ -12,6 +12,11 @@ urlpatterns = [
     # Expedientes
     path("expedientes/", views.ExpedienteListView.as_view(), name="expedientes"),
     path("expediente/<int:pk>/", views.ExpedienteDetailView.as_view(), name="expediente"),
+    path(
+        "expedientepersona/borrar/<int:pk>/",
+        views.ExpedientePersonaDeleteView.as_view(),
+        name="expedientepersona_delete",
+    ),
     # Personas
     path("personas/", views.PersonaListView.as_view(), name="personas"),
     path("persona/<int:pk>/", views.PersonaDetailView.as_view(), name="persona"),
