@@ -127,32 +127,32 @@
     <div>
         {% for el in e.expedientelugar_set.all %}
             {% for c in el.catastrolocal_set.all %} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <strong>Sección: {{ c.seccion }} - Manzana: {{ c.manzana }} - Parcela: {{ c.parcela }}{% if c.subparcela %} - Subparcela: {{ c.subparcela }}{% endif %}{% if c.suburbana %}- Zona Suburbana{% endif %}</strong><br />
+        <strong>Sección: {{ c.seccion }} - Manzana: {{ c.manzana }} - Parcela: {{ c.parcela }}{% if c.subparcela %} - Subparcela: {{ c.subparcela }}{% endif %}{% if c.suburbana %}- Zona Suburbana{% endif %}</strong><br>
             {% endfor %}
         {% endfor %}
     </div>
-    <br />
+    <br>
     <!-- Obejeto -->
     <div>OBJETO{% if e.objetos.count > 1 %}S{% endif %}:
         {% for objeto in e.objetos.all %}
         <a href="/admin/gea/objeto/{{ objeto.id }}/"><strong>{{ objeto.nombre|upper }}</strong></a>
         {% endfor %}
     </div>
-    <br />
+    <br>
     <!-- Propietarios -->
     <div>PROPIETARIO{% if e.propietarios_count > 1 %}S{% endif %}:
         {% for p in e.propietarios %}
-        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="/admin/gea/persona/{{ p.persona.id }}/"><span style="font-size: x-large">{{ p.persona.nombres|upper }} {{ p.persona.apellidos }}</span></a>
             {% if p.sucesion %}<small>(* hoy sus sucesores)</small>{% endif %}
             {% if p.nuda_propiedad %}<small>(* nuda propiedad)</small>{% endif %}
             {% if p.partes_indivisas_propias %}<small>({{ p.partes_indivisas_propias }}/{{ p.partes_indivisas_total }} partes indivisas)</small>{% endif %}
         {% endfor %}
     </div>
-    <br />
+    <br>
     <!-- Inmueble -->
     <div>INMUEBLE: <strong>{{ inmueble }}</strong></div>
-    <br />
+    <br>
     <!-- Dominio -->
     <div>DOMINIO:
         <strong>
@@ -166,7 +166,7 @@
             {{ fecha_dominio|default:"___/___/_____" }}
       </strong>
     </div>
-    <br />
+    <br>
     <!-- Balance -->
     <div style="text-align: center">
         <strong><u>BALANCE DE SUPERFICIES</u></strong>:
@@ -198,9 +198,9 @@
       {% endwith %}
       </strong>
     </div>
-    <br />
-    <br />
-    <br />
+    <br>
+    <br>
+    <br>
     <!-- Fecha y firma -->
     <table style="width: 100%">
         <tr>
@@ -227,12 +227,16 @@
     <hr>
     <!-- Observaciones -->
     <div>
-        <strong><u>OBSERVACIONES</u></strong>:
-        <br />Expediente Co.P.A. Nº {{ e.orden_numero|default:"__________" }} - {{ e.orden_fecha|default:"___/___/______" }}
-        <br />{% for a in e.antecedente_set.all %}{% if 'Modifica' in a.obs %}{{ a.obs }}<br />{% endif %} {% endfor %}
+        <strong><u>OBSERVACIONES GENERALES</u></strong>:
+        <br>Expediente Co.P.A. Nº {{ e.orden_numero|default:"__________" }} - {{ e.orden_fecha|default:"___/___/______" }}
+        <br>{% for a in e.antecedente_set.all %}{% if 'Modifica' in a.obs %}{{ a.obs }}<br>{% endif %} {% endfor %}
         {{ obs }}
     </div>
-    <br />
+    <div>
+        <strong><u>OBSERVACIONES ESPECÍFICAS</u></strong>:
+        {{ obs_esp|default:"" }}
+    </div>
+    <br>
     <hr>
     <!-- Nomenclatura -->
     <table class="nomenclatura">
@@ -283,7 +287,7 @@
         {% endwith %}
     </table>
 </div>
-<br />
+<br>
 <!-- Detalle de PII -->
     {% if e.expedientepartida_set.count > 1 %}
 <div>

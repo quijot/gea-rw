@@ -25,13 +25,16 @@ urlpatterns = [
     path("persona/borrar/<int:pk>/", views.PersonaDeleteView.as_view(), name="persona_delete"),
     # Notas
     path("solicitud/", views.solicitud, name="solicitud"),
+    path("solicitud/<int:expediente>/", views.solicitud, name="solicitud"),
     path("visacion/", views.visacion, name="visacion"),
+    path("visacion/<int:expediente>/", views.visacion, name="visacion"),
     # Búsquedas
     path("plano/", views.plano, name="buscar_plano"),
     path("set/", views.set, name="buscar_set"),
     path("catastro/", views.catastro, name="buscar_catastro"),
     # Herramientas
     path("caratula/", views.caratula, name="caratula"),
+    path("caratula/<int:expediente>/", views.caratula, name="caratula"),
     path("dvapi/", views.dvapi, name="dvapi"),
     path("sie/", views.sie, name="sie"),
 ]

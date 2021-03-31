@@ -1,6 +1,6 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Button, Div, Fieldset, Layout, Row, Submit
+from crispy_forms.layout import Button, Div, Field, Fieldset, Layout, Row, Submit
 from django import forms
 from django.urls import reverse_lazy
 
@@ -19,7 +19,10 @@ class PersonaForm(forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 "Datos personales",
-                Row(Div("apellidos", css_class="col-lg-6"), Div("nombres", css_class="col-lg-6"),),
+                Row(
+                    Div("apellidos", css_class="col-lg-6"),
+                    Div("nombres", css_class="col-lg-6"),
+                ),
                 Row(
                     Div("apellidos_alternativos", css_class="col-lg-6"),
                     Div("nombres_alternativos", css_class="col-lg-6"),
@@ -53,9 +56,9 @@ class PersonaForm(forms.ModelForm):
 
 
 class CaratulaForm(forms.Form):
-    expte_nro = forms.IntegerField(label="Expediente Nº", widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}),)
+    expte_nro = forms.IntegerField(label="Expediente", widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}))
     inmueble = forms.CharField(
-        widget=forms.Textarea(attrs={"placeholder": "ej: Una fracción de terreno..."}), required=False,
+        widget=forms.Textarea(attrs={"placeholder": "ej: Una fracción de terreno..."}), required=False
     )
     matricula = forms.IntegerField(required=False)
     tomo = forms.IntegerField(required=False)
@@ -64,27 +67,78 @@ class CaratulaForm(forms.Form):
     numero = forms.IntegerField(label="Número", required=False)
     fecha = forms.DateField(required=False)
     obs = forms.CharField(
-        label="Observaciones",
-        widget=forms.Textarea(
-            attrs={
-                "placeholder": "ej: Modifica el Lote Nº 1 del \
-                              Plano Nº 23.456. Etc."
-            }
-        ),
+        label="Observaciones generales",
+        widget=forms.Textarea(attrs={"placeholder": "ej: Modifica el Lote 1 del Plano 23.456."}),
         required=False,
     )
+    obs_esp = forms.CharField(label="Observaciones específicas", widget=forms.Textarea(), required=False)
     FORMAT_CHOICES = (
         ("html", "HTML"),
         ("dxf", "DXF"),
     )
     fmt = forms.ChoiceField(label="Formato de salida", choices=FORMAT_CHOICES)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Div("expte_nro", css_class="col-md-3"),
+                Div("fmt", css_class="col-md-3"),
+                Div(
+                    FormActions(
+                        Button(
+                            "cancel",
+                            "Cancelar",
+                            css_class="btn-secondary",
+                            onclick=f"window.location.href = '{reverse_lazy('expedientes')}';",
+                        ),
+                        Submit("save", "Generar"),
+                        style="text-align: right;",
+                    ),
+                    css_class="col-md-6",
+                ),
+            ),
+            Div("inmueble"),
+            Fieldset(
+                "DOMINIO",
+                Row(
+                    Div("matricula", css_class="col-md-2"),
+                    Div(css_class="col"),
+                    Div("tomo", css_class="col-md-2"),
+                    Div("par", css_class="col-md-1"),
+                    Div("folio", css_class="col-md-2"),
+                    Div("numero", css_class="col-md-2"),
+                    Div(Field("fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
+                ),
+            ),
+            Fieldset(
+                "OBSERVACIONES",
+                Div("obs"),
+                Div("obs_esp"),
+            ),
+            FormActions(
+                Button(
+                    "cancel",
+                    "Cancelar",
+                    css_class="btn-secondary",
+                    onclick=f"window.location.href = '{reverse_lazy('expedientes')}';",
+                ),
+                Submit("save", "Generar"),
+                style="text-align: right;",
+            ),
+        )
+
 
 class SolicitudForm(forms.Form):
-    expte_nro = forms.IntegerField(label="Expediente", widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}),)
+    expte_nro = forms.IntegerField(
+        label="Expediente",
+        widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}),
+    )
     circunscripcion = forms.ChoiceField(label="Circunscripción", choices=gv.CIRC, initial=gv.CIRC_DEFAULT)
     domicilio_fiscal = forms.CharField(
-        max_length=40, widget=forms.TextInput(attrs={"placeholder": "ej: San Martín 430"}),
+        max_length=40,
+        widget=forms.TextInput(attrs={"placeholder": "ej: San Martín 430"}),
     )
     localidad = forms.ChoiceField(choices=gv.CP, initial=gv.CP_DEFAULT)
     provincia = forms.ChoiceField(choices=gv.PROV, initial=gv.PROV_DEFAULT)
@@ -99,7 +153,10 @@ class SolicitudForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Row(Div("expte_nro", css_class="col-lg-4"), Div("circunscripcion", css_class="col-lg-8"),),
+            Row(
+                Div("expte_nro", css_class="col-lg-4"),
+                Div("circunscripcion", css_class="col-lg-8"),
+            ),
             Div("domicilio_fiscal"),
             Row(Div("localidad", css_class="col-lg-6"), Div("provincia", css_class="col-lg-6")),
             Div("nota_titulo"),
@@ -118,7 +175,10 @@ class SolicitudForm(forms.Form):
 
 
 class VisacionForm(forms.Form):
-    expte_nro = forms.IntegerField(label="Expediente", widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}),)
+    expte_nro = forms.IntegerField(
+        label="Expediente",
+        widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}),
+    )
     lugar = forms.ChoiceField(choices=gv.LUGAR, initial=0)
 
     def __init__(self, *args, **kwargs):

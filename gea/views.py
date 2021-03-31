@@ -296,7 +296,7 @@ class CatastroLocalListView(LoginRequiredMixin, CounterMixin, CLMixin, generic.L
 
 
 @login_required
-def caratula(request):
+def caratula(request, expediente=None):
     if request.method == "POST":  # If the form has been submitted...
         # CaratulaForm was defined in the previous section
         form = forms.CaratulaForm(request.POST)  # A form bound to the POST data
@@ -336,13 +336,13 @@ def caratula(request):
                 return HttpResponse(template.render(context))
             return response
     else:
-        form = forms.CaratulaForm()  # An unbound form
+        form = forms.CaratulaForm(initial={"expte_nro": expediente})  # An unbound form
 
-    return render(request, "gea/tools/caratula_form.html", {"form": form,})
+    return render(request, "gea/tools/caratula_form.html", {"form": form})
 
 
 @login_required
-def solicitud(request):
+def solicitud(request, expediente=None):
     if request.method == "POST":  # If the form has been submitted...
         # SolicitudForm was defined in the previous section
         form = forms.SolicitudForm(request.POST)  # A form bound to the POST data
@@ -374,13 +374,13 @@ def solicitud(request):
             }
             return HttpResponse(template.render(context))
     else:
-        form = forms.SolicitudForm()  # An unbound form
+        form = forms.SolicitudForm(initial={"expte_nro": expediente})  # An unbound form
 
-    return render(request, "gea/doc/solic_form.html", {"form": form,})
+    return render(request, "gea/doc/solic_form.html", {"form": form})
 
 
 @login_required
-def visacion(request):
+def visacion(request, expediente=None):
     if request.method == "POST":  # If the form has been submitted...
         # VisacionForm was defined in the previous section
         form = forms.VisacionForm(request.POST)  # A form bound to the POST data
@@ -394,11 +394,11 @@ def visacion(request):
 
             e = get_object_or_404(models.Expediente, id=eid)
             # Redirect after POST
-            return render(request, "gea/doc/visac.html", {"e": e, "sr": sr, "localidad": localidad},)
+            return render(request, "gea/doc/visac.html", {"e": e, "sr": sr, "localidad": localidad})
     else:
-        form = forms.VisacionForm()  # An unbound form
+        form = forms.VisacionForm(initial={"expte_nro": expediente})  # An unbound form
 
-    return render(request, "gea/doc/visac_form.html", {"form": form,})
+    return render(request, "gea/doc/visac_form.html", {"form": form})
 
 
 @login_required
@@ -413,7 +413,7 @@ def plano(request):
     else:
         form = forms.PlanoForm()  # An unbound form
 
-    return render(request, "gea/search/plano_form.html", {"form": form,})
+    return render(request, "gea/search/plano_form.html", {"form": form})
 
 
 @login_required
@@ -429,7 +429,7 @@ def set(request):
     else:
         form = forms.SetForm()  # An unbound form
 
-    return render(request, "gea/search/set_form.html", {"form": form,})
+    return render(request, "gea/search/set_form.html", {"form": form})
 
 
 def get_dvapi(dp, ds, sd, pii, subpii):
@@ -453,11 +453,11 @@ def dvapi(request):
             pii = form.cleaned_data["partida"]
             sub_pii = form.cleaned_data["sub_pii"]
             dv = get_dvapi(dp, ds, sd, pii, sub_pii)
-            return render(request, "gea/tools/dvapi_form.html", {"dv": dv, "form": form},)
+            return render(request, "gea/tools/dvapi_form.html", {"dv": dv, "form": form})
     else:
         form = forms.DVAPIForm()  # An unbound form
 
-    return render(request, "gea/tools/dvapi_form.html", {"form": form,})
+    return render(request, "gea/tools/dvapi_form.html", {"form": form})
 
 
 def sie(request):
@@ -475,7 +475,7 @@ def sie(request):
     else:
         form = forms.SIEForm()  # An unbound form
 
-    return render(request, "gea/tools/sie_form.html", {"form": form,})
+    return render(request, "gea/tools/sie_form.html", {"form": form})
 
 
 @login_required
@@ -493,19 +493,19 @@ def catastro(request):
 
             filtro = "?"
             if lugar is not None:
-                filtro = "%s%s%s" % (filtro, "&expedientelugar__lugar__nombre=", lugar,)
+                filtro = "%s%s%s" % (filtro, "&expedientelugar__lugar__nombre=", lugar)
             if seccion != "":
-                filtro = "%s%s%s" % (filtro, "&expedientelugar__catastrolocal__seccion=", seccion,)
+                filtro = "%s%s%s" % (filtro, "&expedientelugar__catastrolocal__seccion=", seccion)
             if manzana != "":
-                filtro = "%s%s%s" % (filtro, "&expedientelugar__catastrolocal__manzana=", manzana,)
+                filtro = "%s%s%s" % (filtro, "&expedientelugar__catastrolocal__manzana=", manzana)
             if parcela != "":
-                filtro = "%s%s%s" % (filtro, "&expedientelugar__catastrolocal__parcela=", parcela,)
+                filtro = "%s%s%s" % (filtro, "&expedientelugar__catastrolocal__parcela=", parcela)
             # Redirect after POST
             return redirect("/admin/gea/expediente/%s" % filtro)
     else:
         form = forms.CLForm()  # An unbound form
 
-    return render(request, "gea/search/catastro_form.html", {"form": form,})
+    return render(request, "gea/search/catastro_form.html", {"form": form})
 
 
 # #####

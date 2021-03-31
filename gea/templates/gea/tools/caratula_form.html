@@ -1,17 +1,29 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
-{% block title %}GEA | Carátula{% endblock %}
+{% block title %}Carátula{% endblock %}
+
+{% block page-title %}
+<i class="far fa-fw fa-file-alt"></i>
+Carátula
+{% if form.expte_nro.initial %}
+| Expediente
+<span class="badge badge-dark">{{ form.expte_nro.initial }}</span>
+{% endif %}
+{% endblock %}
 
 {% block content %}
-<form class="form-horizontal col-lg-6" method="post">{% csrf_token %}
-  <legend><i class="fas fa-fw fa-sticky-note"></i> Generar Carátula de Plano de Mensura</legend>
-  <fieldset>
-    <div class="form-group">
-      <table class="table table-condensed table-hover">
-      {{ form.as_table }}
-      </table>
-      <button type="submit" class="btn btn-primary pull-right">Generar Carátula</button>
-    </div>
-  </fieldset>
-</form>
+<div class="card bg-light shadow mb-4 col-lg-8">
+  <div class="card-body">
+    {% crispy form %}
+  </div>
+</div>
 {% endblock %}
+
+{% block extra_css %}
+{% include "helpers/datepicker.css.html" %}
+{% endblock extra_css %}
+
+{% block extra_js %}
+{% include "helpers/datepicker.js.html" %}
+{% endblock extra_js %}
