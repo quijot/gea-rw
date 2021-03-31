@@ -192,6 +192,16 @@ class PersonaDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.D
     success_message = "Persona eliminada con éxito."
 
 
+class ExpedientePersonaDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
+    model = models.ExpedientePersona
+    success_url = reverse_lazy("personas")
+    success_message = "Persona desvinculada con éxito."
+
+    def get_success_url(self):
+        persona = self.object.persona
+        return reverse_lazy("persona", kwargs={"pk": persona.id})
+
+
 class LugarSearchMixin(object):
     def get_queryset(self):
         queryset = super().get_queryset()

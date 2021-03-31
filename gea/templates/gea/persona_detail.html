@@ -1,35 +1,149 @@
 {% extends "base.html" %}
-{% block title %}GEA | {{ object.nombre_completo }}{% endblock title %}
+{% block title %}{{ object }}{% endblock title %}
+
+{% block page-title %}
+<i class="fas fa-fw fa-user"></i>
+{{ object.nombre_completo }}
+{% endblock %}
+{% block page-heading-buttons %}
+<div class="btn-group d-print-none shadow" role="group" aria-label="Actions">
+  <a onclick="window.print();" class="d-sm-inline-block btn btn-secondary">
+    <i class="fas fa-fw fa-print text-white-50"></i> Imprimir
+  </a>
+  <a href="{{ object.get_delete_url }}" class="d-sm-inline-block btn btn-danger">
+    <i class="fas fa-fw fa-trash text-white-50"></i> Eliminar
+  </a>
+  <a href="{{ object.get_update_url }}" class="d-sm-inline-block btn btn-primary">
+    <i class="fas fa-fw fa-pen text-white-50"></i> Editar
+  </a>
+</div>
+{% endblock %}
 
 {% block content %}
-<div class="col-lg-8">
-    <div class="col-md-2 column">
-        <i class="fas fa-fw fa-user"></i>
+
+<div class="row">
+
+  <div class="col-md-4">
+    <div class="card bg-light shadow mb-2">
+      <div class="card-header">
+        <span class="float-right">
+          <a href="{{ object.get_delete_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-danger"
+            title="Eliminar">
+            <i class="fas fa-fw fa-trash fa-sm"></i>
+          </a>
+          <a href="{{ object.get_update_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-primary"
+            title="Editar">
+            <i class="fas fa-fw fa-pen fa-sm"></i>
+          </a>
+        </span>
+        <i class="fas fa-fw fa-address-book"></i>
+        <span class="lead font-weight-bold">{{ object.nombre_completo }}</span>
+        <div class="font-weight-light">
+          {% if object.nombre_alternativo %}
+          también <em>{{ object.nombre_alternativo }}</em><br>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="font-weight-light">
+          {% if object.telefono %}
+          <i class="fas fa-fw fa-phone"></i>
+          <a href="tel:{{ object.telefono }}">{{ object.telefono }}</a><br>
+          {% endif %}
+          {% if object.email %}
+          <i class="far fa-fw fa-envelope"></i>
+          <a href="mailto:{{ object.email }}">{{ object.email }}</a><br>
+          {% endif %}
+          <i class="far fa-fw fa-id-card"></i>
+          {% if object.documento_completo %}
+          {{ object.documento_completo }} /
+          {% endif %}
+          CUIT {{ object.cuit_link }}<br>
+          {% if object.domicilio_completo %}
+          <i class="fas fa-fw fa-map-marker"></i>
+          {{ object.domicilio_completo }}
+          {% endif %}
+        </div>
+      </div>
     </div>
-    <div class="col-md-offset-3 column">
-        <h1>{{ object.nombre_completo }}</h1>
-        <h4><i class="fas fa-fw fa-user"></i> <a href="#">{{ object.documento }}</a></h4>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card bg-light shadow mb-2">
+      <div class="card-header">
+        <i class="fas fa-fw fa-folder-open"></i>
+        <span class="lead font-weight-bold">Expedientes ({{ object.expedientepersona_set.count }})</span>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for ep in object.expedientepersona_set.all %}
+          <li class="list-group-item {% if ep.expediente.inscripcion_numero %}bg-light{% else %}bg-warning{% endif %}">
+            <div class="row">
+              <div class="col-lg-1">
+                <a href="{{ ep.expediente.get_absolute_url }}">
+                  <span class="badge badge-dark py-1 px-2">
+                    {{ ep.expediente.id }}
+                  </span>
+                </a>
+              </div>
+              <div class="col-lg-3">
+                {% if ep.comitente %}
+                <span class="badge badge-warning">COMITENTE</span>
+                {% endif %}
+                {% if ep.propietario %}
+                <span class="badge badge-primary">
+                  {% if ep.nuda_propiedad %}
+                  NUDO PROPIETARIO
+                  {% else %}
+                  PROPIETARIO
+                  {% endif %}
+                  {% if ep.partes_indivisas_propias %}
+                  ({{ ep.partes_indivisas_propias }}/{{ ep.partes_indivisas_total }})
+                  {% endif %}
+                </span>
+                {% endif %}
+                {% if ep.poseedor %}
+                <span class="badge badge-danger">POSEEDOR</span>
+                {% endif %}
+                {% if ep.sucesor %}
+                <span class="badge badge-info">SUCESOR</span>
+                {% endif %}
+                {% if ep.sucesion %}
+                <span class="badge badge-info">HOY SUCESORES</span>
+                {% endif %}
+                {% if ep.usufructo %}
+                <span class="badge badge-warning">USUFRUCTO</span>
+                {% endif %}
+              </div>
+              <div class="col-lg-8">
+                <a href="{{ ep.get_delete_url }}" class="btn btn-sm btn-outline-danger float-right">
+                  <i class="fas fa-fw fa-user-times fa-sm" title="Desvincular"></i>
+                </a>
+                <span class="font-weight-bold">
+                  <a href="{{ ep.expediente.plano_ruta|default:'#' }}" style="color: unset;">
+                    <i class="far fa-fw fa-map"></i>
+                    {% if ep.duplicado %}Dup.{% endif %}
+                    {{ ep.expediente.inscripcion_numero|default:"¡PENDIENTE!" }}
+                  </a>
+                </span>
+                &nbsp;
+                {{ ep.expediente.lugares_str|default:"<em>Sin lugar</em>" }}
+                <br>
+                <span class="badge badge-danger p-1">CoPA {{ ep.expediente.orden_numero|default:"S/N" }}</span>
+                {% for p in ep.expediente.partidas_list %}
+                <span class="badge badge-primary p-1">{{ p }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </li>
+          {% empty %}
+          <span class="text-danger">No registra expedientes.</span>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-    </br>
-    <table class="table table-user-information">
-        <tbody>
-            <tr>
-                <th class="col-md-3 text-right">Domicilio</th>
-                <td>{{ object.domicilio }}</td>
-            </tr>
-            <tr>
-                <th class="col-md-3 text-right">Teléfono</th>
-                <td>{{ object.telefono }}</td>
-            </tr>
-            <tr>
-                <th class="col-md-3 text-right">Documento</th>
-                <td>{% for d in object.TIPO_DOC %}{% if d.0 == object.tipo_doc %}{{d.1}}{% endif %}{% endfor %} {{ object.documento }}</td>
-            </tr>
-            <tr>
-                <th class="col-md-3 text-right">CUIT/CUIL/CDI</th>
-                <td>{{ object.cuit_cuil }}</td>
-            </tr>
-        </tbody>
-    </table>
+  </div>
+
 </div>
+
 {% endblock content %}
