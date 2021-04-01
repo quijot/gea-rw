@@ -46,7 +46,7 @@ Expedientes
               <input type="text" id="search" name="search" placeholder="Expediente/Persona/Lugar/PII/Plano/CoPA"
                 class="form-control" value="{{ request.GET.search }}" size="35">
               <div class="input-group-append">
-                <button type="button" class="btn btn-sm btn-primary">
+                <button type="submit" class="btn btn-sm btn-primary">
                   <i class="fas fa-fw fa-search"></i>
                 </button>
               </div>
@@ -58,7 +58,7 @@ Expedientes
     <div class="row">
       <!-- Data -->
       <div class="col-sm-12">
-        <table class="table table-sm table-striped table-hover table-responsive-md">
+        <table class="table table-sm table-hover table-responsive-md">
           <thead>
             <tr>
               <th>Expediente</th>
@@ -70,7 +70,7 @@ Expedientes
           </thead>
           <tbody>
             {% for e in object_list %}
-            <tr class="{% if not e.inscripcion_numero and not e.cancelado and not e.sin_incripcion %}table-warning{% endif %}" >
+            <tr class="{% if not e.inscripcion_numero and not e.cancelado and not e.sin_incripcion %}table-warning{% endif %}">
               <td>
                 <!-- EXPEDIENTE -->
                 <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1">{{ e.id }}</a>
