@@ -4229,7 +4229,7 @@ AcDbText
  40
 2.5
   1
-GÃLVEZ, {{ e.fecha_plano|date:"E \D\E Y"|default:"__________"|upper }}
+GÁLVEZ, {% now "E \D\E Y" %}
 100
 AcDbText
   0

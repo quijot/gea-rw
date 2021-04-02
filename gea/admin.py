@@ -305,7 +305,7 @@ class AntecedenteInline(NestedTabularInline):
 class ExpedienteAdmin(NestedModelAdmin):
     filter_horizontal = ["objetos", "profesionales_firmantes"]
     fieldsets = [
-        (None, {"fields": [("id", "fecha_plano", "created", "modified")], "classes": ("extrapretty"),},),
+        (None, {"fields": [("id", "created", "modified")], "classes": ("extrapretty"),},),
         ("Estado", {"fields": [("fecha_medicion",)], "classes": ("extrapretty")},),
         (
             "SCIT - Servicio de Catastro e Información Territorial",
@@ -336,7 +336,6 @@ class ExpedienteAdmin(NestedModelAdmin):
         "id",
         # "created",
         "fecha_medicion",
-        # "fecha_plano",
         "inscripcion_numero",
         "inscripcion_fecha",
         "duplicado",
@@ -348,7 +347,6 @@ class ExpedienteAdmin(NestedModelAdmin):
     )
     list_editable = (
         # "fecha_medicion",
-        # "fecha_plano",
         # "inscripcion_numero",
         # "inscripcion_fecha",
         # "duplicado",
@@ -378,7 +376,6 @@ class ExpedienteAdmin(NestedModelAdmin):
     ]
     search_fields = [
         "id",
-        "fecha_plano",
         "inscripcion_numero",
         "inscripcion_fecha",
         "orden_numero",

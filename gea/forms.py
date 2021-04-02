@@ -48,7 +48,6 @@ class ExpedienteForm(forms.ModelForm):
             "cancelado_por",
             "objetos",
             "profesionales_firmantes",
-            "fecha_plano",
             "fecha_medicion",
             "inscripcion_fecha",
             "orden_fecha",
@@ -62,7 +61,6 @@ class ExpedienteForm(forms.ModelForm):
                 "",
                 Row(
                     Div("id", css_class="col-md-2"),
-                    Div(Field("fecha_plano", css_class="date", id="datepicker"), css_class="col-md-2"),
                     Div(Field("fecha_medicion", css_class="date", id="datepicker"), css_class="col-md-2"),
                     Div("inscripcion_numero", css_class="col-md-2"),
                     Div(Field("inscripcion_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),

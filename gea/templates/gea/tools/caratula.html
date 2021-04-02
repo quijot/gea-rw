@@ -217,7 +217,7 @@
         </tr>
         <tr>
             {% with e.profesionales_firmantes.all|first as p %}
-            <td>{{ p.lugar.observacion|upper }}, {{ e.fecha_plano|date:"E \D\E Y"|default:"__________"|upper }}</td>
+            <td>{{ p.lugar.observacion|upper }}, {% now "E \D\E Y" %}</td>
             {% endwith %}
             {% for profesional in e.profesionales_firmantes.all %}
             <td><span style="float: right; font-size:smaller">{{ profesional.domicilio }} - {{ profesional.lugar.observacion|upper }}</span></td>

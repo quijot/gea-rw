@@ -255,7 +255,6 @@ class Profesional(models.Model):
 
 class Expediente(TimeStampedModel):
     id = models.IntegerField("Expediente", primary_key=True)
-    fecha_plano = models.DateField(blank=True, null=True)
     fecha_medicion = models.DateField(blank=True, null=True)
     inscripcion_numero = models.IntegerField("SCIT inscripción Nº", unique=True, blank=True, null=True)
     inscripcion_fecha = models.DateField("Fecha inscripción", blank=True, null=True)
