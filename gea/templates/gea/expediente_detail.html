@@ -7,24 +7,24 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
 {% endblock %}
 {% block page-heading-buttons %}
 <div class="btn-group d-print-none shadow" role="group" aria-label="Actions">
-  <a href="{% url 'caratula' object.id  %}" class="d-sm-inline-block btn btn-outline-dark">
-    <i class="far fa-fw fa-file-alt"></i> Carátula
-  </a>
-  <a href="{% url 'solicitud' object.id  %}" class="d-sm-inline-block btn btn-outline-dark">
-    <i class="fas fa-fw fa-file-signature"></i> Solicitud
-  </a>
-  <a href="{% url 'visacion' object.id  %}" class="d-sm-inline-block btn btn-outline-dark">
-    <i class="far fa-fw fa-file"></i> Visación
-  </a>
+  <div class="btn-group" role="group" aria-label="Notas">
+    <button id="btnGroupDrop" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">Generar</button>
+    <div class="dropdown-menu" aria-labelledby="btnGroupDrop">
+      <a class="dropdown-item" href="{% url 'caratula' object.id  %}">
+        <i class="far fa-fw fa-file-alt"></i> Carátula de Plano
+      </a>
+      <a class="dropdown-item" href="{% url 'solicitud' object.id  %}">
+        <i class="fas fa-fw fa-file-signature"></i> Solicitud de Inscripción
+      </a>
+      <a class="dropdown-item" href="{% url 'visacion' object.id  %}">
+        <i class="far fa-fw fa-file"></i> Visación Municipal
+      </a>
+    </div>
+  </div>
   <a onclick="window.print();" class="d-sm-inline-block btn btn-secondary">
     <i class="fas fa-fw fa-print text-white-50"></i> Imprimir
   </a>
-  <!-- <a href="{{ object.get_delete_url }}" class="d-sm-inline-block btn btn-danger">
-    <i class="fas fa-fw fa-trash text-white-50"></i> Eliminar
-  </a>
-  <a href="{{ object.get_update_url }}" class="d-sm-inline-block btn btn-primary">
-    <i class="fas fa-fw fa-pen text-white-50"></i> Editar
-  </a> -->
 </div>
 {% endblock %}
 
@@ -159,51 +159,3 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
 </div>
 
 {% endblock content %}
-
-<div class="col-lg-8">
-  <div class="column">
-    <!-- Comitentes -->
-    {% if object.comitentes_count %}
-    <h2><i class="fas fa-fw fa-file-signature"></i> Comitente{% if object.comitentes_count > 1%}s{% endif %}:
-      {% for p in object.comitentes %}
-      <a href="{{ p.persona.get_absolute_url }}">
-        {{ p.persona.nombre_completo }}
-      </a>{% if not forloop.last %},{% endif %}
-      {% endfor %}
-    </h2>
-    {% endif %}
-    <!-- Propietarios -->
-    {% if object.propietarios_count %}
-    <h3>{% if object.propietarios_count > 1 %}<i class="fas fa-fw fa-users"></i> Propietarios:{% else %}<i
-        class="fas fa-fw fa-user"></i> Propietario:{% endif %}
-      {% for p in object.propietarios %}
-      <a href="{{ p.persona.get_absolute_url }}">
-        {{ p.persona.nombre_completo }}
-      </a>{% if not forloop.last %},{% endif %}
-      {% endfor %}
-    </h3>
-    {% endif %}
-    <h3>{{ object.expedientelugar_set.first }}</h3>
-  </div>
-  </br>
-  <table class="table table-user-information">
-    <tbody>
-      <tr>
-        <th class="col-md-3 text-right">Alta</th>
-        <td>{{ object.created }}</td>
-      </tr>
-      <tr>
-        <th class="col-md-3 text-right">Lugar</th>
-        <td>{{ object.expedientelugar_set.first }}</td>
-      </tr>
-      <tr>
-        <th class="col-md-3 text-right">Fecha</th>
-        <td>{{ object.inscripcion_fecha }}</td>
-      </tr>
-      <tr>
-        <th class="col-md-3 text-right">Plano</th>
-        <td><a href="{{ object.plano_ruta }}">{{ object.inscripcion_numero }}</a></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
