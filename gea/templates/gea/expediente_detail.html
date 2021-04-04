@@ -35,16 +35,14 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
   <div class="col-md-4">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <span class="float-right">
-          <a href="{{ object.get_delete_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-danger"
-            title="Eliminar">
-            <i class="fas fa-fw fa-trash fa-sm"></i>
+        <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+          <a href="{{ object.get_update_url }}" class="btn btn-outline-primary" title="Editar">
+            <i class="fas fa-fw fa-sm fa-pen"></i>
           </a>
-          <a href="{{ object.get_update_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-primary"
-            title="Editar">
-            <i class="fas fa-fw fa-pen fa-sm"></i>
+          <a href="{{ object.get_delete_url }}" class="btn btn-outline-danger" title="Eliminar">
+            <i class="fas fa-fw fa-sm fa-trash"></i>
           </a>
-        </span>
+        </div>
         <i class="fas fa-fw fa-folder"></i>
         <span class="lead font-weight-bold">Expediente Nº {{ object }}</span>
         <div class="font-weight-light">
@@ -56,30 +54,51 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
             </a>
           </span>&nbsp;
           <small>{{ object.inscripcion_fecha|default:"" }}</small>
+          <!-- <a href="#" title="Editar inscripción SCIT">
+            <span class="badge badge-light d-print-none">
+              <i class="fas fa-fw fa-pen"></i> SCIT
+            </span>
+          </a> -->
         </div>
       </div>
-      <div class="card-body">
-        <div class="font-weight-light">
+      <div class="card-body font-weight-light">
+        <div class="mb-4">
           {% for el in object.expedientelugar_set.all %}
-          {{ el.lugar }}<br>
+          {{ el.lugar }}
+          <!-- <a href="#" title="Editar Catastro Local">
+            <span class="badge badge-light d-print-none">
+              <i class="fas fa-fw fa-pen"></i> Catastro
+            </span>
+          </a> -->
+          <br>
           <small>
             {% for cl in el.catastros_locales_list %}
             {{ cl }}<br>
             {% endfor %}
           </small>
-          <br>
           {% endfor %}
+        </div>
+        <div class="mb-4">
           {% for o in object.objetos.all %}
           {{ o }}<br>
           {% endfor %}
-          <br>
+        </div>
+        <div class="mb-4">
           {% for p in object.partidas_list %}
           <span class="badge badge-primary p-1">{{ p }}</span>
           {% endfor %}
-          <br><br>
+          <!-- <a href="#" title="Editar Partidas asociadas">
+            <span class="badge badge-light d-print-none">
+              <i class="fas fa-fw fa-pen"></i> PII
+            </span>
+          </a> -->
+        </div>
+        <div class="mb-4">
           <span class="badge badge-danger p-1 mr-1">CoPA {{ object.orden_numero|default:"S/N" }}</span>
           <small>{{ object.orden_fecha|default:"" }}</small>
-          <hr>
+        </div>
+        <hr>
+        <div class="mb-4">
           Medición: {{ object.fecha_medicion|default:"<em>PENDIENTE</em>" }}
           <br>
           {% for p in object.profesionales_firmantes.all %}
@@ -93,7 +112,12 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
   <div class="col-md-8">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <i class="fas fa-fw fa-folder-open"></i>
+        <!-- <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+          <a href="#" class="btn btn-outline-success" title="Agregar">
+            <i class="fas fa-fw fa-sm fa-plus"></i>
+          </a>
+        </div> -->
+        <i class="fas fa-fw fa-sm fa-folder-open"></i>
         <span class="lead font-weight-bold">Personas ({{ object.expedientepersona_set.count }})</span>
       </div>
       <div class="card-body">
@@ -116,9 +140,14 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
                 </small>
               </div>
               <div class="col-lg-6">
-                <a href="{{ ep.get_delete_url }}" class="btn btn-sm btn-outline-danger float-right">
-                  <i class="fas fa-fw fa-user-times fa-sm" title="Desvincular"></i>
-                </a>
+                <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+                  <!-- <a href="#" class="btn btn-outline-primary">
+                    <i class="fas fa-fw fa-sm fa-pen" title="Editar"></i>
+                  </a> -->
+                  <a href="{{ ep.get_delete_url }}" class="btn btn-outline-danger">
+                    <i class="fas fa-fw fa-sm fa-trash" title="Desvincular"></i>
+                  </a>
+                </div>
                 {% if ep.comitente %}
                 <span class="badge badge-warning">COMITENTE</span>
                 {% endif %}
@@ -150,7 +179,7 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
             </div>
           </li>
           {% empty %}
-          <span class="text-danger">No registra expedientes.</span>
+          <span class="text-danger">No registra.</span>
           {% endfor %}
         </ul>
       </div>

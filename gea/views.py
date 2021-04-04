@@ -1,9 +1,11 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Max, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
@@ -55,6 +57,13 @@ class ChildrenContextMixin:
             else:
                 return render(self.request, context["view"].get_template_names(), context)
         return super().form_valid(form)
+
+
+class SuccessURLMixin:
+    def get_success_url(self):
+        if self.request.META.get("HTTP_REFERER"):
+            return self.request.META.get("HTTP_REFERER")
+        return self.success_url
 
 
 class SuccessDeleteMessageMixin:
@@ -153,14 +162,27 @@ class ExpedienteCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     model = models.Expediente
     form_class = forms.ExpedienteForm
     success_message = "¡Expediente creado con éxito!"
-    children = [("personas", forms.PersonasInlineFormSet), ("lugares", forms.LugaresInlineFormSet)]
+    children = [("lugares", forms.LugaresInlineFormSet)]
+
+    def get_initial(self):
+        """
+        Returns the initial data to use for forms on this view.
+        """
+        initial = super().get_initial()
+        initial["id"] = models.Expediente.objects.aggregate(next_id=Max("id") + 1)["next_id"]
+        initial["orden_fecha"] = datetime.now().date()
+        initial["objetos"] = models.Objeto.objects.get(
+            nombre__icontains="mensura para constitución del estado parcelario"
+        )
+        initial["profesionales_firmantes"] = models.Profesional.objects.get(icopa="1.0253.9")
+        return initial
 
 
 class ExpedienteUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenContextMixin, generic.UpdateView):
     model = models.Expediente
     form_class = forms.ExpedienteForm
     success_message = "¡Expediente modificado con éxito!"
-    children = [("personas", forms.PersonasInlineFormSet), ("lugares", forms.LugaresInlineFormSet)]
+    children = [("lugares", forms.LugaresInlineFormSet)]
 
 
 class ExpedienteDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
@@ -239,14 +261,18 @@ class PersonaDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.D
     success_message = "Persona eliminada con éxito."
 
 
-class ExpedientePersonaDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
+class ExpedientePersonaDeleteView(SuccessURLMixin, SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
     model = models.ExpedientePersona
-    success_url = reverse_lazy("personas")
+    success_url = reverse_lazy("expedientes")
     success_message = "Persona desvinculada con éxito."
 
-    def get_success_url(self):
+    def get_persona_url(self):
         persona = self.object.persona
         return reverse_lazy("persona", kwargs={"pk": persona.id})
+
+    def get_expediente_url(self):
+        expediente = self.object.expediente
+        return reverse_lazy("expediente", kwargs={"pk": expediente.id})
 
 
 class LugarSearchMixin(object):
@@ -553,67 +579,3 @@ def catastro(request):
         form = forms.CLForm()  # An unbound form
 
     return render(request, "gea/search/catastro_form.html", {"form": form})
-
-
-# #####
-# ##### EXPERIMENTAL
-# #####
-# from calendar import HTMLCalendar
-# from datetime import date
-# from itertools import groupby
-#
-# from django.utils.html import conditional_escape as esc
-
-
-# class QuerysetCalendar(HTMLCalendar):
-#
-#     def __init__(self, queryset, datefield):
-#         self.datefield = datefield
-#         super(QuerysetCalendar, self).__init__()
-#         self.queryset_by_date = self.group_by_day(queryset)
-#
-#     def formatday(self, day, weekday):
-#         if day != 0:
-#             cssclass = self.cssclasses[weekday]
-#             if date.today() == date(self.year, self.month, day):
-#                 cssclass += ' today'
-#             if day in self.queryset_by_date:
-#                 cssclass += ' filled'
-#                 body = ['<ul>']
-#                 for item in self.queryset_by_date[day]:
-#                     body.append('<li>')
-#                     body.append('<a href="%s">' % item.get_absolute_url())
-#                     body.append(esc(item))
-#                     body.append('</a></li>')
-#                 body.append('</ul>')
-#                 return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
-#             return self.day_cell(cssclass, day)
-#         return self.day_cell('noday', ' ')
-#
-#     def formatmonth(self, year, month):
-#         self.year, self.month = year, month
-#         return super(QuerysetCalendar, self).formatmonth(year, month)
-#
-#     def group_by_day(self, queryset):
-#         field = lambda item: getattr(item, self.datefield).day
-#         return dict(
-#             [(day, list(items)) for day, items in groupby(queryset, field)]
-#         )
-#
-#     def day_cell(self, cssclass, body):
-#         return '<td class="%s">%s</td>' % (cssclass, body)
-
-
-# ######
-# from django.utils.safestring import mark_safe
-#
-#
-# @login_required
-# def calendar(request, year, month):
-#     e = models.Expediente.objects.order_by('fecha_medicion').filter(
-#         fecha_medicion__year=year, fecha_medicion__month=month
-#         )
-#     cal = QuerysetCalendar(e, 'fecha_medicion').formatmonth(int(year),
-#                                                             int(month))
-#     return render_to_response('gea/tools/calendar.html',
-#                               {'calendar': mark_safe(cal), })

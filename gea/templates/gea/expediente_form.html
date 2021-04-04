@@ -25,10 +25,17 @@ Expediente |
 {% endblock %}
 
 {% block extra_css %}
+<!-- DatePicker CSS -->
 {% include "helpers/datepicker.css.html" %}
 {% endblock extra_css %}
 
 {% block extra_js %}
+{{ form.media.js }}
+<!-- Select2 config -->
+<!-- Select2 Internationalization -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/i18n/es.js"></script>
+<!-- DatePicker JS -->
 {% include "helpers/datepicker.js.html" %}
+<!-- Add Form to Formset -->
 {% include "helpers/add_form_button.html" %}
 {% endblock extra_js %}

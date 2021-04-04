@@ -66,21 +66,22 @@ Expedientes
               <th>Lugar(es)</th>
               <th>Partida(s)</th>
               <th>Plano</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {% for e in object_list %}
-            <tr class="{% if not e.inscripcion_numero and not e.cancelado and not e.sin_incripcion %}table-warning{% endif %}">
+            {% for object in object_list %}
+            <tr class="{% if not object.inscripcion_numero and not object.cancelado and not object.sin_incripcion %}table-warning{% endif %}">
               <td>
                 <!-- EXPEDIENTE -->
-                <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1">{{ e.id }}</a>
+                <a href="{{ object.get_absolute_url }}" class="badge badge-dark p-1">{{ object.id }}</a>
               </td>
               <td>
                 <!-- PERSONAS -->
-                {% if e.cancelado %}
-                <span class="badge badge-danger">CANCELADO</span> {{ e.cancelado_por }}<br>
+                {% if object.cancelado %}
+                <span class="badge badge-danger">CANCELADO</span> {{ object.cancelado_por }}<br>
                 {% endif %}
-                {% for ep in e.expedientepersona_set.all %}
+                {% for ep in object.expedientepersona_set.all %}
                 <a href="{{ ep.persona.get_absolute_url }}">{{ ep.persona.nombre_completo }}</a>
                 {% if ep.comitente %}<span class="badge badge-warning">COMITENTE</span>{% endif %}
                 {% if ep.persona.telefono %}
@@ -95,7 +96,7 @@ Expedientes
               </td>
               <td>
                 <!-- LUGARES -->
-                {% for el in e.expedientelugar_set.all %}
+                {% for el in object.expedientelugar_set.all %}
                 <a href="/admin/gea/lugar/{{ el.lugar.id }}/">{{ el.lugar.nombre }}</a>
                 {% for cl in el.catastrolocal_set.all %}
                 <br><small>{{ cl }}</small>
@@ -104,27 +105,40 @@ Expedientes
               </td>
               <td>
                 <!-- PARTIDAS -->
-                {% for p in e.partidas_list %}
+                {% for p in object.partidas_list %}
                 <span class="badge badge-primary p-1">{{ p }}</span><br>
                 {% endfor %}
               </td>
               <td>
                 <!-- PLANO -->
-                {% if e.orden_numero %}
-                <span class="badge badge-danger">CoPA {{ e.orden_numero|default:"S/N" }}</span>
-                <small>{{ e.orden_fecha|default:"" }}</small><br>
+                {% if object.orden_numero %}
+                <span class="badge badge-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
+                <small>{{ object.orden_fecha|default:"" }}</small><br>
                 {% endif %}
                 <i class="far fa-fw fa-map"></i>
-                <a href="{{ e.plano_ruta|default:'#' }}" style="color: unset;">
-                  {% if e.duplicado %}Dup.{% endif %}
+                <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
+                  {% if object.duplicado %}Dup.{% endif %}
                   <span class="font-weight-bold">
-                    {{ e.inscripcion_numero|default:"PENDIENTE" }}
+                    {{ object.inscripcion_numero|default:"PENDIENTE" }}
                   </span>
                 </a>
-                <small>{{ e.inscripcion_fecha|default:"" }}</small>
-                {% if e.sin_inscripcion %}
+                <small>{{ object.inscripcion_fecha|default:"" }}</small>
+                {% if object.sin_inscripcion %}
                 <span class="badge badge-info">NO REQUIERE</span>
                 {% endif %}
+              </td>
+              <td>
+                <div class="btn-group">
+                  <!-- <a href="{{ object.get_absolute_url }}" class="btn btn-info btn-sm" title="Ver">
+                    <i class="fas fa-fw fa-info"></i>
+                  </a> -->
+                  <a href="{{ object.get_update_url }}" class="btn btn-primary btn-sm" title="Editar">
+                    <i class="fas fa-fw fa-pen"></i>
+                  </a>
+                  <a href="{{ object.get_delete_url }}" class="btn btn-danger btn-sm" title="Eliminar">
+                    <i class="fas fa-fw fa-trash"></i>
+                  </a>
+                </div>
               </td>
             </tr>
             {% empty %}

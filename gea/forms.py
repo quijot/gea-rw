@@ -1,8 +1,9 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Button, Div, Field, Fieldset, Layout, Row, Submit
+from crispy_forms.layout import HTML, Button, Div, Field, Fieldset, Layout, Row, Submit
 from django import forms
 from django.urls import reverse_lazy
+from django_select2 import forms as s2forms
 
 from . import gea_vars as gv
 from . import models
@@ -35,23 +36,33 @@ LugaresInlineFormSet = forms.inlineformset_factory(
 )
 
 
+class ObjetosWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = ["nombre__icontains"]
+
+
 class ExpedienteForm(forms.ModelForm):
+    profesionales_firmantes = forms.ModelMultipleChoiceField(
+        models.Profesional.objects.exclude(fallecido=True).exclude(jubilado=True).exclude(habilitado=False),
+        widget=forms.CheckboxSelectMultiple,
+    )
+
     class Meta:
         model = models.Expediente
         fields = [
             "id",
-            "inscripcion_numero",
-            "duplicado",
-            "sin_inscripcion",
-            "orden_numero",
-            "cancelado",
-            "cancelado_por",
+            "fecha_medicion",
             "objetos",
             "profesionales_firmantes",
-            "fecha_medicion",
-            "inscripcion_fecha",
+            "orden_numero",
             "orden_fecha",
+            "inscripcion_numero",
+            "inscripcion_fecha",
+            "duplicado",
+            "sin_inscripcion",
+            # "cancelado",
+            # "cancelado_por",
         ]
+        widgets = {"objetos": ObjetosWidget}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,46 +73,29 @@ class ExpedienteForm(forms.ModelForm):
                 Row(
                     Div("id", css_class="col-md-2"),
                     Div(Field("fecha_medicion", css_class="date", id="datepicker"), css_class="col-md-2"),
-                    Div("inscripcion_numero", css_class="col-md-2"),
-                    Div(Field("inscripcion_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
-                    Div("duplicado", css_class="col-md-2"),
-                    Div("sin_inscripcion", css_class="col-md-2"),
-                    Div("orden_numero", css_class="col-md-2"),
-                    Div(Field("orden_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
-                    Div("cancelado", css_class="col-md-2"),
-                    Div("cancelado_por", css_class="col-md-2"),
-                    Div("objetos", css_class="col-md-6"),
-                    Div("profesionales_firmantes", css_class="col-md-6"),
+                    Div("objetos", css_class="col-md-8 table-responsive"),
                 ),
             ),
-            Fieldset(
-                "Lugares",
-                Button(
-                    "add-lugar",
-                    "&plus; Lugar",
-                    css_class="btn-sm btn-primary",
-                    title="Agregar otro Lugar",
-                    onclick="add_form('lugares')",
-                ),
-                Formset("lugares"),
+            Row(
+                Div("profesionales_firmantes", css_class="col-md-4"),
+                Div("orden_numero", css_class="col-md-2"),
+                Div(Field("orden_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
             ),
-            Fieldset(
-                "Personas involucradas",
-                Button(
-                    "add-persona",
-                    "&plus; Persona",
-                    css_class="btn-sm btn-primary",
-                    title="Agregar otra Persona",
-                    onclick="add_form('personas')",
-                ),
-                Formset("personas"),
+            HTML("<span class='lead font-weight-bold mr-3'>Lugares</span>"),
+            Button(
+                "add-lugar",
+                "&plus; Agregar",
+                css_class="btn-sm btn-outline-primary",
+                title="Agregar otro Lugar",
+                onclick="add_form('lugares')",
             ),
+            Formset("lugares"),
             FormActions(
                 Button(
                     "cancel",
                     "Cancelar",
                     css_class="btn-secondary",
-                    onclick=f"window.location.href = '{reverse_lazy('personas')}';",
+                    onclick=f"window.location.href = '{reverse_lazy('expedientes')}';",
                 ),
                 Submit("save", "Guardar"),
                 style="text-align: right;",

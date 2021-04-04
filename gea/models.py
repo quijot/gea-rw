@@ -255,22 +255,17 @@ class Profesional(models.Model):
 
 class Expediente(TimeStampedModel):
     id = models.IntegerField("Expediente", primary_key=True)
-    fecha_medicion = models.DateField(blank=True, null=True)
-    inscripcion_numero = models.IntegerField("SCIT inscripción Nº", unique=True, blank=True, null=True)
-    inscripcion_fecha = models.DateField("Fecha inscripción", blank=True, null=True)
+    fecha_medicion = models.DateField("Medición", blank=True, null=True)
+    inscripcion_numero = models.IntegerField("SCIT Nº", unique=True, blank=True, null=True)
+    inscripcion_fecha = models.DateField("SCIT fecha", blank=True, null=True)
     duplicado = models.BooleanField(default=False)
-    orden_numero = models.IntegerField("CoPA Expendiente Nº", blank=True, null=True)
-    orden_fecha = models.DateField("Fecha contrato", blank=True, null=True)
-    sin_inscripcion = models.BooleanField(default=False)
+    # certificado_catastral = models.PositiveIntegerField("CC Nº", blank=True, null=True)
+    orden_numero = models.IntegerField("CoPA Nº", blank=True, null=True)
+    orden_fecha = models.DateField("CoPA fecha", blank=True, null=True)
+    sin_inscripcion = models.BooleanField("No se registra", default=False)
     cancelado = models.BooleanField(default=False)
     cancelado_por = models.CharField(max_length=100, blank=True)
     plano_ruta = models.URLField(max_length=100, blank=True)
-    # plano = FileBrowseField(
-    #     "Enlace al plano",
-    #     max_length=200,
-    #     directory="planos/",
-    #     extensions=[".pdf"],
-    # )
     objetos = models.ManyToManyField(Objeto)
     profesionales_firmantes = models.ManyToManyField(Profesional)
     personas = models.ManyToManyField("Persona", through="ExpedientePersona", blank=True)

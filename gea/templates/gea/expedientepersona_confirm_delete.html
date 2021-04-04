@@ -14,8 +14,8 @@ Persona |
     <form method="post">
       {% csrf_token %}
       <h2 class="pb-4">
-        ¿Confirma la desvinculación de <span class="text-danger">{{ object.persona }}</span> del Expediente
-        <strong>{{ object.expediente }}</strong>?
+        ¿Confirma la desvinculación de <a href="{{ object.persona.get_absolute_url }}" class="text-danger">{{ object.persona }}</a> del Expediente
+        <a href="{{ object.expediente.get_absolute_url }}"><span class="badge badge-dark">{{ object.expediente }}</span></a>?
       </h2>
       <div class="form-group text-right">
         <a href="{{ view.get_success_url }}" name="cancel" class="btn btn-dark" id="cancel-id-delete">Cancelar</a>
