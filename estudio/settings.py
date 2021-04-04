@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "dynamic_preferences",
     "django_extensions",
     "crispy_forms",
+    "django_select2",
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,25 @@ DYNAMIC_PREFERENCES = {
     # use the same list view at the same time, see https://code.djangoproject.com/ticket/11313
     "ADMIN_ENABLE_CHANGELIST_FORM": False,
 }
+
+# Select2 config
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        # "BACKEND": "django_redis.cache.RedisCache",
+        # "LOCATION": "redis://127.0.0.1:6379/1",
+        # "OPTIONS": {
+        #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        # },
+    },
+    "select2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+
+# Tell select2 which cache configuration to use:
+SELECT2_CACHE_BACKEND = "select2"

@@ -9,6 +9,7 @@ urlpatterns = [
     path("gea/", include("gea.urls")),
     path("", RedirectView.as_view(url="gea/", permanent=True)),
     path("nested_admin/", include("nested_admin.urls")),
+    path("select2/", include("django_select2.urls")),
 ]
 
 # Developing
