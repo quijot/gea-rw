@@ -188,7 +188,7 @@ class ExpedienteUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
 class ExpedienteDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
     model = models.Expediente
     success_url = reverse_lazy("expedientes")
-    success_message = "Expdiente eliminado con éxito."
+    success_message = "Expediente eliminado con éxito."
 
 
 class NombreSearchMixin(object):
