@@ -349,7 +349,16 @@ class ExpedienteLugar(models.Model):
         ordering = ["expediente", "lugar"]
 
     def __str__(self):
-        return self.lugar.nombre
+        return f"{self.expediente}-{self.lugar.nombre}"
+
+    def get_absolute_url(self):
+        return reverse("expedientelugar", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("expedientelugar_update", kwargs={"pk": self.pk})
+
+    def get_delete_url(self):
+        return reverse("expedientelugar_delete", kwargs={"pk": self.pk})
 
     @property
     def catastros_locales_list(self):

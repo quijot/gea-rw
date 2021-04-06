@@ -162,7 +162,7 @@ class ExpedienteCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     model = models.Expediente
     form_class = forms.ExpedienteForm
     success_message = "¡Expediente creado con éxito!"
-    children = [("lugares", forms.LugaresInlineFormSet)]
+    children = [("expedientelugar_set", forms.LugaresInlineFormSet)]
 
     def get_initial(self):
         """
@@ -182,7 +182,7 @@ class ExpedienteUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     model = models.Expediente
     form_class = forms.ExpedienteForm
     success_message = "¡Expediente modificado con éxito!"
-    children = [("lugares", forms.LugaresInlineFormSet)]
+    children = [("expedientelugar_set", forms.LugaresInlineFormSet)]
 
 
 class ExpedienteDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
@@ -579,3 +579,32 @@ def catastro(request):
         form = forms.CLForm()  # An unbound form
 
     return render(request, "gea/search/catastro_form.html", {"form": form})
+
+
+class ExpedienteLugarCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenContextMixin, generic.CreateView):
+    model = models.ExpedienteLugar
+    form_class = forms.ExpedienteLugarForm
+    success_message = "¡Lugar agregado con éxito!"
+    children = [("catastrolocal_set", forms.CatastrosLocalesInlineFormSet)]
+
+    def get_success_url(self):
+        return reverse_lazy("expediente", kwargs={"pk": self.object.expediente.pk})
+
+
+class ExpedienteLugarUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenContextMixin, generic.UpdateView):
+    model = models.ExpedienteLugar
+    form_class = forms.ExpedienteLugarForm
+    success_message = "¡Lugar modificado con éxito!"
+    children = [("catastrolocal_set", forms.CatastrosLocalesInlineFormSet)]
+
+    def get_success_url(self):
+        return reverse_lazy("expediente", kwargs={"pk": self.object.expediente.pk})
+
+
+class ExpedienteLugarDeleteView(SuccessURLMixin, SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
+    model = models.ExpedienteLugar
+    success_url = reverse_lazy("expedientes")
+    success_message = "Lugar desvinculado con éxito."
+
+    def get_success_url(self):
+        return reverse_lazy("expediente", kwargs={"pk": self.object.expediente.pk})

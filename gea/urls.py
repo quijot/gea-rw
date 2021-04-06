@@ -20,6 +20,10 @@ urlpatterns = [
         views.ExpedientePersonaDeleteView.as_view(),
         name="expedientepersona_delete",
     ),
+    # ExpedienteLugar
+    path("expedientelugar/crear/", views.ExpedienteLugarCreateView.as_view(), name="expedientelugar_create"),
+    path("expedientelugar/editar/<int:pk>/", views.ExpedienteLugarUpdateView.as_view(), name="expedientelugar_update"),
+    path("expedientelugar/borrar/<int:pk>/", views.ExpedienteLugarDeleteView.as_view(), name="expedientelugar_delete"),
     # Personas
     path("personas/", views.PersonaListView.as_view(), name="personas"),
     path("persona/<int:pk>/", views.PersonaDetailView.as_view(), name="persona"),

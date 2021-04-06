@@ -28,10 +28,7 @@ PersonasInlineFormSet = forms.inlineformset_factory(
 LugaresInlineFormSet = forms.inlineformset_factory(
     models.Expediente,
     models.ExpedienteLugar,
-    fields=(
-        "id",
-        "lugar",
-    ),
+    fields=("id", "lugar"),
     extra=1,
 )
 
@@ -92,9 +89,9 @@ class ExpedienteForm(forms.ModelForm):
                 "&plus; Agregar",
                 css_class="btn-sm btn-outline-primary",
                 title="Agregar otro Lugar",
-                onclick="add_form('lugares')",
+                onclick="add_form('expedientelugar_set')",
             ),
-            Formset("lugares"),
+            Div(Formset("expedientelugar_set"), css_class="table-responsive"),
             FormActions(
                 Button(
                     "cancel",
@@ -148,6 +145,47 @@ class PersonaForm(forms.ModelForm):
                     "Cancelar",
                     css_class="btn-secondary",
                     onclick=f"window.location.href = '{reverse_lazy('personas')}';",
+                ),
+                Submit("save", "Guardar"),
+                style="text-align: right;",
+            ),
+        )
+
+
+CatastrosLocalesInlineFormSet = forms.inlineformset_factory(
+    models.ExpedienteLugar,
+    models.CatastroLocal,
+    fields="__all__",
+    extra=1,
+)
+
+
+class ExpedienteLugarForm(forms.ModelForm):
+    class Meta:
+        model = models.ExpedienteLugar
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Div("expediente", css_class="d-none"),
+            Div("lugar", css_class="d-none"),
+            HTML("<span class='lead font-weight-bold mr-3'>Catastro Local</span>"),
+            Button(
+                "add-cl",
+                "&plus; Agregar",
+                css_class="btn-sm btn-outline-primary",
+                title="Agregar otro",
+                onclick="add_form('catastrolocal_set')",
+            ),
+            Div(Formset("catastrolocal_set"), css_class="table-responsive"),
+            FormActions(
+                Button(
+                    "cancel",
+                    "Cancelar",
+                    css_class="btn-secondary",
+                    onclick=f"window.location.href = '{reverse_lazy('expediente', kwargs={'pk': self.instance.expediente.pk})}';",
                 ),
                 Submit("save", "Guardar"),
                 style="text-align: right;",

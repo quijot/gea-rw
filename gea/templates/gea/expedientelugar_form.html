@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Lugar{% endblock %}
+
+{% block page-title %}
+<i class="fas fa-map-signs fa-fw"></i>
+Lugar |
+<span class="text-primary">
+  {% if object %}
+  Editando
+  <span class="badge badge-dark">{{ object.expediente }}</span><span class="badge badge-light font-weight-light">{{ object.lugar }}</span>
+  {% else %}
+  Agregando
+  {% endif %}
+</span>
+{% endblock %}
+
+{% block content %}
+<div class="card bg-light shadow mb-4">
+  <div class="card-body">
+    {% crispy form %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Add Form to Formset -->
+{% include "helpers/add_form_button.html" %}
+{% endblock extra_js %}
