@@ -66,6 +66,11 @@ class ExpedienteForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        url = (
+            reverse_lazy("expediente", kwargs={"pk": self.instance.pk})
+            if self.instance.pk
+            else reverse_lazy("expedientes")
+        )
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Fieldset(
@@ -95,7 +100,7 @@ class ExpedienteForm(forms.ModelForm):
                     "cancel",
                     "Cancelar",
                     css_class="btn-secondary",
-                    onclick=f"window.location.href = '{reverse_lazy('expedientes')}';",
+                    onclick=f"window.location.href = '{url}';",
                 ),
                 Submit("save", "Guardar"),
                 style="text-align: right;",
