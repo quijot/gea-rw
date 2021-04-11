@@ -321,7 +321,7 @@ class Expediente(TimeStampedModel):
     @property
     def partidas_list(self):
         """Devuelve la list() de las partidas intervinientes."""
-        return [ep.partida.partida_completa for ep in self.expedientepartida_set.all()]
+        return [ep.partida for ep in self.expedientepartida_set.all()]
 
     @property
     def partidas_str(self):
@@ -362,7 +362,7 @@ class ExpedienteLugar(models.Model):
 
     @property
     def catastros_locales_list(self):
-        return [cl.__str__() for cl in self.catastrolocal_set.all()]
+        return [cl for cl in self.catastrolocal_set.all()]
 
     @property
     def catastros_locales_str(self):
@@ -380,6 +380,7 @@ class ExpedientePartida(models.Model):
     # )
 
     class Meta:
+        unique_together = ["expediente", "partida"]
         verbose_name = "partida"
         verbose_name_plural = "partidas"
         ordering = ["expediente", "partida"]
@@ -414,35 +415,9 @@ class ExpedientePersona(models.Model):
 
 
 class Partida(models.Model):
-    sd = models.ForeignKey("Sd", db_column="sd", blank=True, null=True, default=None, on_delete=models.SET_NULL)
-    pii = models.IntegerField()
-    subpii = models.IntegerField(blank=True)
-    api = models.SmallIntegerField()
-
-    @property
-    def partida(self):
-        return f"{self.pii:06d}/{self.subpii:04d}"
-
-    @property
-    def partida_completa(self):
-        return f"{self.sd}-{self.partida}-{self.api}"
-
-    def calc_dvapi(self, sd, pii, subpii=0):
-        coef = "9731"
-        _coef = coef + coef + coef + coef
-        strpii = "%06d%06d%04d" % (sd, pii, subpii)
-        suma = 0
-        for i in range(0, len(strpii)):
-            m = str(int(strpii[i]) * int(_coef[i]))
-            suma += int(m[len(m) - 1])
-        return (10 - (suma % 10)) % 10
-
-    def get_dvapi(self):
-        if self.sd:
-            return self.calc_dvapi(int(self.sd.nomenclatura), self.pii, self.subpii)
-        return None
-
-    dvapi = property(get_dvapi)
+    sd = models.ForeignKey("SD", db_column="sd", blank=True, null=True, default=None, on_delete=models.SET_NULL)
+    pii = models.IntegerField("partida")
+    subpii = models.IntegerField("subpartida", default=0)
 
     class Meta:
         unique_together = ("pii", "subpii")
@@ -451,10 +426,43 @@ class Partida(models.Model):
     def __str__(self):
         return self.partida
 
-    def save(self, *args, **kwargs):
-        self.subpii = self.subpii or 0
-        self.api = self.get_dvapi()
-        super().save(*args, **kwargs)
+    # def get_absolute_url(self):
+    #     return reverse("partida", kwargs={"pk": self.pk})
+
+    # def get_update_url(self, eid=None):
+    #     if eid:
+    #         return reverse("partida_update", kwargs={"pk": self.pk, "eid": eid})
+    #     else:
+    #         return reverse("partida_update", kwargs={"pk": self.pk})
+
+    # def get_delete_url(self):
+    #     return reverse("partida_delete", kwargs={"pk": self.pk})
+
+    @property
+    def partida(self):
+        return f"{self.pii:06d}/{self.subpii:04d}"
+
+    @property
+    def partida_completa(self):
+        return f"{self.sd}-{self.partida}-{self.api}" if self.sd else self.partida
+
+    def get_dvapi(self):
+        coef = "9731"
+        _coef = coef + coef + coef + coef
+        sd = int(self.sd.completo) if self.sd else 0
+        strpii = "%06d%06d%04d" % (sd, self.pii, self.subpii or 0)
+        suma = 0
+        for i in range(0, len(strpii)):
+            m = str(int(strpii[i]) * int(_coef[i]))
+            suma += int(m[len(m) - 1])
+        return (10 - (suma % 10)) % 10
+
+    # def get_dvapi(self):
+    #     if self.sd:
+    #         return self.calc_dvapi(int(self.sd.nomenclatura), self.pii, self.subpii)
+    #     return None
+
+    api = property(get_dvapi)
 
 
 class PartidaDominio(models.Model):

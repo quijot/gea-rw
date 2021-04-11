@@ -63,6 +63,15 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
       </div>
       <div class="card-body font-weight-light">
         <div class="mb-4">
+          {% for o in object.objetos.all %}
+          {{ o }}
+          {% empty %}
+          <a href="{{ object.get_update_url }}" title="Agregar Objeto">
+            <span class="badge badge-light d-print-none">
+              <i class="fas fa-fw fa-plus text-success"></i> Agregar Objeto</span></a>
+          {% endfor %}
+        </div>
+        <div class="mb-4">
           {% for el in object.expedientelugar_set.all %}
           {{ el.lugar }}
           <a href="{{ el.get_update_url }}" title="Editar Catastro Local">
@@ -84,28 +93,19 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           {% endfor %}
         </div>
         <div class="mb-4">
-          {% for o in object.objetos.all %}
-          {{ o }}<br>
-          {% empty %}
-          <!-- <a href="{{ object.get_update_url }}" title="Agregar Objeto">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-plus text-success"></i> Agregar Objeto</span></a> -->
-          {% endfor %}
-        </div>
-        <div class="mb-4">
           {% for p in object.partidas_list %}
-          <span class="badge badge-primary p-1">{{ p }}</span>
-          <!-- <a href="#" title="Editar Partida asociada">
+          <span class="badge badge-primary p-1">{{ p.partida_completa }}</span>
+          <!-- <a href="{% url 'partida_update' p.id object.id %}" title="Editar Partida asociada">
             <span class="badge badge-light d-print-none">
               <i class="fas fa-fw fa-pen"></i></span></a>
           <a href="#" title="Eliminar Partida asociada">
             <span class="badge badge-light d-print-none">
               <i class="fas fa-fw fa-times text-danger"></i></span></a> -->
-          {% empty %}
-          <!-- <a href="#" title="Agregar Partida asociada">
+          {% if not forloop.last %}<br>{% endif %}
+          {% endfor %}
+          <!-- <a href="{% url 'partida_create' object.id %}" title="Agregar Partida asociada">
             <span class="badge badge-light d-print-none">
               <i class="fas fa-fw fa-plus text-success"></i> Agregar PII</span></a> -->
-          {% endfor %}
         </div>
         <div class="mb-4">
           <span class="badge badge-danger p-1 mr-1">CoPA {{ object.orden_numero|default:"S/N" }}</span>

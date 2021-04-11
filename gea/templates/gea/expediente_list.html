@@ -106,7 +106,7 @@ Expedientes
               <td>
                 <!-- PARTIDAS -->
                 {% for p in object.partidas_list %}
-                <span class="badge badge-primary p-1">{{ p }}</span><br>
+                <span class="badge badge-primary p-1">{{ p.partida_completa }}</span><br>
                 {% endfor %}
               </td>
               <td>
