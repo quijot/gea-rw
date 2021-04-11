@@ -17,6 +17,15 @@ Lugar |
         ¿Confirma la eliminación de <a href="{{ object.lugar.get_absolute_url }}" class="text-danger">{{ object.lugar }}</a> del Expediente
         <a href="{{ object.expediente.get_absolute_url }}"><span class="badge badge-dark">{{ object.expediente }}</span></a>?
       </h2>
+      {% if object.catastros_locales_list %}
+      <h3 class="lead text-danger font-weight-bold">¡ATENCIÓN!</h3>
+      <p>Se encuentran vinculados a este Lugar:</p>
+      <ul>
+        {% for cl in object.catastros_locales_list %}
+        <li><strong>{{ cl }}</strong></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
       <div class="form-group text-right">
         <a href="{{ view.get_success_url }}" name="cancel" class="btn btn-dark" id="cancel-id-delete">Cancelar</a>
         <input type="submit" name="delete" value="Eliminar" class="btn btn-danger" id="submit-id-delete">
