@@ -18,41 +18,11 @@ Personas
 <div class="card bg-light shadow mb-2">
   <div class="card-body">
     <div class="row">
-      <!-- Filter -->
       <div class="col-sm-12 col-md-5">
-        <div class="d-flex justify-content-start align-items-start">
-          <label>
-            Mostrar
-            <div class="btn-group">
-              <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                {{ request.GET.paginate_by|default:10 }}
-              </button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 10 %}">10</a>
-                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 25 %}">25</a>
-                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 50 %}">50</a>
-                <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 100 %}">100</a>
-              </div>
-            </div>
-            registros
-          </label>
-        </div>
+        {% include "helpers/paginate_by_control.html" %}
       </div>
       <div class="col-sm-12 col-md-7">
-        <div class="d-flex justify-content-end align-items-start">
-          <form class="form-inline" action="." method="get">
-            <div class="input-group mb-2">
-              <input type="text" id="search" name="search" placeholder="Persona/Expediente/Lugar/PII/Plano"
-                class="form-control" value="{{ request.GET.search }}" size="35">
-              <div class="input-group-append">
-                <button type="button" class="btn btn-sm btn-primary">
-                  <i class="fas fa-fw fa-search"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        {% include "helpers/search_control.html" %}
       </div>
     </div>
     <div class="row">
@@ -127,22 +97,7 @@ Personas
       </div>
     </div>
     <div class="row">
-      <!-- Filter -->
-      <div class="col-sm-12 col-md-4">
-        <div class="d-flex justify-content-start align-items-start">
-          <label>
-            Mostrando
-            {{ page_obj.start_index }} a {{ page_obj.end_index }} de
-            <strong>{{ paginator.count }}</strong>
-            registro{% if paginator.count > 1 %}s{% endif %}
-          </label>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-8">
-        <div class="d-flex justify-content-end align-items-start">
-          {% include "includes/_pagination.html" %}
-        </div>
-      </div>
+      {% include "helpers/pagination_bar.html" %}
     </div>
   </div>
 </div>

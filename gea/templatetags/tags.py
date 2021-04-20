@@ -7,4 +7,6 @@ register = template.Library()
 def url_replace(request, field, value):
     dict_ = request.GET.copy()
     dict_[field] = value
+    if field == "paginate_by" and "page" in dict_:
+        del dict_["page"]
     return dict_.urlencode()

@@ -1,0 +1,17 @@
+<!-- Pagination -->
+<div class="col-sm-12 col-md-4">
+  <div class="d-flex justify-content-start align-items-start">
+    <span>
+      Mostrando
+      {{ page_obj.start_index|safe }} a {{ page_obj.end_index|safe }}
+      de
+      <strong>{{ paginator.count|safe }}</strong>
+      registro{% if paginator.count > 1 %}s{% endif %}
+    </span>
+  </div>
+</div>
+<div class="col-sm-12 col-md-8">
+  <div class="d-flex justify-content-end align-items-start">
+    {% include "helpers/_page_select_control.html" %}
+  </div>
+</div>

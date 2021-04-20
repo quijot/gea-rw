@@ -1,0 +1,24 @@
+{% load tags %}
+<!-- Paginate by -->
+<div class="d-flex justify-content-start align-items-start">
+  <label class="font-weight-normal">
+    Mostrar
+    <div class="btn-group">
+      <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+        {% if request.GET.paginate_by %}
+        {{ request.GET.paginate_by }}
+        {% else %}
+        {{ request.user.preferences.pagination__paginate_by|default:10 }}
+        {% endif %}
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 10 %}">10</a>
+        <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 25 %}">25</a>
+        <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 50 %}">50</a>
+        <a class="dropdown-item" href="?{% url_replace request 'paginate_by' 100 %}">100</a>
+      </div>
+    </div>
+    registros
+  </label>
+</div>

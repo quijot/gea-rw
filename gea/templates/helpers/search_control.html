@@ -1,0 +1,15 @@
+{% load tags %}
+<!-- Search -->
+<div class="d-flex justify-content-end align-items-start">
+  <form class="form-inline" action="." method="get">
+    <div class="input-group mb-2">
+      <input type="text" id="search" name="search" placeholder="" class="form-control" value="{{ request.GET.search }}"
+        size="35">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-sm btn-primary">
+          <i class="fas fa-fw fa-search"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
