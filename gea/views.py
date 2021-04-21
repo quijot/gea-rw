@@ -73,26 +73,24 @@ class SuccessDeleteMessageMixin:
         return super().delete(request, *args, **kwargs)
 
 
-class SearchMixin(object):
+class SearchMixin:
     def get_queryset(self):
-        qset = super().get_queryset()
-        q = self.request.GET.get("search")
-        if q:
-            q = q.split(" ")
-            for w in q:
-                qset = qset.filter(
-                    Q(id__contains=w)
-                    | Q(orden_numero__contains=w)
-                    | Q(inscripcion_numero__contains=w)
-                    | Q(expedientepartida__partida__pii__contains=w)
-                    | Q(expedientepersona__persona__nombres__icontains=w)
-                    | Q(expedientepersona__persona__apellidos__icontains=w)
-                    | Q(expedientelugar__lugar__nombre__icontains=w)
-                ).distinct()
-        return qset
+        qs = super().get_queryset()
+        q = self.request.GET.get("search", "").split()
+        for word in q:
+            qs = qs.filter(
+                Q(id__contains=word)
+                | Q(orden_numero__contains=word)
+                | Q(inscripcion_numero__contains=word)
+                | Q(expedientepartida__partida__pii__contains=word)
+                | Q(expedientepersona__persona__nombres__icontains=word)
+                | Q(expedientepersona__persona__apellidos__icontains=word)
+                | Q(expedientelugar__lugar__nombre__icontains=word)
+            ).distinct()
+        return qs
 
 
-class ExpedienteAbiertoMixin(object):
+class ExpedienteAbiertoMixin:
     def get_queryset(self):
         qset = super().get_queryset()
         qset = qset.filter(Q(inscripcion_numero__isnull=True) & Q(cancelado=False) & Q(sin_inscripcion=False))[:10]
@@ -126,7 +124,7 @@ class About(generic.TemplateView):
     template_name = "about.html"
 
 
-class ExpedienteMixin(object):
+class ExpedienteMixin:
     def get_queryset(self):
         qset = super().get_queryset()
         q = self.request.GET.get("pendiente")
@@ -212,25 +210,24 @@ class NombreSearchMixin(object):
 
 class PersonaFilterMixin(object):
     def get_queryset(self):
-        q = super().get_queryset()
-        query = self.request.GET.get("search")
-        query = "" if not query else query.split()
-        for w in query:
-            q = q.filter(
-                Q(nombres__icontains=w)
-                | Q(apellidos__icontains=w)
-                | Q(nombres_alternativos__icontains=w)
-                | Q(apellidos_alternativos__icontains=w)
-                | Q(email__icontains=w)
-                | Q(documento__contains=w)
-                | Q(cuit_cuil__contains=w)
-                | Q(telefono__contains=w)
-                | Q(expedientepersona__expediente__id__contains=w)
-                | Q(expedientepersona__expediente__inscripcion_numero__contains=w)
-                | Q(expedientepersona__expediente__expedientepartida__partida__pii__contains=w)
-                | Q(expedientepersona__expediente__expedientelugar__lugar__nombre__icontains=w)
+        qs = super().get_queryset()
+        q = self.request.GET.get("search", "").split()
+        for word in q:
+            qs = qs.filter(
+                Q(nombres__icontains=word)
+                | Q(apellidos__icontains=word)
+                | Q(nombres_alternativos__icontains=word)
+                | Q(apellidos_alternativos__icontains=word)
+                | Q(email__icontains=word)
+                | Q(documento__contains=word)
+                | Q(cuit_cuil__contains=word)
+                | Q(telefono__contains=word)
+                | Q(expedientepersona__expediente__id__contains=word)
+                | Q(expedientepersona__expediente__inscripcion_numero__contains=word)
+                | Q(expedientepersona__expediente__expedientepartida__partida__pii__contains=word)
+                | Q(expedientepersona__expediente__expedientelugar__lugar__nombre__icontains=word)
             ).distinct()
-        return q
+        return qs
 
 
 # class PersonaListView(LoginRequiredMixin, NombreSearchMixin, CounterMixin, generic.ListView):
