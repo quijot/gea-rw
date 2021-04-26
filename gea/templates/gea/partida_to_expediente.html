@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Partidas{% endblock %}
+
+{% block page-title %}
+<i class="fas fa-file-alt fa-fw"></i>
+Partida |
+<span class="text-primary">
+  {% if partida %}
+  Editando
+  <span class="badge badge-dark">{{ expediente }}</span><span class="badge badge-light font-weight-light">{{ partida }}</span>
+  {% else %}
+  Agregando a <span class="badge badge-dark">{{ expediente }}</span>
+  {% endif %}
+</span>
+{% endblock %}
+
+{% block content %}
+<div class="card bg-light shadow mb-4">
+  <div class="card-body">
+    {% crispy form %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Add Form to Formset -->
+{% include "helpers/add_form_button.html" %}
+{% endblock extra_js %}

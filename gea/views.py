@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Max, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -602,6 +602,89 @@ class ExpedienteLugarDeleteView(SuccessURLMixin, SuccessDeleteMessageMixin, Logi
     model = models.ExpedienteLugar
     success_url = reverse_lazy("expedientes")
     success_message = "Lugar desvinculado con éxito."
+
+    def get_success_url(self):
+        return reverse_lazy("expediente", kwargs={"pk": self.object.expediente.pk})
+
+
+def add_partida_to_expediente(request, expediente_id):
+    template_name = "gea/partida_to_expediente.html"
+    form = forms.PartidaToExpediente(request.POST or None)
+    # formset = forms.CatastroFormSet(request.POST or None)
+    formset = forms.CatastroInlineFormSet(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            sd = form.cleaned_data["dpdssd"]
+            pii = form.cleaned_data["partida"]
+            subpii = form.cleaned_data["subpartida"]
+            expediente = models.Expediente.objects.get(pk=expediente_id)
+            partida, was_created = models.Partida.objects.get_or_create(sd=sd, pii=pii, subpii=subpii)
+            try:
+                expediente.expedientepartida_set.create(partida=partida)
+                messages.success(request, "Partida guardada con éxito.")
+                ep = models.ExpedientePartida.objects.get(expediente=expediente, partida=partida)
+                formset.instance = ep
+                if formset.is_valid():
+                    formset.save()
+            except IntegrityError:
+                messages.error(request, "Partida previamente asociada. No se pudo volver a crear.")
+
+            return redirect(reverse_lazy("expediente", kwargs={"pk": expediente_id}))
+
+    return render(
+        request,
+        template_name,
+        {
+            "form": form,
+            "expediente": expediente_id,
+            "catastro_set": formset,
+        },
+    )
+
+
+def update_partida_to_expediente(request, expediente_id, partida_id):
+    template_name = "gea/partida_to_expediente.html"
+    partida = models.Partida.objects.get(pk=partida_id)
+    initial = {"dpdssd": partida.sd, "partida": partida.pii, "subpartida": partida.subpii}
+    form = forms.PartidaToExpediente(request.POST or initial)
+    ep = models.ExpedientePartida.objects.get(expediente=expediente_id, partida=partida_id)
+    formset = forms.CatastroInlineFormSet(request.POST or None, instance=ep)
+
+    if request.method == "POST":
+        if form.is_valid():
+            sd = form.cleaned_data["dpdssd"]
+            pii = form.cleaned_data["partida"]
+            subpii = form.cleaned_data["subpartida"]
+            expediente = models.Expediente.objects.get(pk=expediente_id)
+            partida, was_created = models.Partida.objects.get_or_create(sd=sd, pii=pii, subpii=subpii)
+            try:
+                expediente.expedientepartida_set.get(partida=partida)
+                # messages.error(request, "Partida previamente asociada.")
+            except models.ExpedientePartida.DoesNotExist:
+                expediente.expedientepartida_set.create(partida=partida)
+                messages.success(request, "Partida modificada con éxito.")
+            if formset.is_valid():
+                formset.save()
+
+            return redirect(reverse_lazy("expediente", kwargs={"pk": expediente_id}))
+
+    return render(
+        request,
+        template_name,
+        {
+            "form": form,
+            "expediente": expediente_id,
+            "partida": partida_id,
+            "catastro_set": formset,
+        },
+    )
+
+
+class ExpedientePartidaDeleteView(SuccessURLMixin, SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
+    model = models.ExpedientePartida
+    success_url = reverse_lazy("expedientes")
+    success_message = "Partida desvinculada con éxito."
 
     def get_success_url(self):
         return reverse_lazy("expediente", kwargs={"pk": self.object.expediente.pk})

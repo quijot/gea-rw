@@ -93,19 +93,25 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           {% endfor %}
         </div>
         <div class="mb-4">
-          {% for p in object.partidas_list %}
-          <span class="badge badge-primary p-1">{{ p.partida_completa }}</span>
-          <!-- <a href="{ url 'partida_update' p.id object.id %}" title="Editar Partida asociada">
+          {% for ep in object.expedientepartida_set.all %}
+          <span class="badge badge-primary p-1">{{ ep.partida.partida_completa }}</span>
+          <a href="{{ ep.get_update_url }}" title="Editar Partida asociada">
             <span class="badge badge-light d-print-none">
               <i class="fas fa-fw fa-pen"></i></span></a>
-          <a href="#" title="Eliminar Partida asociada">
+          <a href="{{ ep.get_delete_url }}" title="Eliminar Partida asociada">
             <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-times text-danger"></i></span></a> -->
-          {% if not forloop.last %}<br>{% endif %}
+              <i class="fas fa-fw fa-times text-danger"></i></span></a>
+          <small>
+            {% for c in ep.catastro_set.all %}
+            <br>{{ c }}
+            {% endfor %}
+          </small>
+          <!-- {% if not forloop.last %}<br>{% endif %} -->
+          <br>
           {% endfor %}
-          <!-- <a href="{ url 'partida_create' object.id %}" title="Agregar Partida asociada">
+          <a href="{% url 'partida_to_expediente' object.id %}" title="Asociar nueva Partida de Impuesto Inmobiliario">
             <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-plus text-success"></i> Agregar PII</span></a> -->
+              <i class="fas fa-fw fa-plus text-success"></i> Agregar Partida</span></a>
         </div>
         <div class="mb-4">
           <span class="badge badge-danger p-1 mr-1">CoPA {{ object.orden_numero|default:"S/N" }}</span>

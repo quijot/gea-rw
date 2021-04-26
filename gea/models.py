@@ -388,6 +388,14 @@ class ExpedientePartida(models.Model):
     def __str__(self):
         return f"{self.partida}"
 
+    def get_update_url(self):
+        return reverse(
+            "partida_to_expediente", kwargs={"expediente_id": self.expediente.pk, "partida_id": self.partida.pk}
+        )
+
+    def get_delete_url(self):
+        return reverse("expedientepartida_delete", kwargs={"pk": self.pk})
+
 
 class ExpedientePersona(models.Model):
     expediente = models.ForeignKey(Expediente, on_delete=models.CASCADE)

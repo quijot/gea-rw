@@ -193,6 +193,54 @@ class ExpedienteLugarForm(forms.ModelForm):
         )
 
 
+class CatastroForm(forms.ModelForm):
+    class Meta:
+        model = models.Catastro
+        fields = ["zona", "seccion", "poligono", "manzana", "parcela", "subparcela"]
+
+
+CatastroFormSet = forms.formset_factory(CatastroForm, extra=1)
+CatastroInlineFormSet = forms.inlineformset_factory(
+    models.ExpedientePartida, models.Catastro, fields="__all__", extra=1
+)
+
+
+class PartidaToExpediente(forms.Form):
+    dpdssd = forms.ModelChoiceField(models.Sd.objects.all(), label="DP DS SD", help_text="Dpto. Distrito Subdistrito")
+    partida = forms.IntegerField(max_value=999999, min_value=0)
+    subpartida = forms.IntegerField(max_value=9999, min_value=0)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Div("dpdssd", css_class="col-lg-2"),
+                Div("partida", css_class="col-lg-2"),
+                Div("subpartida", css_class="col-lg-1"),
+            ),
+            HTML("<span class='lead font-weight-normal mr-3'>Catastro</span>"),
+            Button(
+                "add-catastro",
+                "&plus; Agregar",
+                css_class="btn-sm btn-outline-primary",
+                title="Agregar otro",
+                onclick="add_form('catastro_set')",
+            ),
+            Div(Formset("catastro_set"), css_class="table-responsive"),
+            FormActions(
+                Button(
+                    "cancel",
+                    "Cancelar",
+                    css_class="btn-secondary",
+                    onclick="window.history.back();",
+                ),
+                Submit("save", "Guardar"),
+                style="text-align: right;",
+            ),
+        )
+
+
 class CaratulaForm(forms.Form):
     expte_nro = forms.IntegerField(
         label="Expediente", widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}), min_value=1

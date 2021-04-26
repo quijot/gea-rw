@@ -16,12 +16,17 @@ Expediente |
       <h2 class="pb-4">
         ¿Confirma la eliminación de <span class="badge badge-danger">{{ object }}</span>?
       </h2>
-      {% if object.personas.count %}
+      {% if object.personas.count or object.expedientepartida_set.count %}
       <h3 class="lead text-danger font-weight-bold">¡ATENCIÓN!</h3>
       <p>Se DESVINCULARÁN del Expediente:</p>
       <ul>
         {% for ep in object.personas.all %}
         <li><strong>{{ ep }}</strong></li>
+        {% endfor %}
+      </ul>
+      <ul>
+        {% for p in object.partidas_list %}
+        <li><span class="badge badge-primary">{{ p.partida_completa }}</span></li>
         {% endfor %}
       </ul>
       {% endif %}
