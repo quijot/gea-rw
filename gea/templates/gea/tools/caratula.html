@@ -96,7 +96,7 @@
         {% else %}
             {% for ep in e.expedientepartida_set.all %}
                 {% with ep.partida as p %}
-        <a href="/admin/gea/partida/{{ p.id }}/"><strong>{{ p.pii|stringformat:"06d" }}/{{ p.subpii|stringformat:"04d" }}</strong></a>
+        <a href="/admin/gea/partida/{{ p.id }}/"><strong>{{ p.para_caratula }}</strong></a>
                 {% endwith %}
             {% endfor %}
         {% endif %}

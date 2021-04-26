@@ -446,6 +446,10 @@ class Partida(models.Model):
     def partida_completa(self):
         return f"{self.sd}-{self.partida}-{self.api}" if self.sd else self.partida
 
+    @property
+    def para_caratula(self):
+        return f"{self.sd.dp}-{self.sd.ds}-{self.sd.sd:02d} {self.partida}" if self.sd else self.partida
+
     def get_dvapi(self):
         coef = "9731"
         _coef = coef + coef + coef + coef
