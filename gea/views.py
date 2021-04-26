@@ -37,10 +37,7 @@ class ChildrenContextMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         for child, fs in self.children:
-            if self.request.POST:
-                context[child] = fs(self.request.POST, instance=self.object)
-            else:
-                context[child] = fs(instance=self.object)
+            context[child] = fs(self.request.POST or None, instance=self.object)
         return context
 
     def form_valid(self, form):
