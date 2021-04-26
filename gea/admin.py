@@ -305,16 +305,38 @@ class AntecedenteInline(NestedTabularInline):
 class ExpedienteAdmin(NestedModelAdmin):
     filter_horizontal = ["objetos", "profesionales_firmantes"]
     fieldsets = [
-        (None, {"fields": [("id", "created", "modified")], "classes": ("extrapretty"),},),
-        ("Estado", {"fields": [("fecha_medicion",)], "classes": ("extrapretty")},),
         (
-            "SCIT - Servicio de Catastro e Información Territorial",
+            None,
             {
-                "fields": [("inscripcion_numero", "inscripcion_fecha", "duplicado", "sin_inscripcion",)],
+                "fields": [("id", "created", "modified")],
                 "classes": ("extrapretty"),
             },
         ),
-        ("Orden de Trabajo CoPA", {"fields": [("orden_numero", "orden_fecha")], "classes": ("extrapretty"),},),
+        (
+            "Estado",
+            {"fields": [("fecha_medicion",)], "classes": ("extrapretty")},
+        ),
+        (
+            "SCIT - Servicio de Catastro e Información Territorial",
+            {
+                "fields": [
+                    (
+                        "inscripcion_numero",
+                        "inscripcion_fecha",
+                        "duplicado",
+                        "sin_inscripcion",
+                    )
+                ],
+                "classes": ("extrapretty"),
+            },
+        ),
+        (
+            "Orden de Trabajo CoPA",
+            {
+                "fields": [("orden_numero", "orden_fecha")],
+                "classes": ("extrapretty"),
+            },
+        ),
         (
             "Otros",
             {
@@ -323,7 +345,13 @@ class ExpedienteAdmin(NestedModelAdmin):
             },
         ),
         ("Objetos", {"fields": [("objetos")], "classes": ("extrapretty")}),
-        ("Profesionales Firmantes", {"fields": [("profesionales_firmantes")], "classes": ("extrapretty"),},),
+        (
+            "Profesionales Firmantes",
+            {
+                "fields": [("profesionales_firmantes")],
+                "classes": ("extrapretty"),
+            },
+        ),
     ]
     readonly_fields = ("created", "modified", "ver_plano")
     inlines = [
@@ -597,8 +625,19 @@ class PartidaAdmin(admin.ModelAdmin):
 @admin.register(Persona)
 class PersonaAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {"fields": [("apellidos", "nombres"), ("apellidos_alternativos", "nombres_alternativos"),]},),
-        ("Contacto", {"fields": [("domicilio", "lugar"), ("telefono", "email")]},),
+        (
+            None,
+            {
+                "fields": [
+                    ("apellidos", "nombres"),
+                    ("apellidos_alternativos", "nombres_alternativos"),
+                ]
+            },
+        ),
+        (
+            "Contacto",
+            {"fields": [("domicilio", "lugar"), ("telefono", "email")]},
+        ),
         ("DNI/CUIT/CUIL/CDI", {"fields": [("tipo_doc", "documento"), "cuit_cuil"]}),
     ]
     inlines = [ExpedientePersonaInline]
@@ -674,7 +713,16 @@ class PersonaAdmin(admin.ModelAdmin):
 class ProfesionalAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": [("apellidos", "nombres"), ("titulo", "icopa")]}),
-        ("Contacto", {"fields": [("domicilio", "lugar"), ("telefono",), ("email", "web"),]},),
+        (
+            "Contacto",
+            {
+                "fields": [
+                    ("domicilio", "lugar"),
+                    ("telefono",),
+                    ("email", "web"),
+                ]
+            },
+        ),
         ("DNI/CUIT/CUIL/CDI", {"fields": ["cuit_cuil"]}),
         ("Otra info", {"fields": [("habilitado", "jubilado", "fallecido")]}),
     ]
@@ -715,7 +763,16 @@ class PagoInline(NestedStackedInline):
 @admin.register(Presupuesto)
 class PresupuestoAdmin(NestedModelAdmin):
     fieldsets = [
-        (None, {"fields": [("expediente"), ("monto", "fecha", "porcentaje_cancelado"), ("observacion"),]},),
+        (
+            None,
+            {
+                "fields": [
+                    ("expediente"),
+                    ("monto", "fecha", "porcentaje_cancelado"),
+                    ("observacion"),
+                ]
+            },
+        ),
     ]
     inlines = [PagoInline]
     list_display = (
