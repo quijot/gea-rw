@@ -94,9 +94,8 @@ class ExpedienteAbiertoMixin:
         return qset
 
 
-class Home(LoginRequiredMixin, CounterMixin, SearchMixin, ExpedienteAbiertoMixin, generic.ListView):
+class Home(LoginRequiredMixin, generic.TemplateView):
     template_name = "index.html"
-    model = models.Expediente
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
