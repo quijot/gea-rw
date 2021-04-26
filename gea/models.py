@@ -420,7 +420,7 @@ class Partida(models.Model):
     subpii = models.IntegerField("subpartida", default=0)
 
     class Meta:
-        unique_together = ("pii", "subpii")
+        unique_together = ("sd", "pii", "subpii")
         ordering = ["pii", "subpii"]
 
     def __str__(self):
