@@ -194,15 +194,17 @@ class ExpedienteLugarForm(forms.ModelForm):
 
 
 class CaratulaForm(forms.Form):
-    expte_nro = forms.IntegerField(label="Expediente", widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}))
+    expte_nro = forms.IntegerField(
+        label="Expediente", widget=forms.NumberInput(attrs={"placeholder": "ej: 4300"}), min_value=1
+    )
     inmueble = forms.CharField(
         widget=forms.Textarea(attrs={"placeholder": "ej: Una fracción de terreno..."}), required=False
     )
-    matricula = forms.IntegerField(required=False)
-    tomo = forms.IntegerField(required=False)
+    matricula = forms.IntegerField(required=False, min_value=1)
+    tomo = forms.IntegerField(required=False, min_value=1)
     par = forms.BooleanField(required=False)
-    folio = forms.IntegerField(required=False)
-    numero = forms.IntegerField(label="Número", required=False)
+    folio = forms.IntegerField(required=False, min_value=1)
+    numero = forms.IntegerField(label="Número", required=False, min_value=1)
     fecha = forms.DateField(required=False)
     obs = forms.CharField(
         label="Observaciones generales",
