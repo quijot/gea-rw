@@ -1,37 +1,13 @@
 import unicodedata
 
 from django.contrib import admin
-from django.db import models
-from django.db.models import Q
+from django.db.models import CharField, Count, IntegerField, Q
 from django.forms import NumberInput, TextInput
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
-from .models import (
-    Antecedente,
-    Catastro,
-    CatastroLocal,
-    Circunscripcion,
-    Comprobante,
-    Dp,
-    Ds,
-    Expediente,
-    ExpedienteLugar,
-    ExpedientePartida,
-    ExpedientePersona,
-    Lugar,
-    Objeto,
-    Pago,
-    Partida,
-    PartidaDominio,
-    Persona,
-    Presupuesto,
-    Profesional,
-    Sd,
-    Titulo,
-    Zona,
-)
+from . import models
 
 # -----------------------------------------------------------------------------
 # Custom Filters
@@ -53,7 +29,7 @@ class CantidadDeExpedientesPorPersonaFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        qs = queryset.annotate(entry_count=models.Count("expedientepersona"))
+        qs = queryset.annotate(entry_count=Count("expedientepersona"))
         if self.value() == "0":
             qs = qs.filter(entry_count=0)
             return qs
@@ -86,7 +62,7 @@ class CantidadDeExpedientesPorObjetoFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        qs = queryset.annotate(entry_count=models.Count("expediente"))
+        qs = queryset.annotate(entry_count=Count("expediente"))
         if self.value() == "0":
             qs = qs.filter(entry_count=0)
             return qs
@@ -253,39 +229,39 @@ class TieneSetFilter(admin.SimpleListFilter):
 # Expedientes
 class CatastroLocalInline(NestedTabularInline):
     classes = ("extrapretty", "collapse")
-    model = CatastroLocal
+    model = models.CatastroLocal
     extra = 0
     formfield_overrides = {
-        models.CharField: {"widget": TextInput(attrs={"size": "10"})},
+        CharField: {"widget": TextInput(attrs={"size": "10"})},
     }
 
 
 class ExpedienteLugarInline(NestedStackedInline):
     classes = ["extrapretty"]
-    model = ExpedienteLugar
+    model = models.ExpedienteLugar
     extra = 0
     inlines = [CatastroLocalInline]
 
 
 class ExpedientePersonaInline(NestedStackedInline):
     classes = ["extrapretty"]
-    model = ExpedientePersona
+    model = models.ExpedientePersona
     extra = 0
     ordering = ["-comitente"]
 
 
 class CatastroInline(NestedTabularInline):
     classes = ("extrapretty", "collapse")
-    model = Catastro
+    model = models.Catastro
     extra = 0
     formfield_overrides = {
-        models.CharField: {"widget": TextInput(attrs={"size": "10"})},
+        CharField: {"widget": TextInput(attrs={"size": "10"})},
     }
 
 
 class ExpedientePartidaInline(NestedStackedInline):
     classes = ["extrapretty"]
-    model = ExpedientePartida
+    model = models.ExpedientePartida
     extra = 0
     inlines = [CatastroInline]
     exclude = ["set_ruta"]
@@ -293,7 +269,7 @@ class ExpedientePartidaInline(NestedStackedInline):
 
 class AntecedenteInline(NestedTabularInline):
     classes = ["extrapretty"]
-    model = Antecedente
+    model = models.Antecedente
     fk_name = "expediente"
     extra = 0
     ordering = ["-expediente_modificado", "-inscripcion_numero"]
@@ -304,7 +280,7 @@ class AntecedenteInline(NestedTabularInline):
 # -----------------------------------------------------------------------------
 
 
-@admin.register(Expediente)
+@admin.register(models.Expediente)
 class ExpedienteAdmin(NestedModelAdmin):
     filter_horizontal = ["objetos", "profesionales_firmantes"]
     fieldsets = [
@@ -445,7 +421,7 @@ def strip_accents(s):
     )
 
 
-@admin.register(Antecedente)
+@admin.register(models.Antecedente)
 class AntecedenteAdmin(admin.ModelAdmin):
     list_filter = [
         "duplicado",
@@ -487,7 +463,7 @@ class AntecedenteAdmin(admin.ModelAdmin):
     ver_plano.admin_order_field = "inscripcion_plano"
 
 
-@admin.register(Catastro)
+@admin.register(models.Catastro)
 class CatastroAdmin(admin.ModelAdmin):
     list_filter = ["zona", "seccion", "poligono", "manzana", "parcela", "subparcela"]
     search_fields = ["zona", "seccion", "poligono", "manzana", "parcela", "subparcela"]
@@ -497,7 +473,7 @@ class CatastroAdmin(admin.ModelAdmin):
     ordering = ["zona", "seccion", "poligono", "manzana", "parcela", "subparcela"]
 
 
-@admin.register(CatastroLocal)
+@admin.register(models.CatastroLocal)
 class CatastroLocalAdmin(NestedModelAdmin):
     list_display = (
         "seccion",
@@ -524,7 +500,7 @@ class CatastroLocalAdmin(NestedModelAdmin):
     ordering = ["seccion", "manzana", "parcela", "subparcela", "suburbana", "poligono"]
 
 
-@admin.register(Circunscripcion)
+@admin.register(models.Circunscripcion)
 class CircunscripcionAdmin(admin.ModelAdmin):
     list_display = ("id", "nombre", "orden")
     # list_editable = ('nombre', 'orden')
@@ -533,7 +509,7 @@ class CircunscripcionAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-@admin.register(Dp)
+@admin.register(models.Dp)
 class DpAdmin(admin.ModelAdmin):
     list_display = (
         "dp",
@@ -556,7 +532,7 @@ class DpAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-@admin.register(Ds)
+@admin.register(models.Ds)
 class DsAdmin(admin.ModelAdmin):
     list_display = ("id", "dp", "distrito", "nombre")
     list_filter = ["dp", "dp__nombre"]
@@ -565,7 +541,7 @@ class DsAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-@admin.register(Sd)
+@admin.register(models.Sd)
 class SdAdmin(admin.ModelAdmin):
     list_display = ("id", "dp", "ds", "subdistrito", "dp_nombre", "ds_nombre", "nombre")
     list_filter = ["ds__dp", "ds__dp__nombre", "ds", "ds__nombre"]
@@ -574,7 +550,7 @@ class SdAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-@admin.register(ExpedientePartida)
+@admin.register(models.ExpedientePartida)
 class ExpedientePartidaAdmin(admin.ModelAdmin):
     inlines = [CatastroInline]
     list_display = ("expediente", "partida", "set_ruta")
@@ -589,7 +565,7 @@ class ExpedientePartidaAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
-@admin.register(Lugar)
+@admin.register(models.Lugar)
 class LugarAdmin(admin.ModelAdmin):
     list_display = ("nombre", "observacion")
     list_editable = ("observacion",)
@@ -598,7 +574,7 @@ class LugarAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-@admin.register(Objeto)
+@admin.register(models.Objeto)
 class ObjetoAdmin(admin.ModelAdmin):
     list_filter = [CantidadDeExpedientesPorObjetoFilter]
     search_fields = ["nombre"]
@@ -607,11 +583,11 @@ class ObjetoAdmin(admin.ModelAdmin):
 
 
 class PartidaDominioInline(admin.TabularInline):
-    model = PartidaDominio
+    model = models.PartidaDominio
     extra = 0
 
 
-@admin.register(Partida)
+@admin.register(models.Partida)
 class PartidaAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": [("sd", "pii", "subpii", "api")]}),
@@ -626,11 +602,11 @@ class PartidaAdmin(admin.ModelAdmin):
     list_per_page = 20
     list_select_related = True
     formfield_overrides = {
-        models.IntegerField: {"widget": NumberInput(attrs={"size": "10"})},
+        IntegerField: {"widget": NumberInput(attrs={"size": "10"})},
     }
 
 
-@admin.register(Persona)
+@admin.register(models.Persona)
 class PersonaAdmin(admin.ModelAdmin):
     fieldsets = [
         (
@@ -674,7 +650,7 @@ class PersonaAdmin(admin.ModelAdmin):
     actions_on_bottom = True
     save_on_top = True
     formfield_overrides = {
-        models.IntegerField: {"widget": NumberInput(attrs={"size": "10"})},
+        IntegerField: {"widget": NumberInput(attrs={"size": "10"})},
     }
 
     def show_telefono(self, obj):
@@ -722,7 +698,7 @@ class PersonaAdmin(admin.ModelAdmin):
     show_cuit.admin_order_field = "cuit_cuil"
 
 
-@admin.register(Profesional)
+@admin.register(models.Profesional)
 class ProfesionalAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": [("apellidos", "nombres"), ("titulo", "icopa")]}),
@@ -765,15 +741,15 @@ class ProfesionalAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
-admin.site.register(Comprobante)
+admin.site.register(models.Comprobante)
 
 
 class PagoInline(NestedStackedInline):
-    model = Pago
+    model = models.Pago
     extra = 0
 
 
-@admin.register(Presupuesto)
+@admin.register(models.Presupuesto)
 class PresupuestoAdmin(NestedModelAdmin):
     fieldsets = [
         (
@@ -803,10 +779,10 @@ class PresupuestoAdmin(NestedModelAdmin):
     save_on_top = True
 
 
-admin.site.register(Titulo)
+admin.site.register(models.Titulo)
 
 
-@admin.register(Zona)
+@admin.register(models.Zona)
 class ZonaAdmin(admin.ModelAdmin):
     list_display = ("id", "descripcion")
     search_fields = ["id", "descripcion"]
