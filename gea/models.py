@@ -461,8 +461,8 @@ class Partida(models.Model):
     def get_dvapi(self):
         coef = "9731"
         _coef = coef + coef + coef + coef
-        sd = int(self.sd.completo) if self.sd else 0
-        strpii = "%06d%06d%04d" % (sd, self.pii, self.subpii or 0)
+        sd = int(self.sd.completo or 0)
+        strpii = f"{sd:06d}{self.pii or 0:06d}{self.subpii or 0:04d}"
         suma = 0
         for i in range(0, len(strpii)):
             m = str(int(strpii[i]) * int(_coef[i]))
