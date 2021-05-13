@@ -3,10 +3,9 @@ import unicodedata
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
-from django.forms import TextInput
+from django.forms import NumberInput, TextInput
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
 from .models import (
@@ -170,9 +169,13 @@ class TieneOrdenPendienteFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == "si":
-            return queryset.filter(orden_numero__isnull=False, inscripcion_numero__isnull=True)
+            return queryset.filter(
+                orden_numero__isnull=False, inscripcion_numero__isnull=True
+            )
         if self.value() == "no":
-            return queryset.exclude(orden_numero__isnull=False, inscripcion_numero__isnull=True)
+            return queryset.exclude(
+                orden_numero__isnull=False, inscripcion_numero__isnull=True
+            )
 
 
 class TieneAntecedentesFilter(admin.SimpleListFilter):
@@ -437,7 +440,9 @@ class ExpedienteAdmin(NestedModelAdmin):
 
 
 def strip_accents(s):
-    return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
+    return "".join(
+        c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn"
+    )
 
 
 @admin.register(Antecedente)
@@ -620,6 +625,9 @@ class PartidaAdmin(admin.ModelAdmin):
     save_on_top = True
     list_per_page = 20
     list_select_related = True
+    formfield_overrides = {
+        models.IntegerField: {"widget": NumberInput(attrs={"size": "10"})},
+    }
 
 
 @admin.register(Persona)
@@ -665,6 +673,9 @@ class PersonaAdmin(admin.ModelAdmin):
     ]
     actions_on_bottom = True
     save_on_top = True
+    formfield_overrides = {
+        models.IntegerField: {"widget": NumberInput(attrs={"size": "10"})},
+    }
 
     def show_telefono(self, obj):
         if obj.telefono == "" or obj.telefono is None:
@@ -698,7 +709,9 @@ class PersonaAdmin(admin.ModelAdmin):
                 .replace(" SH", "")
                 .replace(" HNOS", "")
             )
-            return mark_safe(f'<a href="http://www.cuitonline.com/search.php?q={nombre}">buscar</a>')
+            return mark_safe(
+                f'<a href="http://www.cuitonline.com/search.php?q={nombre}">buscar</a>'
+            )
         else:
             cuit_cuil = obj.cuit_cuil.replace("-", "")
             return mark_safe(
