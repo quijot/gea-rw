@@ -241,6 +241,7 @@ class ExpedienteLugarInline(NestedStackedInline):
     model = models.ExpedienteLugar
     extra = 0
     inlines = [CatastroLocalInline]
+    autocomplete_fields = ["lugar"]
 
 
 class ExpedientePersonaInline(NestedStackedInline):
@@ -248,6 +249,7 @@ class ExpedientePersonaInline(NestedStackedInline):
     model = models.ExpedientePersona
     extra = 0
     ordering = ["-comitente"]
+    autocomplete_fields = ["persona"]
 
 
 class CatastroInline(NestedTabularInline):
@@ -265,6 +267,7 @@ class ExpedientePartidaInline(NestedStackedInline):
     extra = 0
     inlines = [CatastroInline]
     exclude = ["set_ruta"]
+    autocomplete_fields = ["partida"]
 
 
 class AntecedenteInline(NestedTabularInline):
@@ -273,6 +276,7 @@ class AntecedenteInline(NestedTabularInline):
     fk_name = "expediente"
     extra = 0
     ordering = ["-expediente_modificado", "-inscripcion_numero"]
+    autocomplete_fields = ["expediente_modificado"]
 
 
 # -----------------------------------------------------------------------------
@@ -282,7 +286,7 @@ class AntecedenteInline(NestedTabularInline):
 
 @admin.register(models.Expediente)
 class ExpedienteAdmin(NestedModelAdmin):
-    filter_horizontal = ["objetos", "profesionales_firmantes"]
+    autocomplete_fields = ["objetos", "profesionales_firmantes"]
     fieldsets = [
         (
             None,

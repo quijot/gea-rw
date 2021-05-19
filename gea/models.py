@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django_extensions.db.models import TimeStampedModel
 
@@ -138,7 +139,7 @@ class Ds(models.Model):
     ds = models.IntegerField()
     nombre = models.CharField(max_length=50, verbose_name="nombre distrito")
 
-    @property
+    @cached_property
     def distrito(self):
         return f"{self.ds:02d}"
 
@@ -156,19 +157,19 @@ class Sd(models.Model):
     sd = models.IntegerField()
     nombre = models.CharField("nombre subdistrito", max_length=50, blank=True)
 
-    @property
+    @cached_property
     def subdistrito(self):
         return f"{self.sd:02d}"
 
-    @property
+    @cached_property
     def dp(self):
         return self.ds.dp
 
-    @property
+    @cached_property
     def dp_nombre(self):
         return self.ds.dp.nombre
 
-    @property
+    @cached_property
     def ds_nombre(self):
         return self.ds.nombre
 
@@ -176,7 +177,7 @@ class Sd(models.Model):
         verbose_name_plural = "subdistritos"
         ordering = ["ds", "sd"]
 
-    @property
+    @cached_property
     def completo(self):
         return f"{self.ds.dp}{self.ds}{self.sd:02d}"
 
@@ -243,7 +244,7 @@ class Profesional(models.Model):
     def __str__(self):
         return self.nombre_completo
 
-    @property
+    @cached_property
     def nombre_completo(self):
         return f"{self.apellidos} {self.nombres}".strip()
 
@@ -292,7 +293,7 @@ class Expediente(TimeStampedModel):
     def inscripto(self):
         return self.inscripcion_numero != 0
 
-    @property
+    @cached_property
     def propietarios_count(self):
         """Devuelve la cantidad de personas que figuran como propietarias."""
         return self.expedientepersona_set.filter(propietario=True).count()
@@ -301,7 +302,7 @@ class Expediente(TimeStampedModel):
         """Devuelve las personas que figuran como propietarias."""
         return self.expedientepersona_set.filter(propietario=True)
 
-    @property
+    @cached_property
     def firmantes_count(self):
         """
         Devuelve la cantidad de personas que deben firmar la Solicitud de Inscripción.
@@ -312,7 +313,7 @@ class Expediente(TimeStampedModel):
         """Devuelve las personas que deben firmar la Solicitud de Inscripción."""
         return self.expedientepersona_set.filter(Q(propietario=True) | Q(sucesor=True)).exclude(sucesion=True)
 
-    @property
+    @cached_property
     def comitentes_count(self):
         """Devuelve la cantidad de personas que figuran como comitentes."""
         return self.expedientepersona_set.filter(comitente=True).count()
@@ -321,22 +322,22 @@ class Expediente(TimeStampedModel):
         """Devuelve las personas que figuran como comitentes."""
         return self.expedientepersona_set.filter(comitente=True)
 
-    @property
+    @cached_property
     def partidas_list(self):
         """Devuelve la list() de las partidas intervinientes."""
         return [ep.partida for ep in self.expedientepartida_set.all()]
 
-    @property
+    @cached_property
     def partidas_str(self):
         """Devuelve la lista de partidas intervinientes separadas por ", "."""
         return ", ".join(self.partidas_list)
 
-    @property
+    @cached_property
     def lugares_list(self):
         """Devuelve la list() de los lugares."""
         return [el.lugar.nombre for el in self.expedientelugar_set.all()]
 
-    @property
+    @cached_property
     def lugares_str(self):
         """Devuelve la lista de lugares separados por ", "."""
         return ", ".join(self.lugares_list)
@@ -363,11 +364,11 @@ class ExpedienteLugar(models.Model):
     def get_delete_url(self):
         return reverse("expedientelugar_delete", kwargs={"pk": self.pk})
 
-    @property
+    @cached_property
     def catastros_locales_list(self):
         return [cl for cl in self.catastrolocal_set.all()]
 
-    @property
+    @cached_property
     def catastros_locales_str(self):
         return ", ".join(self.catastros_locales_list)
 
@@ -455,15 +456,15 @@ class Partida(models.Model):
     # def get_delete_url(self):
     #     return reverse("partida_delete", kwargs={"pk": self.pk})
 
-    @property
+    @cached_property
     def partida(self):
         return f"{self.pii:06d}/{self.subpii:04d}"
 
-    @property
+    @cached_property
     def partida_completa(self):
         return f"{self.sd}-{self.partida}-{self.api}" if self.sd else self.partida
 
-    @property
+    @cached_property
     def para_caratula(self):
         return f"{self.sd.dp}-{self.sd.ds}-{self.sd.sd:02d} {self.partida}" if self.sd else self.partida
 
@@ -537,30 +538,30 @@ class Persona(models.Model):
         self.nombres_alternativos = capitalize_phrase(self.nombres_alternativos)
         super().save(*args, **kwargs)
 
-    @property
+    @cached_property
     def nombre_completo(self):
         return f"{self.apellidos} {self.nombres or ''}".strip()
 
-    @property
+    @cached_property
     def nombre_alternativo(self):
         if self.apellidos_alternativos or self.nombres_alternativos:
             return (
                 f"{self.apellidos_alternativos or self.apellidos} {self.nombres_alternativos or self.nombres}".strip()
             )
 
-    @property
+    @cached_property
     def domicilio_completo(self):
         localidad = f", {self.lugar}" if self.lugar and self.domicilio else self.lugar or ""
         return f"{self.domicilio}{localidad}".strip() if self.domicilio else localidad
 
-    @property
+    @cached_property
     def documento_completo(self):
         if self.documento:
             return f"{self.get_tipo_doc_display()} {self.documento}".strip()
         else:
             return ""
 
-    @property
+    @cached_property
     def cuit_link(self):
         url = '<a href="http://www.cuitonline.com/search.php?q=%s">%s</a>'
         if self.cuit_cuil:
