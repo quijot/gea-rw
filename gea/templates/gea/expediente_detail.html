@@ -54,11 +54,11 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
             </a>
           </span>&nbsp;
           <small>{{ object.inscripcion_fecha|default:"" }}</small>
-          <!-- <a href="#" title="Editar inscripción SCIT">
+          <a href="{{ object.get_update_plano_url }}" title="Editar inscripción SCIT">
             <span class="badge badge-light d-print-none" style="background-color:transparent">
-              <i class="fas fa-fw fa-pen"></i> SCIT
+              <i class="fas fa-fw fa-pen"></i> Plano
             </span>
-          </a> -->
+          </a>
         </div>
       </div>
       <div class="card-body font-weight-light">
@@ -97,7 +97,7 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           <span class="badge badge-primary p-1">{{ ep.partida.partida_completa }}</span>
           <a href="{{ ep.get_update_url }}" title="Editar Partida asociada">
             <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-pen"></i></span></a>
+              <i class="fas fa-fw fa-pen"></i> SCIT</span></a>
           <a href="{{ ep.get_delete_url }}" title="Eliminar Partida asociada">
             <span class="badge badge-light d-print-none">
               <i class="fas fa-fw fa-times text-danger"></i></span></a>
@@ -132,11 +132,11 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
   <div class="col-md-8">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <!-- <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
-          <a href="#" class="btn btn-outline-success" title="Agregar">
-            <i class="fas fa-fw fa-sm fa-plus"></i>
+        <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+          <a href="{% url 'persona_to_expediente' object.id %}" class="btn btn-outline-primary" title="Agregar/Editar">
+            <i class="fas fa-fw fa-sm fa-pen"></i>
           </a>
-        </div> -->
+        </div>
         <i class="fas fa-fw fa-sm fa-users"></i>
         <span class="lead font-weight-bold">Personas ({{ object.expedientepersona_set.count }})</span>
       </div>
@@ -161,9 +161,6 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
               </div>
               <div class="col-lg-6">
                 <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
-                  <!-- <a href="#" class="btn btn-outline-primary">
-                    <i class="fas fa-fw fa-sm fa-pen" title="Editar"></i>
-                  </a> -->
                   <a href="{{ ep.get_delete_url }}" class="btn btn-outline-danger">
                     <i class="fas fa-fw fa-sm fa-trash" title="Desvincular"></i>
                   </a>

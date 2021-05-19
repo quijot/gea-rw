@@ -5,14 +5,9 @@
 
 {% block page-title %}
 <i class="fas fa-folder-open fa-fw"></i>
-Expediente |
+Expediente <span class="badge badge-dark">{{ object }}</span> |
 <span class="text-primary">
-  {% if object %}
-  Editando
-  <span class="badge badge-dark">{{ object }}</span>
-  {% else %}
-  Agregando
-  {% endif %}
+  Actualizando Nº de Plano
 </span>
 {% endblock %}
 
@@ -30,15 +25,6 @@ Expediente |
 {% endblock extra_css %}
 
 {% block extra_js %}
-{{ form.media.js }}
-<!-- Select2 config -->
-<script>
-  $.fn.select2.defaults.set( "theme", "bootstrap4" );
-</script>
-<!-- Select2 Internationalization -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/i18n/es.js"></script>
 <!-- DatePicker JS -->
 {% include "helpers/datepicker.js.html" %}
-<!-- Add Form to Formset -->
-{% include "helpers/add_form_button.html" %}
 {% endblock extra_js %}

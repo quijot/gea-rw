@@ -10,26 +10,43 @@ from . import models
 from .formset_layout import Formset
 
 
-class PersonasForm(forms.ModelForm):
+class PersonaWidget(s2forms.ModelSelect2Widget):
+    search_fields = ["apellidos__icontains", "nombres__icontains"]
+
+
+class EPForm(forms.ModelForm):
     class Meta:
         model = models.ExpedientePersona
         fields = "__all__"
+        widgets = {"persona": PersonaWidget}
 
 
 PersonasInlineFormSet = forms.inlineformset_factory(
     models.Expediente,
     models.ExpedientePersona,
-    form=PersonasForm,
     fields="__all__",
     extra=1,
+    # form=EPForm,
 )
+
+
+class LugarWidget(s2forms.ModelSelect2Widget):
+    search_fields = ["nombre__icontains"]
+
+
+class ELForm(forms.ModelForm):
+    class Meta:
+        model = models.ExpedienteLugar
+        fields = "__all__"
+        widgets = {"lugar": LugarWidget}
 
 
 LugaresInlineFormSet = forms.inlineformset_factory(
     models.Expediente,
     models.ExpedienteLugar,
-    fields=("id", "lugar"),
+    fields="__all__",
     extra=1,
+    # form=ELForm,
 )
 
 
@@ -92,6 +109,39 @@ class ExpedienteForm(forms.ModelForm):
                 onclick="add_form('expedientelugar_set')",
             ),
             Div(Formset("expedientelugar_set"), css_class="table-responsive"),
+            FormActions(
+                Button(
+                    "cancel",
+                    "Cancelar",
+                    css_class="btn-secondary",
+                    onclick=f"window.location.href = '{url}';",
+                ),
+                Submit("save", "Guardar"),
+                style="text-align: right;",
+            ),
+        )
+
+
+class PlanoForm(forms.ModelForm):
+    class Meta:
+        model = models.Expediente
+        fields = ["inscripcion_numero", "inscripcion_fecha", "duplicado", "sin_inscripcion"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        url = (
+            reverse_lazy("expediente", kwargs={"pk": self.instance.pk})
+            if self.instance.pk
+            else reverse_lazy("expedientes")
+        )
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Div("inscripcion_numero", css_class="col-md-2"),
+                Div(Field("inscripcion_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
+            ),
+            Row(Div("duplicado", css_class="col-md-3")),
+            Row(Div("sin_inscripcion", css_class="col-md-3")),
             FormActions(
                 Button(
                     "cancel",
@@ -193,13 +243,39 @@ class ExpedienteLugarForm(forms.ModelForm):
         )
 
 
+class PersonaToExpediente(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML("<span class='lead font-weight-normal mr-3'>Personas</span>"),
+            Button(
+                "add-persona",
+                "&plus; Agregar",
+                css_class="btn-sm btn-outline-primary",
+                title="Agregar otro",
+                onclick="add_form('expedientepersona_set')",
+            ),
+            Div(Formset("expedientepersona_set"), css_class="table-responsive"),
+            FormActions(
+                Button(
+                    "cancel",
+                    "Cancelar",
+                    css_class="btn-secondary",
+                    onclick="window.history.back();",
+                ),
+                Submit("save", "Guardar"),
+                style="text-align: right;",
+            ),
+        )
+
+
 class CatastroForm(forms.ModelForm):
     class Meta:
         model = models.Catastro
         fields = ["zona", "seccion", "poligono", "manzana", "parcela", "subparcela"]
 
 
-CatastroFormSet = forms.formset_factory(CatastroForm, extra=1)
 CatastroInlineFormSet = forms.inlineformset_factory(
     models.ExpedientePartida, models.Catastro, fields="__all__", extra=1
 )
@@ -310,7 +386,7 @@ class CaratulaForm(forms.Form):
                     "cancel",
                     "Cancelar",
                     css_class="btn-secondary",
-                    onclick=f"window.location.href = '{reverse_lazy('expedientes')}';",
+                    onclick="window.history.back();",
                 ),
                 Submit("save", "Generar"),
                 style="text-align: right;",
@@ -354,7 +430,7 @@ class SolicitudForm(forms.Form):
                     "cancel",
                     "Cancelar",
                     css_class="btn-dark",
-                    onclick=f"window.location.href = '{reverse_lazy('home')}';",
+                    onclick="window.history.back();",
                 ),
                 Submit("save", "Generar Nota"),
                 css_class="float-right",
@@ -380,20 +456,12 @@ class VisacionForm(forms.Form):
                     "cancel",
                     "Cancelar",
                     css_class="btn-dark",
-                    onclick=f"window.location.href = '{reverse_lazy('home')}';",
+                    onclick="window.history.back();",
                 ),
                 Submit("save", "Generar Nota"),
                 css_class="float-right",
             ),
         )
-
-
-#
-# Buscar Plano por Nro
-#
-class PlanoForm(forms.Form):
-    circ = forms.IntegerField(label="Circunscripción", min_value=1, max_value=2, initial=1)
-    n_insc = forms.IntegerField(label="Plano Nº", min_value=1, max_value=999999)
 
 
 #

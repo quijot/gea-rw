@@ -58,9 +58,7 @@ class ChildrenContextMixin:
 
 class SuccessURLMixin:
     def get_success_url(self):
-        if self.request.META.get("HTTP_REFERER"):
-            return self.request.META.get("HTTP_REFERER")
-        return self.success_url
+        return self.request.META.get("HTTP_REFERER") or self.success_url
 
 
 class SuccessDeleteMessageMixin:
@@ -179,6 +177,13 @@ class ExpedienteUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     children = [("expedientelugar_set", forms.LugaresInlineFormSet)]
 
 
+class PlanoUpdateView(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
+    template_name = "gea/plano_form.html"
+    model = models.Expediente
+    form_class = forms.PlanoForm
+    success_message = "¡Plano actualizado con éxito!"
+
+
 class ExpedienteDeleteView(SuccessDeleteMessageMixin, LoginRequiredMixin, generic.DeleteView):
     model = models.Expediente
     success_url = reverse_lazy("expedientes")
@@ -258,6 +263,9 @@ class ExpedientePersonaDeleteView(SuccessURLMixin, SuccessDeleteMessageMixin, Lo
     model = models.ExpedientePersona
     success_url = reverse_lazy("expedientes")
     success_message = "Persona desvinculada con éxito."
+
+    def get_success_url(self):
+        return self.get_expediente_url()
 
     def get_persona_url(self):
         persona = self.object.persona
@@ -468,21 +476,6 @@ def visacion(request, expediente=None):
 
 
 @login_required
-def plano(request):
-    ftp_url = "ftp://zentyal.estudio.lan"
-    if request.method == "POST":  # If the form has been submitted...
-        form = forms.PlanoForm(request.POST)  # A form bound to the POST data
-        if form.is_valid():  # All validation rules pass
-            circ = form.cleaned_data["circ"]
-            nro = form.cleaned_data["n_insc"]
-            return redirect("%s/planos/%s/%06d.pdf" % (ftp_url, circ, nro))
-    else:
-        form = forms.PlanoForm()  # An unbound form
-
-    return render(request, "gea/search/plano_form.html", {"form": form})
-
-
-@login_required
 def set(request):
     ftp_url = "ftp://zentyal.estudio.lan"
     if request.method == "POST":  # If the form has been submitted...
@@ -603,10 +596,10 @@ class ExpedienteLugarDeleteView(SuccessURLMixin, SuccessDeleteMessageMixin, Logi
         return reverse_lazy("expediente", kwargs={"pk": self.object.expediente.pk})
 
 
+@login_required
 def add_partida_to_expediente(request, expediente_id):
     template_name = "gea/partida_to_expediente.html"
     form = forms.PartidaToExpediente(request.POST or None)
-    # formset = forms.CatastroFormSet(request.POST or None)
     formset = forms.CatastroInlineFormSet(request.POST or None)
 
     if request.method == "POST":
@@ -617,12 +610,11 @@ def add_partida_to_expediente(request, expediente_id):
             expediente = models.Expediente.objects.get(pk=expediente_id)
             partida, was_created = models.Partida.objects.get_or_create(sd=sd, pii=pii, subpii=subpii)
             try:
-                expediente.expedientepartida_set.create(partida=partida)
-                messages.success(request, "Partida guardada con éxito.")
-                ep = models.ExpedientePartida.objects.get(expediente=expediente, partida=partida)
+                ep = expediente.expedientepartida_set.create(partida=partida)
                 formset.instance = ep
                 if formset.is_valid():
                     formset.save()
+                messages.success(request, "Partida guardada con éxito.")
             except IntegrityError:
                 messages.error(request, "Partida previamente asociada. No se pudo volver a crear.")
 
@@ -639,11 +631,15 @@ def add_partida_to_expediente(request, expediente_id):
     )
 
 
+@login_required
 def update_partida_to_expediente(request, expediente_id, partida_id):
     template_name = "gea/partida_to_expediente.html"
+    form = forms.PartidaToExpediente(request.POST or None)
+    for f in form.fields:
+        form.fields[f].disabled = True
     partida = models.Partida.objects.get(pk=partida_id)
     initial = {"dpdssd": partida.sd, "partida": partida.pii, "subpartida": partida.subpii}
-    form = forms.PartidaToExpediente(request.POST or initial)
+    form.initial = initial
     ep = models.ExpedientePartida.objects.get(expediente=expediente_id, partida=partida_id)
     formset = forms.CatastroInlineFormSet(request.POST or None, instance=ep)
 
@@ -656,12 +652,11 @@ def update_partida_to_expediente(request, expediente_id, partida_id):
             partida, was_created = models.Partida.objects.get_or_create(sd=sd, pii=pii, subpii=subpii)
             try:
                 expediente.expedientepartida_set.get(partida=partida)
-                # messages.error(request, "Partida previamente asociada.")
             except models.ExpedientePartida.DoesNotExist:
                 expediente.expedientepartida_set.create(partida=partida)
-                messages.success(request, "Partida modificada con éxito.")
             if formset.is_valid():
                 formset.save()
+            messages.success(request, "Partida modificada con éxito.")
 
             return redirect(reverse_lazy("expediente", kwargs={"pk": expediente_id}))
 
@@ -684,3 +679,32 @@ class ExpedientePartidaDeleteView(SuccessURLMixin, SuccessDeleteMessageMixin, Lo
 
     def get_success_url(self):
         return reverse_lazy("expediente", kwargs={"pk": self.object.expediente.pk})
+
+
+@login_required
+def personas_to_expediente(request, expediente_id):
+    template_name = "gea/persona_to_expediente.html"
+    form = forms.PersonaToExpediente(request.POST or None)
+    expediente = models.Expediente.objects.get(id=expediente_id)
+    formset = forms.PersonasInlineFormSet(request.POST or None, instance=expediente)
+
+    if request.method == "POST" and form.is_valid():
+        try:
+            formset.instance = expediente
+            if formset.is_valid():
+                formset.save()
+            messages.success(request, "Personas guardadas con éxito.")
+        except IntegrityError:
+            messages.error(request, "Personas previamente asociada. No se pudo volver a crear.")
+
+        return redirect(reverse_lazy("expediente", kwargs={"pk": expediente_id}))
+
+    return render(
+        request,
+        template_name,
+        {
+            "form": form,
+            "expediente": expediente,
+            "expedientepersona_set": formset,
+        },
+    )

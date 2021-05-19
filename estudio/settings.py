@@ -110,6 +110,9 @@ USE_TZ = True
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES["default"].update(db_from_env)
 
+# AutoField configuration
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"  # "django.db.models.BigAutoField" is the default since Django 3.2
+
 # Extra places for collectstatic to find static files.
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
@@ -164,7 +167,7 @@ CACHES = {
     },
     "select2": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get('REDIS_URL', "redis://127.0.0.1:6379/2"),
+        "LOCATION": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/2"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },

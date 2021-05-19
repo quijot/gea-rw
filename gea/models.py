@@ -286,6 +286,9 @@ class Expediente(TimeStampedModel):
     def get_delete_url(self):
         return reverse("expediente_delete", kwargs={"pk": self.pk})
 
+    def get_update_plano_url(self):
+        return reverse("expediente_update_plano", kwargs={"pk": self.pk})
+
     def inscripto(self):
         return self.inscripcion_numero != 0
 
@@ -406,17 +409,23 @@ class ExpedientePersona(models.Model):
     sucesor = models.BooleanField(default=False)
     partes_indivisas_propias = models.IntegerField(blank=True)
     partes_indivisas_total = models.IntegerField(blank=True)
-    sucesion = models.BooleanField(default=False)
+    sucesion = models.BooleanField("sucesión", default=False)
     nuda_propiedad = models.BooleanField(default=False)
     usufructo = models.BooleanField(default=False)
 
     class Meta:
+        unique_together = ["expediente", "persona"]
         verbose_name = "persona involucrada"
         verbose_name_plural = "personas involucradas"
         ordering = ["expediente", "persona__apellidos", "persona__nombres"]
 
     def __str__(self):
         return f"{self.expediente.id} - {self.persona.apellidos} {self.persona.nombres}"
+
+    def get_update_url(self):
+        return reverse(
+            "persona_to_expediente", kwargs={"expediente_id": self.expediente.pk, "persona_id": self.persona.pk}
+        )
 
     def get_delete_url(self):
         return reverse("expedientepersona_delete", kwargs={"pk": self.pk})
@@ -461,8 +470,8 @@ class Partida(models.Model):
     def get_dvapi(self):
         coef = "9731"
         _coef = coef + coef + coef + coef
-        sd = int(self.sd.completo or 0)
-        strpii = f"{sd:06d}{self.pii or 0:06d}{self.subpii or 0:04d}"
+        sd = int(self.sd.completo)
+        strpii = f"{sd or 0:06d}{self.pii or 0:06d}{self.subpii or 0:04d}"
         suma = 0
         for i in range(0, len(strpii)):
             m = str(int(strpii[i]) * int(_coef[i]))

@@ -2909,7 +2909,7 @@ AcDbText
  40
 2.0
   1
-PII Nº: {% if e.expedientepartida_set.count > 1 %}VER DETALLE{% else %}{% for ep in e.expedientepartida_set.all %}{% with ep.partida as p %}{{ p.pii|stringformat:"06d" }}/{{ p.subpii|stringformat:"04d" }}{% endwith %}{% endfor %}{% endif %}
+PII Nº: {% if e.expedientepartida_set.count > 1 %}VER DETALLE{% else %}{{ e.expedientepartida_set.first.partida.para_caratula|default:"" }}{% endif %}
 100
 AcDbText
   0
@@ -4229,7 +4229,7 @@ AcDbText
  40
 2.5
   1
-GÁLVEZ, {% now "E \D\E Y" %}
+GÁLVEZ, {% now "E \D\E Y" as f %}{{ f|upper }}
 100
 AcDbText
   0
@@ -4349,7 +4349,7 @@ AcDbText
  40
 3.0
   1
-SecciÃ³n 00 - Manzana 00 - Parcela 00
+Sección 00 - Manzana 00 - Parcela 00
 100
 AcDbText
   0
@@ -4731,7 +4731,7 @@ AcDbText
  40
 3.0
   1
-{{ e.expediente_objeto.objeto }}
+{{ e.objetos.all|join:", " }}
 100
 AcDbText
   0

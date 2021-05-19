@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Personas{% endblock %}
+
+{% block page-title %}
+<i class="fas fa-user fa-fw"></i>
+Personas |
+<span class="text-primary">
+  Editando
+  <span class="badge badge-dark">{{ expediente.id }}</span>
+</span>
+{% endblock %}
+
+{% block content %}
+<div class="card bg-light shadow mb-4">
+  <div class="card-body">
+    {% crispy form %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Add Form to Formset -->
+{% include "helpers/add_form_button.html" %}
+{% endblock extra_js %}

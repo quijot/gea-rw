@@ -13,21 +13,25 @@ urlpatterns = [
     path("expedientes/", views.ExpedienteListView.as_view(), name="expedientes"),
     path("expediente/<int:pk>/", views.ExpedienteDetailView.as_view(), name="expediente"),
     path("expediente/crear/", views.ExpedienteCreateView.as_view(), name="expediente_create"),
-    path("expediente/editar/<int:pk>/", views.ExpedienteUpdateView.as_view(), name="expediente_update"),
-    path("expediente/borrar/<int:pk>/", views.ExpedienteDeleteView.as_view(), name="expediente_delete"),
+    path("expediente/<int:pk>/editar/", views.ExpedienteUpdateView.as_view(), name="expediente_update"),
+    path("expediente/<int:pk>/borrar/", views.ExpedienteDeleteView.as_view(), name="expediente_delete"),
+    # Plano
+    path("expediente/<int:pk>/editar/plano/", views.PlanoUpdateView.as_view(), name="expediente_update_plano"),
+    # ExpedienteLugar
+    path("expedientelugar/crear/", views.ExpedienteLugarCreateView.as_view(), name="expedientelugar_create"),
+    path("expedientelugar/editar/<int:pk>/", views.ExpedienteLugarUpdateView.as_view(), name="expedientelugar_update"),
+    path("expedientelugar/borrar/<int:pk>/", views.ExpedienteLugarDeleteView.as_view(), name="expedientelugar_delete"),
+    # ExpedientePersona
+    path("expediente/<int:expediente_id>/personas/", views.personas_to_expediente, name="persona_to_expediente"),
     path(
         "expedientepersona/borrar/<int:pk>/",
         views.ExpedientePersonaDeleteView.as_view(),
         name="expedientepersona_delete",
     ),
-    # ExpedienteLugar
-    path("expedientelugar/crear/", views.ExpedienteLugarCreateView.as_view(), name="expedientelugar_create"),
-    path("expedientelugar/editar/<int:pk>/", views.ExpedienteLugarUpdateView.as_view(), name="expedientelugar_update"),
-    path("expedientelugar/borrar/<int:pk>/", views.ExpedienteLugarDeleteView.as_view(), name="expedientelugar_delete"),
     # ExpedientePartida
     path("expediente/<int:expediente_id>/partidas/", views.add_partida_to_expediente, name="partida_to_expediente"),
     path(
-        "expediente/<int:expediente_id>/partidas/<int:partida_id>/",
+        "expediente/<int:expediente_id>/partida/<int:partida_id>/",
         views.update_partida_to_expediente,
         name="partida_to_expediente",
     ),
@@ -48,7 +52,6 @@ urlpatterns = [
     path("visacion/", views.visacion, name="visacion"),
     path("visacion/<int:expediente>/", views.visacion, name="visacion"),
     # Búsquedas
-    path("plano/", views.plano, name="buscar_plano"),
     path("set/", views.set, name="buscar_set"),
     path("catastro/", views.catastro, name="buscar_catastro"),
     # Herramientas
