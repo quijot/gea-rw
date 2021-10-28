@@ -69,10 +69,10 @@ class ExpedienteForm(forms.ModelForm):
             "profesionales_firmantes",
             "orden_numero",
             "orden_fecha",
-            "inscripcion_numero",
-            "inscripcion_fecha",
-            "duplicado",
-            "sin_inscripcion",
+            # "inscripcion_numero",
+            # "inscripcion_fecha",
+            # "duplicado",
+            # "sin_inscripcion",
             # "cancelado",
             # "cancelado_por",
         ]
@@ -125,7 +125,12 @@ class ExpedienteForm(forms.ModelForm):
 class PlanoForm(forms.ModelForm):
     class Meta:
         model = models.Expediente
-        fields = ["inscripcion_numero", "inscripcion_fecha", "duplicado", "sin_inscripcion"]
+        fields = [
+            "inscripcion_numero",
+            "inscripcion_fecha",
+            "duplicado",
+            "sin_inscripcion",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
