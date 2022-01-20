@@ -10,12 +10,6 @@
   <a onclick="window.print();" class="d-sm-inline-block btn btn-secondary">
     <i class="fas fa-fw fa-print text-white-50"></i> Imprimir
   </a>
-  <a href="{{ object.get_delete_url }}" class="d-sm-inline-block btn btn-danger">
-    <i class="fas fa-fw fa-trash text-white-50"></i> Eliminar
-  </a>
-  <a href="{{ object.get_update_url }}" class="d-sm-inline-block btn btn-primary">
-    <i class="fas fa-fw fa-pen text-white-50"></i> Editar
-  </a>
 </div>
 {% endblock %}
 
@@ -26,16 +20,14 @@
   <div class="col-md-4">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <span class="float-right">
-          <a href="{{ object.get_delete_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-danger"
-            title="Eliminar">
-            <i class="fas fa-fw fa-trash fa-sm"></i>
+        <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+          <a href="{{ object.get_update_url }}" class="btn btn-outline-primary" title="Editar">
+            <i class="fas fa-fw fa-sm fa-pen"></i>
           </a>
-          <a href="{{ object.get_update_url }}" class="d-print-none d-sm-inline-block btn btn-sm btn-outline-primary"
-            title="Editar">
-            <i class="fas fa-fw fa-pen fa-sm"></i>
+          <a href="{{ object.get_delete_url }}" class="btn btn-outline-danger" title="Eliminar">
+            <i class="fas fa-fw fa-sm fa-trash"></i>
           </a>
-        </span>
+        </div>
         <i class="fas fa-fw fa-address-book"></i>
         <span class="lead font-weight-bold">{{ object.nombre_completo }}</span>
         <div class="font-weight-light">
