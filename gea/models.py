@@ -375,7 +375,7 @@ class ExpedienteLugar(models.Model):
 
     @cached_property
     def catastros_locales_str(self):
-        return ", ".join(self.catastros_locales_list)
+        return ", ".join([cl.__str__() for cl in self.catastros_locales_list])
 
 
 class ExpedientePartida(models.Model):

@@ -76,7 +76,7 @@
 {% block content %}
 {% if e %}
 <!-- Expediente Nº -->
-<span style="font-size: smaller">Expte. <a href="/admin/gea/expediente/{{ e.id }}/">{{ e.id }}</a></span>
+<span style="font-size: smaller">Expte. <a href="{{ e.get_absolute_url }}">{{ e.id }}</a></span>
 <div class="caratula">
     <!-- Título -->
     <div style="font-size: x-large">PLANO DE MENSURA
@@ -91,14 +91,10 @@
     <hr>
     <!-- Partidas de Impuesto Inmobiliario -->
     <div style="float: right">PII Nº:
-        {% if e.expedientepartida_set.count > 1 %}
+        {% if e.partidas_count > 1 %}
         <strong><a href="#detalle_pii">VER DETALLE</a></strong>
         {% else %}
-            {% for ep in e.expedientepartida_set.all %}
-                {% with ep.partida as p %}
-        <a href="/admin/gea/partida/{{ p.id }}/"><strong>{{ p.para_caratula }}</strong></a>
-                {% endwith %}
-            {% endfor %}
+        <a href="{{ e.get_absolute_url }}"><strong>{{ e.partidas_str|default:"" }}</strong></a>
         {% endif %}
     </div>
     <!-- Provincia -->
@@ -143,7 +139,7 @@
     <div>PROPIETARIO{% if e.propietarios_count > 1 %}S{% endif %}:
         {% for p in e.propietarios %}
         <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/admin/gea/persona/{{ p.persona.id }}/"><span style="font-size: x-large">{{ p.persona.nombres|upper }} {{ p.persona.apellidos }}</span></a>
+        <a href="{{ p.persona.get_absolute_url }}"><span style="font-size: x-large">{{ p.persona.nombres|upper }} {{ p.persona.apellidos }}</span></a>
             {% if p.sucesion %}<small>(* hoy sus sucesores)</small>{% endif %}
             {% if p.nuda_propiedad %}<small>(* nuda propiedad)</small>{% endif %}
             {% if p.partes_indivisas_propias %}<small>({{ p.partes_indivisas_propias }}/{{ p.partes_indivisas_total }} partes indivisas)</small>{% endif %}
@@ -175,11 +171,7 @@
         <span>Sup. s/Título</span>
         {% with e.expedientepartida_set.all|first as ep %}
             {% with ep.catastro_set.all|first as c %}
-                {% if c.zona.id == 4 %}
-        <span style="float: right">____<sup>has</sup> ____<sup>as</sup> ____<sup>cas</sup> ____<sup>dm&sup2;</sup></span>
-                {% else %}
         <span style="float: right">_______.____ m&sup2;</span>
-                {% endif %}
             {% endwith %}
         {% endwith %}
     </div>
@@ -189,11 +181,7 @@
       <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lote ___</span>
       {% with e.expedientepartida_set.all|first as ep %}
         {% with ep.catastro_set.all|first as c %}
-          {% if c.zona.id == 4 %}
-      <span style="float: right">____<sup>has</sup> ____<sup>as</sup> ____<sup>cas</sup> ____<sup>dm&sup2;</sup></span>
-          {% else %}
       <span style="float: right">_______.____ m&sup2;</span>
-          {% endif %}
         {% endwith %}
       {% endwith %}
       </strong>
@@ -216,8 +204,8 @@
             {% endfor %}
         </tr>
         <tr>
-            {% with e.profesionales_firmantes.all|first as p %}
-            <td>{{ p.lugar.observacion|upper }}, {% now "E \D\E Y" %}</td>
+            {% with e.profesionales_firmantes.first as p %}
+            <td>{{ p.lugar.observacion|upper }}, {% now "E \D\E Y" as f %}{{ f|upper }}</td>
             {% endwith %}
             {% for profesional in e.profesionales_firmantes.all %}
             <td><span style="float: right; font-size:smaller">{{ profesional.domicilio }} - {{ profesional.lugar.observacion|upper }}</span></td>
@@ -228,7 +216,7 @@
     <!-- Observaciones -->
     <div>
         <strong><u>OBSERVACIONES GENERALES</u></strong>:
-        <br>Expediente Co.P.A. Nº {{ e.orden_numero|default:"__________" }} - {{ e.orden_fecha|default:"___/___/______" }}
+        Expediente Co.P.A. Nº {{ e.orden_numero|default:"__________" }}.
         <br>{% for a in e.antecedente_set.all %}{% if 'Modifica' in a.obs %}{{ a.obs }}<br>{% endif %} {% endfor %}
         {{ obs }}
     </div>
@@ -272,7 +260,7 @@
             <td colspan="2">PARCELA</td>
             <td colspan="2">SUBPARC</td>
         </tr>
-        {% if e.expedientepartida_set.count > 1 %}
+        {% if e.partidas_count > 1 %}
         <tr>
             <td colspan="4"><strong><a href="#detalle_pii">VER DETALLE</a></strong></td>
         </tr>
@@ -308,7 +296,7 @@
         <tr>
             <td></td>
             <td></td>
-            <td>{{ p.pii|stringformat:"06d" }}/{{ p.subpii|stringformat:"04d" }}</td>
+            <td>{{ p.para_caratula }}</td>
             <td></td>
             <td></td>
             <td>{{ c.parcela|add:"0"|stringformat:"04d" }}</td>
