@@ -323,14 +323,19 @@ class Expediente(TimeStampedModel):
         return self.expedientepersona_set.filter(comitente=True)
 
     @cached_property
+    def partidas_count(self):
+        """Devuelve la cantidad de partidas vinculadas."""
+        return self.expedientepartida_set.count()
+
+    @cached_property
     def partidas_list(self):
-        """Devuelve la list() de las partidas intervinientes."""
+        """Devuelve la list() de las partidas vinculadas."""
         return [ep.partida for ep in self.expedientepartida_set.all()]
 
     @cached_property
     def partidas_str(self):
-        """Devuelve la lista de partidas intervinientes separadas por ", "."""
-        return ", ".join(self.partidas_list)
+        """Devuelve la lista de partidas vinculadas separadas por ", "."""
+        return ", ".join([p.para_caratula for p in self.partidas_list])
 
     @cached_property
     def lugares_list(self):
@@ -462,6 +467,10 @@ class Partida(models.Model):
 
     @cached_property
     def partida_completa(self):
+        return f"{self.sd}-{self.partida}" if self.sd else self.partida
+
+    @cached_property
+    def partida_api(self):
         return f"{self.sd}-{self.partida}-{self.api}" if self.sd else self.partida
 
     @cached_property

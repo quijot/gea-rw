@@ -94,7 +94,7 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
         </div>
         <div class="mb-4">
           {% for ep in object.expedientepartida_set.all %}
-          <span class="badge badge-primary p-1">{{ ep.partida.partida_completa }}</span>
+          <span class="badge badge-primary p-1">{{ ep.partida.partida_api }}</span>
           <a href="{{ ep.get_update_url }}" title="Editar Partida asociada">
             <span class="badge badge-light d-print-none">
               <i class="fas fa-fw fa-pen"></i> SCIT</span></a>

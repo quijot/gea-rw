@@ -51,7 +51,7 @@
       Distrito <a href="/admin/gea/ds/{{ p.sd.ds.id }}/"><strong>{{ p.sd.ds.nombre }}</strong></a>,
       Depto. <a href="/admin/gea/dp/{{ p.sd.ds.dp }}/"><strong>{{ p.sd.ds.dp.nombre|upper }}</strong></a>,
       Partida de Impuesto Inmobiliario
-      <a href="/admin/gea/partida/{{ p.id }}/"><strong>{{ p.partida_completa }}-</strong></a>,
+      <a href="/admin/gea/partida/{{ p.id }}/"><strong>{{ p.partida_api }}-</strong></a>,
       {% endwith %}
       {% for c in ep.catastro_set.all %}
         {% if c.zona %}Zona <strong>{% if c.zona.id == 1 %}U{% elif c.zona.id > 3 %}R{% else %}S{% endif %}</strong>,{% endif %}

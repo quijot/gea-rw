@@ -14,7 +14,7 @@ Partida |
     <form method="post">
       {% csrf_token %}
       <h2 class="pb-4">
-        ¿Confirma la desvinculación de <span class="badge badge-danger">{{ object.partida.partida_completa }}</span> del Expediente
+        ¿Confirma la desvinculación de <span class="badge badge-danger">{{ object.partida.partida_api }}</span> del Expediente
         <a href="{{ object.expediente.get_absolute_url }}">
           <span class="badge badge-dark">{{ object.expediente }}</span></a>?
       </h2>
