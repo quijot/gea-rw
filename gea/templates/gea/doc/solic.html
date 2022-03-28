@@ -73,11 +73,11 @@
     {% endif %}
     al pie de la presente, fijando su DOMICILIO FISCAL en <strong>{{ domfiscal.upper }}</strong>
     de la localidad de <strong>{{ localidad }}</strong>, Código Postal <strong>{{ cp }}</strong>,
-    {% ifnotequal provincia 'CAPITAL FEDERAL' %}
+    {% if provincia != 'CAPITAL FEDERAL' %}
     Provincia de <strong>{{ provincia }}</strong>
     {% else %}
     <strong>{{ provincia }}</strong>
-    {% endifnotequal %}.
+    {% endif %}.
   </p>
   <p class="sangria">Saludamos muy atentamente.</p>
   <br /><br />
