@@ -25,6 +25,53 @@ Expedientes
         {% include "helpers/search_control.html" %}
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <form class="form-inline float-right" action="." method="get">
+          <div class="input-group mb-2">
+            <fieldset class="form-group">
+              <div class="form-check mx-2">
+                <label class="form-check-label" for="pendiente">
+                  <input class="form-check-input" type="radio" name="estado_expediente" value="pendiente"
+                  {% if request.GET.estado_expediente == "pendiente" %}checked{% endif %}>Orden pendiente
+                </label>
+              </div>
+              <div class="form-check mx-2">
+                <label class="form-check-label" for="inscripto">
+                  <input class="form-check-input" type="radio" name="estado_expediente" value="inscripto"
+                  {% if request.GET.estado_expediente == "inscripto" %}checked{% endif %}>Inscripto
+                </label>
+              </div>
+              <div class="form-check mx-2">
+                <label class="form-check-label" for="cancelado">
+                  <input class="form-check-input" type="radio" name="estado_expediente" value="cancelado"
+                  {% if request.GET.estado_expediente == "cancelado" %}checked{% endif %}>Cancelado
+                </label>
+              </div>
+              <div class="form-check mx-2">
+                <label class="form-check-label" for="duplicado">
+                  <input class="form-check-input" type="radio" name="estado_expediente" value="duplicado"
+                  {% if request.GET.estado_expediente == "duplicado" %}checked{% endif %}>Duplicado
+                </label>
+              </div>
+              <div class="form-check mx-2">
+                <label class="form-check-label" for="sin_inscr">
+                  <input class="form-check-input" type="radio" name="estado_expediente" value="sin_inscr"
+                  {% if request.GET.estado_expediente == "sin_inscr" %}checked{% endif %}>No requiere plano
+                </label>
+              </div>
+            </fieldset>
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-sm btn-info">
+                <i class="fas fa-fw fa-filter"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <div class="row">
       <!-- Data -->
       <div class="col-sm-12">
@@ -77,7 +124,7 @@ Expedientes
               <td>
                 <!-- PARTIDAS -->
                 {% for p in object.partidas_list %}
-                <span class="badge badge-primary p-1">{{ p.partida_api }}</span><br>
+                <span class="badge badge-primary p-1">{{ p.partida_completa }}</span><br>
                 {% endfor %}
               </td>
               <td>

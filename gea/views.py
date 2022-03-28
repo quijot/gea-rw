@@ -121,27 +121,43 @@ class About(generic.TemplateView):
 class ExpedienteMixin:
     def get_queryset(self):
         qset = super().get_queryset()
-        q = self.request.GET.get("pendiente")
-        if q:  # orden pendiente
-            qset = qset.filter(Q(inscripcion_numero__isnull=q) & Q(orden_numero__isnull=not q))
-        q = self.request.GET.get("inscripto")
-        if q:  # plano inscripto
+        # q = self.request.GET.get("pendiente")
+        # if q:  # orden pendiente
+        #     qset = qset.filter(Q(inscripcion_numero__isnull=True) & Q(orden_numero__isnull=False))
+        # q = self.request.GET.get("inscripto")
+        # if q:  # plano inscripto
+        #     qset = qset.filter(inscripcion_numero__isnull=False)
+        # else:
+        #     qset = qset.filter(inscripcion_numero__isnull=True)
+        # q = self.request.GET.get("cancelado")
+        # if q:  # expediente cancelado
+        #     qset = qset.filter(cancelado=True)
+        # q = self.request.GET.get("duplicado")
+        # if q:  # duplicado
+        #     qset = qset.filter(duplicado=True)
+        # q = self.request.GET.get("sin_inscr")
+        # if q:  # sin inscripcion
+        #     qset = qset.filter(sin_inscripcion=True)
+        q = self.request.GET.get("estado_expediente")
+        if q == "pendiente":  # orden pendiente
+            qset = qset.filter(Q(inscripcion_numero__isnull=True) & Q(orden_numero__isnull=False))
+            return qset
+        if q == "inscripto":  # plano inscripto
             qset = qset.filter(inscripcion_numero__isnull=False)
-        else:
-            qset = qset.filter(inscripcion_numero__isnull=True)
-        q = self.request.GET.get("cancelado")
-        if q:  # expediente cancelado
-            qset = qset.filter(cancelado=q)
-        q = self.request.GET.get("duplicado")
-        if q:  # duplicado
-            qset = qset.filter(duplicado=q)
-        q = self.request.GET.get("sin_inscr")
-        if q:  # sin inscripcion
-            qset = qset.filter(sin_inscripcion=q)
+            return qset
+        if q == "cancelado":  # expediente cancelado
+            qset = qset.filter(cancelado=True)
+            return qset
+        if q == "duplicado":  # duplicado
+            qset = qset.filter(duplicado=True)
+            return qset
+        if q == "sin_inscr":  # sin inscripcion
+            qset = qset.filter(sin_inscripcion=True)
+            return qset
         return qset
 
 
-class ExpedienteListView(LoginRequiredMixin, PaginateByMixin, CounterMixin, SearchMixin, generic.ListView):
+class ExpedienteListView(LoginRequiredMixin, PaginateByMixin, CounterMixin, SearchMixin, ExpedienteMixin, generic.ListView):
     model = models.Expediente
     paginate_by = 10
 
