@@ -43,7 +43,7 @@
     <div class="card shadow-lg mb-4 border-primary">
       <div class="card-header bg-primary text-white">
         <span class="float-right">
-          <a href="/admin/gea/expediente/?inscripto=si" class="btn btn-primary" title="Ver todos">
+          <a href="{% url 'expedientes' %}?estado_expediente=inscripto" class="btn btn-primary" title="Ver todos">
             <i class="fas fa-fw fa-plus"></i>
           </a>
         </span>
@@ -76,8 +76,7 @@
     <div class="card shadow-lg mb-4 border-warning">
       <div class="card-header bg-warning text-white">
         <span class="float-right">
-          <a href="/admin/gea/expediente/?cancelado__exact=0&orden_pendiente=si&sin_inscripcion__exact=0"
-            class="btn btn-warning" title="Ver todos">
+          <a href="{% url 'expedientes' %}?estado_expediente=pendiente" class="btn btn-warning" title="Ver todos">
             <i class="fas fa-fw fa-plus"></i>
           </a>
         </span>
