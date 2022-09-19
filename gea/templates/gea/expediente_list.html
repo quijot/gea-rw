@@ -135,15 +135,16 @@ Expedientes
                 {% endif %}
                 <i class="far fa-fw fa-map"></i>
                 <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
+                  {% if object.sin_inscripcion %}
+                  <span class="badge badge-info">NO REQUIERE</span>
+                  {% else %}
                   {% if object.duplicado %}Dup.{% endif %}
                   <span class="font-weight-bold">
                     {{ object.inscripcion_numero|default:"PENDIENTE" }}
                   </span>
+                  {% endif %}
                 </a>
                 <small>{{ object.inscripcion_fecha|default:"" }}</small>
-                {% if object.sin_inscripcion %}
-                <span class="badge badge-info">NO REQUIERE</span>
-                {% endif %}
               </td>
               <td>
                 <div class="btn-group">

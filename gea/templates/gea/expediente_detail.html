@@ -49,8 +49,12 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           <span class="font-weight-bold">
             <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
               <i class="far fa-fw fa-map"></i>
+              {% if object.sin_inscripcion %}
+              <span class="badge badge-info">NO REQUIERE</span>
+              {% else %}
               {% if object.duplicado %}Dup.{% endif %}
               {{ object.inscripcion_numero|default:"<span class='text-warning'>¡PENDIENTE!</span>" }}
+              {% endif %}
             </a>
           </span>&nbsp;
           <small>{{ object.inscripcion_fecha|default:"" }}</small>
