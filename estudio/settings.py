@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
+
 import dj_database_url
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -69,13 +71,6 @@ WSGI_APPLICATION = "estudio.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-#     }
-# }
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -114,7 +109,7 @@ DATABASES["default"].update(db_from_env)
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"  # "django.db.models.BigAutoField" is the default since Django 3.2
 
 # Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# STATICFILES_DIRS = BASE_DIR / "static"
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
@@ -124,19 +119,20 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = "/static/"
 # The absolute path to the directory where collectstatic will collect static files for deployment.
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Redirection after login
 LOGIN_REDIRECT_URL = "home"
 
-# Heroku
-HEROKUAPP_NAME = os.environ.get("DJANGO_HEROKUAPP_NAME", "gea-pestarini")
+# Environment variables
+APP_NAME = os.environ.get("DJANGO_APP_NAME", "gea")
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", SECRET_KEY)
 DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 CUSTOM_DOMAIN_NAME = os.environ.get("CUSTOM_DOMAIN_NAME", "gea.pestarini.com.ar")
 ALLOWED_HOSTS = [
     "127.0.0.1",
-    f"{HEROKUAPP_NAME}.herokuapp.com",
+    f"{APP_NAME}.herokuapp.com",
+    f"{APP_NAME}.up.railway.app",
     CUSTOM_DOMAIN_NAME,
 ]
 
