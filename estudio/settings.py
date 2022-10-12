@@ -136,6 +136,11 @@ ALLOWED_HOSTS = [
     CUSTOM_DOMAIN_NAME,
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host}"
+    for host in ALLOWED_HOSTS
+]
+
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 CRISPY_FAIL_SILENTLY = not DEBUG
