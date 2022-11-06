@@ -200,7 +200,7 @@ class Lugar(models.Model):
 
 
 class Objeto(models.Model):
-    nombre = models.CharField(max_length=80)
+    nombre = models.CharField(max_length=100)
 
     class Meta:
         ordering = ["nombre"]
