@@ -290,8 +290,9 @@ class Expediente(TimeStampedModel):
     def get_update_plano_url(self):
         return reverse("expediente_update_plano", kwargs={"pk": self.pk})
 
-    def inscripto(self):
-        return self.inscripcion_numero != 0
+    @cached_property
+    def pendiente(self):
+        return (not self.inscripcion_numero and not self.cancelado and not self.sin_inscripcion)
 
     @cached_property
     def propietarios_count(self):
@@ -550,6 +551,10 @@ class Persona(models.Model):
     @cached_property
     def nombre_completo(self):
         return f"{self.apellidos} {self.nombres or ''}".strip()
+
+    @cached_property
+    def nombre_completo_elipsis(self):
+        return self.nombre_completo if len(self.nombre_completo) < 30 else f"{self.nombre_completo[:30]}&mldr;"
 
     @cached_property
     def nombre_alternativo(self):
