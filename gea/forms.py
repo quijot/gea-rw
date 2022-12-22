@@ -50,6 +50,16 @@ LugaresInlineFormSet = forms.inlineformset_factory(
 )
 
 
+AntecedentesInlineFormSet = forms.inlineformset_factory(
+    models.Expediente,
+    models.Antecedente,
+    fk_name="expediente",
+    fields="__all__",
+    extra=1,
+    # form=ELForm,
+)
+
+
 class ObjetosWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = ["nombre__icontains"]
 
@@ -109,6 +119,15 @@ class ExpedienteForm(forms.ModelForm):
                 onclick="add_form('expedientelugar_set')",
             ),
             Div(Formset("expedientelugar_set"), css_class="table-responsive"),
+            HTML("<span class='lead font-weight-bold mr-3'>Antecedentes</span>"),
+            Button(
+                "add-antecedente",
+                "&plus; Agregar",
+                css_class="btn-sm btn-outline-primary",
+                title="Agregar otro Antecedente",
+                onclick="add_form('antecedente_set')",
+            ),
+            Div(Formset("antecedente_set"), css_class="table-responsive"),
             FormActions(
                 Button(
                     "cancel",

@@ -123,6 +123,38 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
         </div>
         <hr>
         <div class="mb-4">
+          {% if object.antecedente_set.count %}
+          Antecedentes ({{ object.antecedente_set.count }}):
+          <br>
+          {% for a in object.antecedente_set.all %}
+          {% if a.expediente_modificado %}
+          <span class="badge badge-dark p-1 mr-1">{{ a.expediente_modificado.id }}</span>
+          <span class="font-weight-bold">
+            <a href="{{ a.expediente_modificado.plano_ruta|default:'#' }}" style="color: unset;">
+              <i class="far fa-fw fa-map"></i>
+              {% if a.expediente_modificado.sin_inscripcion %}
+              <span class="badge badge-info">NO REQUIERE</span>
+              {% else %}
+              {% if a.expediente_modificado.duplicado %}Dup.{% endif %}
+              {{ a.expediente_modificado.inscripcion_numero|default:"<span class='text-warning'>¡PENDIENTE!</span>" }}
+              {% endif %}
+            </a>
+          </span>
+          <small>/{{ a.expediente_modificado.inscripcion_fecha.year|default:"" }}</small>&nbsp;
+          {% else %}
+          <span class="font-weight-bold">
+            <i class="far fa-fw fa-map"></i>
+            {{ a.inscripcion_numero }}
+          </span>&nbsp;
+          {% endif %}
+          <small>{{ a.observacion }}</small><br>
+          {% endfor %}
+          {% else %}
+          No registra antecedentes
+          {% endif %}
+        </div>
+        <hr>
+        <div class="mb-4">
           Medición: {{ object.fecha_medicion|default:"<em>PENDIENTE</em>" }}
           <br>
           {% for p in object.profesionales_firmantes.all %}

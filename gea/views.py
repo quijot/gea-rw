@@ -190,7 +190,10 @@ class ExpedienteUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     model = models.Expediente
     form_class = forms.ExpedienteForm
     success_message = "¡Expediente modificado con éxito!"
-    children = [("expedientelugar_set", forms.LugaresInlineFormSet)]
+    children = [
+        ("expedientelugar_set", forms.LugaresInlineFormSet),
+        ("antecedente_set", forms.AntecedentesInlineFormSet),
+    ]
 
 
 class PlanoUpdateView(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
