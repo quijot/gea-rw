@@ -75,7 +75,9 @@ Catastros Locales
 <div class="card bg-light shadow mb-2">
   <div class="card-body">
     <div class="row">
-      {% include "helpers/pagination_bar.html" %}
+      <div class="col-sm-12 col-md-5">
+        {% include "helpers/paginate_by_control.html" %}
+      </div>
     </div>
     <div class="row">
       <!-- Data -->
@@ -88,58 +90,80 @@ Catastros Locales
               <th>Lugar(es)</th>
               <th>Partida(s)</th>
               <th>Plano</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {% for e in object_list %}
-            <tr>
+            {% for object in object_list %}
+            <tr class="{% if object.pendiente %}table-warning{% endif %}">
               <td>
                 <!-- EXPEDIENTE -->
-                <a href="{{ e.get_absolute_url }}">{{ e.id }}</a>
+                <a href="{{ object.get_absolute_url }}" class="badge badge-dark p-1">{{ object.id }}</a>
               </td>
               <td>
                 <!-- PERSONAS -->
-                {% if e.orden_numero and not e.inscripcion_numero %}
-                <span class="badge badge-warning">PENDIENTE</span>
-                Orden N&ordm; {{ e.orden_numero }} - {{ e.orden_fecha }}<br>
+                {% if object.cancelado %}
+                <span class="badge badge-danger">CANCELADO</span> <small>{{ object.cancelado_por }}</small><br>
                 {% endif %}
-                {% if e.cancelado %}
-                <span class="badge badge-danger">CANCELADO</span>
-                {{ e.cancelado_por }}<br>
+                {% for ep in object.expedientepersona_set.all %}
+                <a href="{{ ep.persona.get_absolute_url }}" title="{{ ep.persona.nombre_completo }}">{{ ep.persona.nombre_completo_elipsis|safe }}</a>
+                {% if ep.comitente %}<span class="badge badge-warning">COMITENTE</span>{% endif %}
+                {% if ep.persona.telefono %}
+                <small>
+                  <a href="tel:{{ ep.persona.telefono }}" style="color: unset;">
+                    {{ ep.persona.telefono }}
+                  </a>
+                </small>
                 {% endif %}
-                {% for ep in e.expedientepersona_set.all %}
-                <a href="{{ ep.persona.get_absolute_url }}">{{ ep.persona.nombre_completo }}</a>
-                {% if ep.comitente %}<span class="badge badge-primary">COMITENTE</span>{% endif %}
-                {% if ep.persona.telefono %}({{ ep.persona.telefono }}){% endif %}
                 {% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
               </td>
               <td>
                 <!-- LUGARES -->
-                {% for el in e.expedientelugar_set.all %}
-                <a href="/admin/gea/lugar/{{ el.lugar.id }}/">{{ el.lugar.nombre }}</a>
-                {% for cl in el.catastrolocal_set.all %}<br>
-                {{ cl }}
-                {% endfor %}
-                {% if not forloop.last %}<br>{% endif %}
+                {% for el in object.expedientelugar_set.all %}
+                <a href="{% url 'admin:gea_lugar_change' el.lugar.id %}">{{ el.lugar.nombre }}</a>
+                {% for cl in el.catastrolocal_set.all %}
+                <br><small>{{ cl }}</small>
+                {% endfor %}{% if not forloop.last %}<br>{% endif %}
                 {% endfor %}
               </td>
               <td>
                 <!-- PARTIDAS -->
-                {% for ep in e.expedientepartida_set.all %}
-                {% if ep.set_ruta %}<a href="{{ ep.set_ruta }}">{% endif %}
-                  {{ ep.partida.sd }}-{{ ep.partida }}
-                  {% if ep.set_ruta %}</a>{% endif %}
-                {% if not forloop.last %}<br>{% endif %}
+                {% for p in object.partidas_list %}
+                <span class="badge badge-primary p-1">{{ p.partida_completa }}</span><br>
                 {% endfor %}
               </td>
               <td>
                 <!-- PLANO -->
-                {% if e.plano_ruta %}<a href="{{ e.plano_ruta }}">{% endif %}
-                  {% if e.duplicado %}Dup.{% endif %}{% if e.inscripcion_numero %}{{ e.inscripcion_numero }}{% endif %}
-                  {% if e.plano_ruta %}</a>{% endif %}
-                {% if e.inscripcion_fecha %}({{ e.inscripcion_fecha }}){% endif %}
-                {% if e.sin_inscripcion %}<span class="badge badge-info">NO REQUIERE</span>{% endif %}
+                {% if object.orden_numero %}
+                <span class="badge badge-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
+                <small>{{ object.orden_fecha|default:"" }}</small><br>
+                {% endif %}
+                <i class="far fa-fw fa-map"></i>
+                <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
+                  {% if object.sin_inscripcion %}
+                  <span class="badge badge-info">NO REQUIERE</span>
+                  {% else %}
+                  {% if object.duplicado %}Dup.{% endif %}
+                  <span class="font-weight-bold">
+                    {{ object.inscripcion_numero|default:"PENDIENTE" }}
+                  </span>
+                  {% endif %}
+                </a>
+                <small>{{ object.inscripcion_fecha|default:"" }}</small>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <!-- <a href="{{ object.get_absolute_url }}" class="btn btn-info btn-sm" title="Ver">
+                    <i class="fas fa-fw fa-info"></i>
+                  </a> -->
+                  <a href="{{ object.get_update_url }}" class="btn btn-primary btn-sm" title="Editar">
+                    <i class="fas fa-fw fa-pen"></i>
+                  </a>
+                  <a href="{{ object.get_delete_url }}" class="btn btn-danger btn-sm" title="Eliminar">
+                    <i class="fas fa-fw fa-trash"></i>
+                  </a>
+                </div>
               </td>
             </tr>
             {% empty %}
