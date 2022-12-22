@@ -7,7 +7,7 @@
 {% if e %}
   <br>
   <div style="float: right; font-size: smaller">
-    <em>Expte. <a href="/admin/gea/expediente/{{ e.id }}/">{{ e.id }}</a></em>
+    <em>Expte. <a href="{{ e.get_absolute_url }}">{{ e.id }}</a></em>
   </div>
   {% if e.expedientelugar_set.all %}
     {% for el in e.expedientelugar_set.all %}

@@ -116,7 +116,7 @@
     <!-- Lugar -->
     <div>LUGAR:
         {% for el in e.lugares.all %}
-        <a href="/admin/gea/lugar/{{ el.id }}/"><strong>{{ el.nombre|upper }}</strong></a>{% if not forloop.last %}, {% endif %}
+        <a href="{% url 'admin:gea_lugar_change' el.id %}"><strong>{{ el.nombre|upper }}</strong></a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
     </div>
     <!-- Catastro Local -->
@@ -131,7 +131,7 @@
     <!-- Obejeto -->
     <div>OBJETO{% if e.objetos.count > 1 %}S{% endif %}:
         {% for objeto in e.objetos.all %}
-        <a href="/admin/gea/objeto/{{ objeto.id }}/"><strong>{{ objeto.nombre|upper }}</strong></a>
+        <a href="{% url 'admin:gea_objeto_change' objeto.id %}"><strong>{{ objeto.nombre|upper }}</strong></a>
         {% endfor %}
     </div>
     <br>
@@ -244,7 +244,7 @@
             <td>{{ p.sd.dp }}</td>
             <td>{{ p.sd.ds }}</td>
             <td>{{ p.sd.subdistrito }}</td>
-            <td><a href="/admin/gea/zona/{{ c.zona.id }}/">{{ c.zona }}</a></td>
+            <td><a href="{% url 'admin:gea_zona_change' c.zona.id %}">{{ c.zona }}</a></td>
         </tr>
         <tr>
             <td>SECC</td>
