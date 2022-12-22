@@ -92,11 +92,14 @@ Expedientes
               <td>
                 <!-- EXPEDIENTE -->
                 <a href="{{ object.get_absolute_url }}" class="badge badge-dark p-1">{{ object.id }}</a>
+                {% if object.tipo %}
+                <a href="{{ object.get_absolute_url }}" class="badge badge-info p-1">{{ object.get_tipo_display }}</a>
+                {% endif %}
               </td>
               <td>
                 <!-- PERSONAS -->
                 {% if object.cancelado %}
-                <span class="badge badge-danger">CANCELADO</span> <smal>{{ object.cancelado_por }}</smal><br>
+                <span class="badge badge-danger">CANCELADO</span>&ensp;<small>{{ object.cancelado_por|default:"" }}</small><br>
                 {% endif %}
                 {% for ep in object.expedientepersona_set.all %}
                 <a href="{{ ep.persona.get_absolute_url }}" title="{{ ep.persona.nombre_completo }}">{{ ep.persona.nombre_completo_elipsis|safe }}</a>
