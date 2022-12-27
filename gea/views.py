@@ -170,7 +170,10 @@ class ExpedienteCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     model = models.Expediente
     form_class = forms.ExpedienteForm
     success_message = "¡Expediente creado con éxito!"
-    children = [("expedientelugar_set", forms.LugaresInlineFormSet)]
+    children = [
+        ("expedientelugar_set", forms.LugaresInlineFormSet),
+        ("antecedente_set", forms.AntecedentesInlineFormSet),
+    ]
 
     def get_initial(self):
         """
