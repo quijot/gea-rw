@@ -91,9 +91,15 @@
     {% for p in e.firmantes %}
       <tr style="height: 80px">
         <td></td>
-        <td>{{ p.persona.apellidos }}<br>{{ p.persona.nombres }}<br>{% if p.partes_indivisas_propias %}<small>({{ p.partes_indivisas_propias }}/{{ p.partes_indivisas_total }} partes indivisas)</small>{% endif %}</td>
-        <td>{% if p.persona.documento %}{% if p.persona.get_tipo_doc_display %}{{ p.persona.get_tipo_doc_display }}: {% endif %}{{ p.persona.documento }}{% endif %}</td>
-        <td style="text-align: right">{{ p.persona.cuit_cuil }}</td>
+        <td>
+          {{ p.persona.apellidos }}<br>
+          {{ p.persona.nombres|default:"" }}<br>
+          {% if p.partes_indivisas_propias %}
+          <small>({{ p.partes_indivisas_propias }}/{{ p.partes_indivisas_total }} partes indivisas)</small>
+          {% endif %}
+        </td>
+        <td>{{ p.persona.get_tipo_doc_display|default:"" }} {{ p.persona.documento|default:"" }}</td>
+        <td style="text-align: right">{{ p.persona.cuit_cuil|default:"" }}</td>
       </tr>
     {% endfor %}
   </table>
