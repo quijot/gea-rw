@@ -1,5 +1,5 @@
 dj-database-url==1.2.0
-Django==4.1.5
+Django==4.1.7
 django-crispy-forms==1.14.0
 django-dynamic-preferences==1.14.0
 django-extensions==3.2.1
