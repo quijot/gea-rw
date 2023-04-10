@@ -182,10 +182,10 @@ class ExpedienteCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
         initial = super().get_initial()
         initial["id"] = models.Expediente.objects.aggregate(next_id=Max("id") + 1)["next_id"]
         initial["orden_fecha"] = datetime.now().date()
-        initial["objetos"] = models.Objeto.objects.get(
-            nombre__icontains="mensura para constitución del estado parcelario"
+        initial["objetos"] = models.Objeto.objects.filter(
+            nombre__icontains="mensura para constitución de estado parcelario"
         )
-        initial["profesionales_firmantes"] = models.Profesional.objects.get(icopa="1.0253.9")
+        initial["profesionales_firmantes"] = models.Profesional.objects.filter(icopa="1.0253.9")
         return initial
 
 
