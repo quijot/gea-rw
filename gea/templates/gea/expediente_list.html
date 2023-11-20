@@ -34,7 +34,7 @@ Expedientes
               <div class="form-check mx-2">
                 <label class="form-check-label" for="pendiente">
                   <input class="form-check-input" type="radio" name="estado_expediente" value="pendiente"
-                  {% if request.GET.estado_expediente == "pendiente" %}checked{% endif %}>Orden pendiente
+                  {% if request.GET.estado_expediente == "pendiente" %}checked{% endif %}>Pendiente
                 </label>
               </div>
               <div class="form-check mx-2">
@@ -92,9 +92,6 @@ Expedientes
               <td>
                 <!-- EXPEDIENTE -->
                 <a href="{{ object.get_absolute_url }}" class="badge badge-dark p-1">{{ object.id }}</a>
-                {% if object.tipo %}
-                <a href="{{ object.get_absolute_url }}" class="badge badge-info p-1">{{ object.get_tipo_display }}</a>
-                {% endif %}
               </td>
               <td>
                 <!-- PERSONAS -->

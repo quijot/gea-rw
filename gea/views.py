@@ -139,8 +139,8 @@ class ExpedienteMixin:
         # if q:  # sin inscripcion
         #     qset = qset.filter(sin_inscripcion=True)
         q = self.request.GET.get("estado_expediente")
-        if q == "pendiente":  # orden pendiente
-            qset = qset.filter(Q(inscripcion_numero__isnull=True) & Q(orden_numero__isnull=False))
+        if q == "pendiente":  # pendiente
+            qset = qset.filter(Q(inscripcion_numero__isnull=True) & Q(cancelado=False) & Q(sin_inscripcion=False))
             return qset
         if q == "inscripto":  # plano inscripto
             qset = qset.filter(inscripcion_numero__isnull=False)
