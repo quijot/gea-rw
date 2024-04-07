@@ -48,12 +48,14 @@ Catastros Locales
     </div>
     <div class="row">
       <div class="col-lg-1">Manzana</div>
-      <div class="col-lg-11 btn-group btn-group-sm" role="group">
+      <div class="col-lg-11" role="group" width="100%">
         <a href="{% url 'catastros_locales' %}?lugar={{ lugar }}"
-          class="btn {% if not manzana %}btn-outline-secondary active{% else %} btn-info{% endif %}">*</a>
+           style="margin-right: -3px; margin-left: 0px"
+           class="btn btn-sm {% if not manzana %}btn-outline-secondary active{% else %} btn-info{% endif %}">*</a>
         {% for m in manzanas %}
         <a href="{% url 'catastros_locales' %}?lugar={{ lugar }}{% if seccion %}&seccion={{ seccion }}{% endif %}&manzana={{ m }}"
-          class="btn {% if manzana == m %}btn-outline-secondary active{% else %} btn-primary{% endif %}">{{ m }}</a>
+           style="margin-right: -3px; margin-left: 0px"
+           class="btn btn-sm {% if manzana == m %}btn-outline-secondary active{% else %} btn-primary{% endif %}">{{ m }}</a>
         {% endfor %}
       </div>
     </div>
