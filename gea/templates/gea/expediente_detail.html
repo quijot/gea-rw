@@ -25,6 +25,12 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
   <a onclick="window.print();" class="d-sm-inline-block btn btn-secondary">
     <i class="fas fa-fw fa-print text-white-50"></i> Imprimir
   </a>
+  <!-- <a href="{{ object.get_delete_url }}" class="d-sm-inline-block btn btn-danger" title="Eliminar">
+    <i class="fas fa-fw fa-trash text-white-50"></i> Eliminar
+  </a>
+  <a href="{{ object.get_update_url }}" class="btn btn-primary" title="Editar">
+    <i class="fas fa-fw fa-pen text-white-50"></i> Editar
+  </a> -->
 </div>
 {% endblock %}
 
@@ -168,11 +174,11 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
   <div class="col-md-8">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+        <!-- <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
           <a href="{% url 'persona_to_expediente' object.id %}" class="btn btn-outline-primary" title="Agregar/Editar">
             <i class="fas fa-fw fa-sm fa-pen"></i>
           </a>
-        </div>
+        </div> -->
         <i class="fas fa-fw fa-sm fa-users"></i>
         <span class="lead font-weight-bold">Personas ({{ object.expedientepersona_set.count }})</span>
       </div>

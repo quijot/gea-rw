@@ -26,7 +26,7 @@ PersonasInlineFormSet = forms.inlineformset_factory(
     models.ExpedientePersona,
     fields="__all__",
     extra=1,
-    # form=EPForm,
+    form=EPForm,
 )
 
 
@@ -46,8 +46,19 @@ LugaresInlineFormSet = forms.inlineformset_factory(
     models.ExpedienteLugar,
     fields="__all__",
     extra=1,
-    # form=ELForm,
+    form=ELForm,
 )
+
+
+class AntecedenteWidget(s2forms.ModelSelect2Widget):
+    search_fields = ["id__icontains"]
+
+
+class AntForm(forms.ModelForm):
+    class Meta:
+        model = models.Antecedente
+        fields = "__all__"
+        widgets = {"expediente_modificado": AntecedenteWidget}
 
 
 AntecedentesInlineFormSet = forms.inlineformset_factory(
@@ -56,7 +67,7 @@ AntecedentesInlineFormSet = forms.inlineformset_factory(
     fk_name="expediente",
     fields="__all__",
     extra=1,
-    # form=ELForm,
+    form=AntForm,
 )
 
 
@@ -119,6 +130,15 @@ class ExpedienteForm(forms.ModelForm):
                 onclick="add_form('expedientelugar_set')",
             ),
             Div(Formset("expedientelugar_set"), css_class="table-responsive"),
+            HTML("<span class='lead font-weight-bold mr-3'>Personas</span>"),
+            Button(
+                "add-persona",
+                "&plus; Agregar",
+                css_class="btn-sm btn-outline-primary",
+                title="Agregar otra Persona",
+                onclick="add_form('expedientepersona_set')",
+            ),
+            Div(Formset("expedientepersona_set"), css_class="table-responsive"),
             HTML("<span class='lead font-weight-bold mr-3'>Antecedentes</span>"),
             Button(
                 "add-antecedente",

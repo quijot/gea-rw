@@ -172,6 +172,7 @@ class ExpedienteCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     success_message = "¡Expediente creado con éxito!"
     children = [
         ("expedientelugar_set", forms.LugaresInlineFormSet),
+        ("expedientepersona_set", forms.PersonasInlineFormSet),
         ("antecedente_set", forms.AntecedentesInlineFormSet),
     ]
 
@@ -195,6 +196,7 @@ class ExpedienteUpdateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenCont
     success_message = "¡Expediente modificado con éxito!"
     children = [
         ("expedientelugar_set", forms.LugaresInlineFormSet),
+        ("expedientepersona_set", forms.PersonasInlineFormSet),
         ("antecedente_set", forms.AntecedentesInlineFormSet),
     ]
 
