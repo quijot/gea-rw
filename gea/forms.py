@@ -24,7 +24,17 @@ class EPForm(forms.ModelForm):
 PersonasInlineFormSet = forms.inlineformset_factory(
     models.Expediente,
     models.ExpedientePersona,
-    fields="__all__",
+    # fields="__all__",
+    fields=[
+        "persona",
+        "comitente",
+        "propietario",
+        "poseedor",
+        "sucesor",
+        "sucesion",
+        "nuda_propiedad",
+        "usufructo",
+    ],
     extra=1,
     form=EPForm,
 )

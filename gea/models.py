@@ -417,8 +417,8 @@ class ExpedientePersona(models.Model):
     partes_indivisas_propias = models.IntegerField(blank=True)
     partes_indivisas_total = models.IntegerField(blank=True)
     sucesion = models.BooleanField("sucesión", default=False)
-    nuda_propiedad = models.BooleanField(default=False)
-    usufructo = models.BooleanField(default=False)
+    nuda_propiedad = models.BooleanField("nuda prop", default=False)
+    usufructo = models.BooleanField("usuf", default=False)
 
     class Meta:
         unique_together = ["expediente", "persona"]
