@@ -35,7 +35,7 @@ PersonasInlineFormSet = forms.inlineformset_factory(
         "nuda_propiedad",
         "usufructo",
     ],
-    extra=1,
+    extra=3,
     form=EPForm,
 )
 
