@@ -9,7 +9,7 @@ homepage = "https://github.com/quijot/gea-package"
 packages = [{ include = "gea" }]
 
 [tool.poetry.dependencies]
-python = "=3.11.8"
+python = "=3.13.3"
 dj-database-url = "^2"
 Django = "^5"
 django-crispy-forms = "^1"
