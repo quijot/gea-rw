@@ -9,3 +9,4 @@ django-select2==7.11.1
 gunicorn==20.1.0
 psycopg2==2.9.9
 whitenoise==6.6.0
+pytz==2025.2

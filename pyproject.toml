@@ -22,6 +22,7 @@ django-select2 = "^8"
 gunicorn = "^20"
 psycopg2 = "^2"
 whitenoise = "^6"
+pytz = "^2025.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8"
