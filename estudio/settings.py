@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "dynamic_preferences",
     "django_extensions",
     "crispy_forms",
+    # "crispy_bootstrap4",
     "django_select2",
 ]
 
@@ -96,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 LANGUAGE_CODE = "es-ar"
-TIME_ZONE = "America/Buenos_Aires"
+TIME_ZONE = "America/Argentina/Buenos_Aires"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
