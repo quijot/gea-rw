@@ -336,7 +336,8 @@ CatastroInlineFormSet = forms.inlineformset_factory(
 
 
 class PartidaToExpediente(forms.Form):
-    dpdssd = forms.ModelChoiceField(models.Sd.objects.all(), label="DP DS SD", help_text="Dpto. Distrito Subdistrito")
+    sj = (213, 214, 218, 219, 220, 221, 222, 223, 225, 226, 212, 224, 216, 205, 206, 207, 208, 209, 210, 211, 215, 217, 366)
+    dpdssd = forms.ModelChoiceField(models.Sd.objects.filter(ds__in=sj), label="DP DS SD", help_text="Dpto. Distrito Subdistrito")
     partida = forms.IntegerField(max_value=999999, min_value=0)
     subpartida = forms.IntegerField(max_value=9999, min_value=0)
 
