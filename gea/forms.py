@@ -331,7 +331,7 @@ class CatastroForm(forms.ModelForm):
 
 
 CatastroInlineFormSet = forms.inlineformset_factory(
-    models.ExpedientePartida, models.Catastro, fields="__all__", extra=1
+    models.ExpedientePartida, models.Catastro, fields="__all__", extra=3
 )
 
 
