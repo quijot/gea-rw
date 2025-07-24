@@ -136,7 +136,7 @@ class Ds(models.Model):
     id = models.AutoField(primary_key=True)
     # dp = models.ForeignKey(Dp, db_column="dp", on_delete=models.PROTECT)
     dp = models.ForeignKey(Dp, on_delete=models.PROTECT)
-    ds = models.IntegerField()
+    ds = models.IntegerField(db_index=True)
     nombre = models.CharField(max_length=50, verbose_name="nombre distrito")
 
     @cached_property
@@ -146,6 +146,10 @@ class Ds(models.Model):
     class Meta:
         verbose_name_plural = "distritos"
         ordering = ["dp", "ds"]
+        unique_together = [["dp", "ds"]]
+        indexes = [
+            models.Index(fields=["dp", "ds"], name="idx_ds_dp_ds"),
+        ]
 
     def __str__(self):
         return f"{self.ds:02d}"
@@ -154,7 +158,7 @@ class Ds(models.Model):
 class Sd(models.Model):
     id = models.AutoField(primary_key=True)
     ds = models.ForeignKey(Ds, db_column="ds", on_delete=models.PROTECT)
-    sd = models.IntegerField()
+    sd = models.IntegerField(db_index=True)
     nombre = models.CharField("nombre subdistrito", max_length=50, blank=True)
 
     @cached_property
@@ -176,6 +180,10 @@ class Sd(models.Model):
     class Meta:
         verbose_name_plural = "subdistritos"
         ordering = ["ds", "sd"]
+        unique_together = [["ds", "sd"]]
+        indexes = [
+            models.Index(fields=["ds", "sd"], name="idx_sd_ds_sd"),
+        ]
 
     @cached_property
     def completo(self):
@@ -440,12 +448,16 @@ class ExpedientePersona(models.Model):
 
 class Partida(models.Model):
     sd = models.ForeignKey("SD", db_column="sd", blank=True, null=True, default=None, on_delete=models.SET_NULL)
-    pii = models.IntegerField("partida")
+    pii = models.IntegerField("partida", db_index=True)
     subpii = models.IntegerField("subpartida", default=0)
 
     class Meta:
         unique_together = ("sd", "pii", "subpii")
         ordering = ["pii", "subpii"]
+        indexes = [
+            models.Index(fields=["pii", "subpii"], name="idx_partida_pii_subpii"),
+            models.Index(fields=["sd", "pii"], name="idx_partida_sd_pii"),
+        ]
 
     def __str__(self):
         return self.partida
@@ -481,8 +493,8 @@ class Partida(models.Model):
     def get_dvapi(self):
         coef = "9731"
         _coef = coef + coef + coef + coef
-        sd = int(self.sd.completo)
-        strpii = f"{sd or 0:06d}{self.pii or 0:06d}{self.subpii or 0:04d}"
+        sd = int(self.sd.completo) if self.sd else 0
+        strpii = f"{sd:06d}{self.pii or 0:06d}{self.subpii or 0:04d}"
         suma = 0
         for i in range(0, len(strpii)):
             m = str(int(strpii[i]) * int(_coef[i]))
