@@ -690,7 +690,7 @@ class PersonaAdmin(admin.ModelAdmin):
                 .replace(" HNOS", "")
             )
             return mark_safe(
-                f'<a href="http://www.cuitonline.com/search.php?q={nombre}">buscar</a>'
+                f'<a href="https://www.cuitonline.com/search/{nombre}">buscar</a>'
             )
         else:
             cuit_cuil = obj.cuit_cuil.replace("-", "")
