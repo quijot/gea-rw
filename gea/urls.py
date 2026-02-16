@@ -5,8 +5,6 @@ from . import views
 urlpatterns = [
     # Inicio
     path("", views.Home.as_view(), name="home"),
-    # Privacy Policy
-    path("politica-de-privacidad/", views.PrivacyPolicy.as_view(), name="privacypolicy"),
     # About
     path("acerca/", views.About.as_view(), name="about"),
     # Catastros Locales

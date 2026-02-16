@@ -118,10 +118,6 @@ class About(generic.TemplateView):
     template_name = "about.html"
 
 
-class PrivacyPolicy(generic.TemplateView):
-    template_name = "privacy_policy.html"
-
-
 class ExpedienteMixin:
     def get_queryset(self):
         qset = super().get_queryset()
