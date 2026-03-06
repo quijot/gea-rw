@@ -1026,7 +1026,7 @@ LUGAR = (
 )
 
 Lugar_dict = {
-    0: ("Sr. Secretario de Obras, Servicios Públicos y Gestión", "MUNICIPALIDAD DE GÁLVEZ"),
+    0: ("Sr. Jefe de Catastro", "MUNICIPALIDAD DE GÁLVEZ"),
     1: ("Sr. Presidente de la Comisión Comunal", "PUEBLO AROCENA"),
     2: ("Sr. Presidente de la Comisión Comunal", "PUEBLO BARRANCAS"),
     3: ("Sr. Presidente de la Comisión Comunal", "PUEBLO BERNARDO DE IRIGOYEN"),
