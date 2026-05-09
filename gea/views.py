@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError, transaction
-from django.db.models import Max, Q
+from django.db.models import Max, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
@@ -161,9 +161,32 @@ class ExpedienteListView(LoginRequiredMixin, PaginateByMixin, CounterMixin, Sear
     model = models.Expediente
     paginate_by = 10
 
+    def get_queryset(self):
+        return (
+            super().get_queryset()
+            .prefetch_related(
+                "expedientepartida_set__partida",
+                "expedientelugar_set__catastrolocal_set",
+            )
+        )
+
 
 class ExpedienteDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.Expediente
+
+    def get_queryset(self):
+        return (
+            super().get_queryset()
+            .prefetch_related(
+                "expedientepartida_set__partida",
+                "expedientepartida_set__catastro_set__zona",
+                "expedientelugar_set__catastrolocal_set",
+                "expedientepersona_set__persona",
+                "antecedente_set",
+                "objetos",
+                "profesionales_firmantes",
+            )
+        )
 
 
 class ExpedienteCreateView(SuccessMessageMixin, LoginRequiredMixin, ChildrenContextMixin, generic.CreateView):
@@ -412,7 +435,22 @@ def caratula(request, expediente=None):
             obs = form.cleaned_data["obs"]
             fmt = form.cleaned_data["fmt"]
 
-            e = get_object_or_404(models.Expediente, id=expediente_id)
+            e = get_object_or_404(
+                models.Expediente.objects.prefetch_related(
+                    Prefetch(
+                        "expedientepartida_set",
+                        queryset=models.ExpedientePartida.objects.select_related(
+                            "partida__sd__ds__dp"
+                        ).prefetch_related("catastro_set__zona"),
+                    ),
+                    "expedientelugar_set__lugar",
+                    "expedientelugar_set__catastrolocal_set",
+                    "objetos",
+                    "profesionales_firmantes__titulo",
+                    "antecedente_set",
+                ),
+                id=expediente_id,
+            )
             template = loader.get_template("gea/tools/caratula.%s" % fmt)
             context = {
                 "e": e,
@@ -458,7 +496,21 @@ def solicitud(request, expediente=None):
             nota_titulo = form.cleaned_data["nota_titulo"]
             nota = form.cleaned_data["nota"]
 
-            e = get_object_or_404(models.Expediente, id=expediente_id)
+            e = get_object_or_404(
+                models.Expediente.objects.prefetch_related(
+                    Prefetch(
+                        "expedientepartida_set",
+                        queryset=models.ExpedientePartida.objects.select_related(
+                            "partida__sd__ds__dp"
+                        ).prefetch_related("catastro_set__zona"),
+                    ),
+                    "expedientelugar_set__lugar",
+                    "expedientelugar_set__catastrolocal_set",
+                    "expedientepersona_set__persona",
+                    "profesionales_firmantes__titulo",
+                ),
+                id=expediente_id,
+            )
             template = loader.get_template("gea/doc/solic.html")
             context = {
                 "e": e,
@@ -490,7 +542,14 @@ def visacion(request, expediente=None):
             sr = gv.Lugar_dict[int(lugar)][0]
             localidad = gv.Lugar_dict[int(lugar)][1]
 
-            e = get_object_or_404(models.Expediente, id=eid)
+            e = get_object_or_404(
+                models.Expediente.objects.prefetch_related(
+                    "expedientepartida_set__partida",
+                    "expedientelugar_set__lugar",
+                    "profesionales_firmantes",
+                ),
+                id=eid,
+            )
             # Redirect after POST
             return render(request, "gea/doc/visac.html", {"e": e, "sr": sr, "localidad": localidad})
     else:
@@ -628,7 +687,7 @@ def add_partida_to_expediente(request, expediente_id):
 
     if request.method == "POST":
         if form.is_valid():
-            sd = form.cleaned_data["dpdssd"]
+            sd = form.cleaned_data["sd"]
             pii = form.cleaned_data["partida"]
             subpii = form.cleaned_data["subpartida"]
             expediente = models.Expediente.objects.get(pk=expediente_id)
@@ -662,14 +721,14 @@ def update_partida_to_expediente(request, expediente_id, partida_id):
     for f in form.fields:
         form.fields[f].disabled = True
     partida = models.Partida.objects.get(pk=partida_id)
-    initial = {"dpdssd": partida.sd, "partida": partida.pii, "subpartida": partida.subpii}
+    initial = {"sd": partida.sd, "partida": partida.pii, "subpartida": partida.subpii}
     form.initial = initial
     ep = models.ExpedientePartida.objects.get(expediente=expediente_id, partida=partida_id)
     formset = forms.CatastroInlineFormSet(request.POST or None, instance=ep)
 
     if request.method == "POST":
         if form.is_valid():
-            sd = form.cleaned_data["dpdssd"]
+            sd = form.cleaned_data["sd"]
             pii = form.cleaned_data["partida"]
             subpii = form.cleaned_data["subpartida"]
             expediente = models.Expediente.objects.get(pk=expediente_id)

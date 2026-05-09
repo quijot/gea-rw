@@ -335,10 +335,49 @@ CatastroInlineFormSet = forms.inlineformset_factory(
 )
 
 
+class SDWidget(s2forms.ModelSelect2Widget):
+    model = models.Sd
+    search_fields = [
+        "nombre__icontains",
+        "ds__nombre__icontains",
+        "ds__dp__nombre__icontains",
+    ]
+
+    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
+        from django.db.models import CharField, F, Q, Value
+        from django.db.models.functions import Cast, Concat, LPad
+
+        if queryset is None:
+            queryset = self.get_queryset()
+        if not term:
+            return queryset
+        queryset = queryset.annotate(
+            _completo=Concat(
+                LPad(Cast(F("ds__dp__dp"), output_field=CharField()), 2, Value("0")),
+                LPad(Cast(F("ds__ds"), output_field=CharField()), 2, Value("0")),
+                LPad(Cast(F("sd"), output_field=CharField()), 2, Value("0")),
+                output_field=CharField(),
+            )
+        )
+        q = Q()
+        for word in term.split():
+            q &= (
+                Q(nombre__icontains=word)
+                | Q(ds__nombre__icontains=word)
+                | Q(ds__dp__nombre__icontains=word)
+                | Q(_completo__icontains=word)
+            )
+        return queryset.filter(q).distinct()
+
+
 class PartidaToExpediente(forms.Form):
-    sj = (213, 214, 218, 219, 220, 221, 222, 223, 225, 226, 212, 224, 216, 205, 206, 207, 208, 209, 210, 211, 215, 217, 366)
-    dpdssd = forms.ModelChoiceField(models.Sd.objects.filter(ds__in=sj), label="DP DS SD", help_text="Dpto. Distrito Subdistrito")
-    # dpdssd = forms.ModelChoiceField(models.Sd.objects.all(), label="DP DS SD", help_text="Dpto. Distrito Subdistrito",)
+    sd = forms.ModelChoiceField(
+        queryset=models.Sd.objects.select_related("ds__dp").all(),
+        widget=SDWidget,
+        label="DP DS SD",
+        help_text="Dpto. Distrito Subdistrito",
+        empty_label=None,
+    )
     partida = forms.IntegerField(max_value=999999, min_value=0)
     subpartida = forms.IntegerField(max_value=9999, min_value=0)
 
@@ -347,7 +386,7 @@ class PartidaToExpediente(forms.Form):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
-                Div("dpdssd", css_class="col-lg-2"),
+                Div("sd", css_class="col-lg-2"),
                 Div("partida", css_class="col-lg-2"),
                 Div("subpartida", css_class="col-lg-1"),
             ),

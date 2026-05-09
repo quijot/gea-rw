@@ -24,7 +24,10 @@ Partida |
 </div>
 {% endblock %}
 
+{% block extra_css %}{{ form.media.css }}{% endblock extra_css %}
+
 {% block extra_js %}
+{{ form.media.js }}
 <!-- Add Form to Formset -->
 {% include "helpers/add_form_button.html" %}
 {% endblock extra_js %}

@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
@@ -115,7 +116,7 @@ class Pago(models.Model):
 
 class Dp(models.Model):
     dp = models.IntegerField(primary_key=True)
-    nombre = models.CharField(max_length=50, verbose_name="nombre depto")
+    nombre = models.CharField(max_length=50, verbose_name="nombre depto", db_index=True)
     habitantes = models.IntegerField(blank=True)
     superficie = models.IntegerField(blank=True)
     cabecera = models.CharField(max_length=50, blank=True)
@@ -127,6 +128,9 @@ class Dp(models.Model):
     class Meta:
         verbose_name_plural = "Departamentos"
         ordering = ["dp"]
+        indexes = [
+            models.Index(fields=["nombre"], name="idx_dp_nombre"),
+        ]
 
     def __str__(self):
         return f"{self.dp:02d}"
@@ -137,7 +141,7 @@ class Ds(models.Model):
     # dp = models.ForeignKey(Dp, db_column="dp", on_delete=models.PROTECT)
     dp = models.ForeignKey(Dp, on_delete=models.PROTECT)
     ds = models.IntegerField(db_index=True)
-    nombre = models.CharField(max_length=50, verbose_name="nombre distrito")
+    nombre = models.CharField(max_length=50, verbose_name="nombre distrito", db_index=True)
 
     @cached_property
     def distrito(self):
@@ -149,6 +153,7 @@ class Ds(models.Model):
         unique_together = [["dp", "ds"]]
         indexes = [
             models.Index(fields=["dp", "ds"], name="idx_ds_dp_ds"),
+            models.Index(fields=["nombre"], name="idx_ds_nombre"),
         ]
 
     def __str__(self):
@@ -177,6 +182,10 @@ class Sd(models.Model):
     def ds_nombre(self):
         return self.ds.nombre
 
+    @cached_property
+    def completo(self):
+        return f"{self.ds.dp}{self.ds}{self.sd:02d}"
+
     class Meta:
         verbose_name_plural = "subdistritos"
         ordering = ["ds", "sd"]
@@ -184,10 +193,6 @@ class Sd(models.Model):
         indexes = [
             models.Index(fields=["ds", "sd"], name="idx_sd_ds_sd"),
         ]
-
-    @cached_property
-    def completo(self):
-        return f"{self.ds.dp}{self.ds}{self.sd:02d}"
 
     def __str__(self):
         return self.completo
@@ -448,8 +453,9 @@ class ExpedientePersona(models.Model):
 
 class Partida(models.Model):
     sd = models.ForeignKey("SD", db_column="sd", blank=True, null=True, default=None, on_delete=models.SET_NULL)
-    pii = models.IntegerField("partida", db_index=True)
-    subpii = models.IntegerField("subpartida", default=0)
+    pii = models.IntegerField("partida", db_index=True, validators=[MaxValueValidator(999999)])
+    subpii = models.IntegerField("subpartida", default=0, validators=[MaxValueValidator(9999)])
+    identificador = models.CharField(max_length=30, db_index=True, editable=False, blank=True, default="")
 
     class Meta:
         unique_together = ("sd", "pii", "subpii")
@@ -459,20 +465,22 @@ class Partida(models.Model):
             models.Index(fields=["sd", "pii"], name="idx_partida_sd_pii"),
         ]
 
+    def save(self, *args, **kwargs):
+        if self.sd_id is not None:
+            sd = Sd.objects.select_related("ds__dp").get(pk=self.sd_id)
+            dp_num, ds_num, sd_num = sd.ds.dp.dp, sd.ds.ds, sd.sd
+            pii_str = f"{self.pii:06d}/{self.subpii:04d}"
+            coef = "9731" * 4
+            strpii = f"{dp_num:02d}{ds_num:02d}{sd_num:02d}{self.pii:06d}{self.subpii:04d}"
+            suma = sum(int(str(int(strpii[i]) * int(coef[i]))[-1]) for i in range(len(strpii)))
+            dv = (10 - (suma % 10)) % 10
+            self.identificador = f"{dp_num:02d}-{ds_num:02d}-{sd_num:02d} {pii_str}-{dv}"
+        else:
+            self.identificador = f"{self.pii:06d}/{self.subpii:04d}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.partida
-
-    # def get_absolute_url(self):
-    #     return reverse("partida", kwargs={"pk": self.pk})
-
-    # def get_update_url(self, eid=None):
-    #     if eid:
-    #         return reverse("partida_update", kwargs={"pk": self.pk, "eid": eid})
-    #     else:
-    #         return reverse("partida_update", kwargs={"pk": self.pk})
-
-    # def get_delete_url(self):
-    #     return reverse("partida_delete", kwargs={"pk": self.pk})
+        return self.identificador if self.identificador else self.partida
 
     @cached_property
     def partida(self):
@@ -480,31 +488,28 @@ class Partida(models.Model):
 
     @cached_property
     def partida_completa(self):
-        return f"{self.sd}-{self.partida}" if self.sd else self.partida
+        if self.identificador:
+            return self.identificador.rsplit("-", 1)[0]
+        return self.partida
 
     @cached_property
     def partida_api(self):
-        return f"{self.sd}-{self.partida}-{self.api}" if self.sd else self.partida
+        return self.identificador if self.identificador else self.partida
 
     @cached_property
     def para_caratula(self):
-        return f"{self.sd.dp}-{self.sd.ds}-{self.sd.sd:02d} {self.partida}" if self.sd else self.partida
+        if self.identificador:
+            return self.identificador.rsplit("-", 1)[0]
+        return self.partida
 
     def get_dvapi(self):
-        coef = "9731"
-        _coef = coef + coef + coef + coef
+        if self.identificador:
+            return int(self.identificador.rsplit("-", 1)[-1])
+        coef = "9731" * 4
         sd = int(self.sd.completo) if self.sd else 0
         strpii = f"{sd:06d}{self.pii or 0:06d}{self.subpii or 0:04d}"
-        suma = 0
-        for i in range(0, len(strpii)):
-            m = str(int(strpii[i]) * int(_coef[i]))
-            suma += int(m[len(m) - 1])
+        suma = sum(int(str(int(strpii[i]) * int(coef[i]))[-1]) for i in range(len(strpii)))
         return (10 - (suma % 10)) % 10
-
-    # def get_dvapi(self):
-    #     if self.sd:
-    #         return self.calc_dvapi(int(self.sd.nomenclatura), self.pii, self.subpii)
-    #     return None
 
     api = property(get_dvapi)
 
@@ -589,7 +594,7 @@ class Persona(models.Model):
 
     @cached_property
     def cuit_link(self):
-        url = '<a href="http://www.cuitonline.com/search.php?q=%s">%s</a>'
+        url = '<a href="http://www.cuitonline.com/search/%s">%s</a>'
         if self.cuit_cuil:
             return mark_safe(url % (self.cuit_cuil, self.cuit_cuil))
         elif self.documento:

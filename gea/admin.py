@@ -598,16 +598,18 @@ class PartidaAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ("api",)
     inlines = [PartidaDominioInline]
-    # list_display = ('id', 'sd', 'pii', 'subpii', 'api')
+    list_display = ("identificador", "sd", "pii", "subpii", "api")
     list_filter = ["sd__ds__dp__nombre"]
-    search_fields = ["pii", "sd__nombre", "sd__ds__nombre", "sd__ds__dp__nombre"]
+    search_fields = ["identificador", "pii", "sd__nombre", "sd__ds__nombre", "sd__ds__dp__nombre"]
     actions_on_bottom = True
     save_on_top = True
     list_per_page = 20
-    list_select_related = True
     formfield_overrides = {
         IntegerField: {"widget": NumberInput(attrs={"size": "10"})},
     }
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("sd__ds__dp")
 
 
 @admin.register(models.Persona)
