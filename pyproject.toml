@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gea"
-version = "0.2.52"
+version = "0.2.6"
 description = "Gestión de Expedientes de Agrimensores"
 authors = ["Santiago Pestarini <santiagonob@gmail.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ packages = [{ include = "gea" }]
 
 [tool.poetry.dependencies]
 python = "^3.14"
-dj-database-url = "^2"
+django-environ = "^0.11"
 Django = "^5"
 django-crispy-forms = "^1"
 # crispy-bootstrap4 = "^2024"
@@ -19,22 +19,24 @@ django-extensions = "^3"
 django-nested-admin = "^4"
 django-redis = "^5"
 django-select2 = "^8"
-gunicorn = "23.0.0"
+gunicorn = "^23"
 psycopg2 = "^2"
 whitenoise = "^6"
-pytz = "^2025.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8"
-flake8 = "^7"
-black = "^24"
+ruff = "^0.9"
 ipython = "^8"
 pydot = "^2"
 coverage = "^7"
+graphifyy = "^0.7"
 
-[tool.black]
+[tool.ruff]
 line-length = 119
-target-version = ["py36"]
+extend-exclude = ["gea/migrations/"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
 
 [build-system]
 requires = ["poetry>=0.12"]

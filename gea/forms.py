@@ -289,7 +289,8 @@ class ExpedienteLugarForm(forms.ModelForm):
                     "cancel",
                     "Cancelar",
                     css_class="btn-secondary",
-                    onclick=f"window.location.href = '{reverse_lazy('expediente', kwargs={'pk': self.instance.expediente.pk})}';",
+                    onclick=f"window.location.href = '"
+                    f"{reverse_lazy('expediente', kwargs={'pk': self.instance.expediente.pk})}';",
                 ),
                 Submit("save", "Guardar"),
                 style="text-align: right;",

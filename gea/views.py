@@ -12,9 +12,8 @@ from django.template import loader
 from django.urls import reverse_lazy
 from django.views import generic
 
-from . import forms
+from . import forms, models
 from . import gea_vars as gv
-from . import models
 
 
 class CounterMixin:
@@ -157,7 +156,9 @@ class ExpedienteMixin:
         return qset
 
 
-class ExpedienteListView(LoginRequiredMixin, PaginateByMixin, CounterMixin, SearchMixin, ExpedienteMixin, generic.ListView):
+class ExpedienteListView(
+    LoginRequiredMixin, PaginateByMixin, CounterMixin, SearchMixin, ExpedienteMixin, generic.ListView
+):
     model = models.Expediente
     paginate_by = 10
 
