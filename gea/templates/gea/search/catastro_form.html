@@ -6,7 +6,7 @@
 <form class="form-horizontal col-lg-6" method="post">{% csrf_token %}
   <legend><i class="fas fa-fw fa-map-signs"></i> Buscar en Catastros Locales</legend>
   <fieldset>
-    <div class="form-group">
+    <div class="mb-3">
       <table class="table table-condensed table-hover">
       {{ form.as_table }}
       </table>

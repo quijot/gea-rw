@@ -1,13 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler"
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
     aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand" href="{% url 'home' %}">
-    <i class="far fa-folder-open fa-fw mr-2"></i><strong>GEA</strong>
+    <i class="far fa-folder-open fa-fw me-2"></i><strong>GEA</strong>
   </a>
   <div class="collapse navbar-collapse" id="navbarToggler">
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav me-auto">
       <!-- Expedientes -->
       {% url 'expedientes' as url %}
       <li class="nav-item {% if request.path == url %}active{% endif %}">
@@ -31,7 +31,7 @@
       </li>
       <!-- Notas -->
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-paperclip"></i> Notas
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -45,7 +45,7 @@
       </li>
       <!-- Herramientas -->
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-wrench"></i> Herramientas
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -63,11 +63,11 @@
       <!-- Acerca de -->
       <li class="nav-item">
         <a class="nav-link" href="{% url 'about' %}">
-          <i class="fas fa-info mr-2"></i> Acerca de
+          <i class="fas fa-info me-2"></i> Acerca de
         </a>
       </li>
     </ul>
-    <ul class="navbar-nav ml-md-auto">
+    <ul class="navbar-nav ms-md-auto">
       {% if user.is_staff %}
       <!-- admin -->
       <li class="nav-item">

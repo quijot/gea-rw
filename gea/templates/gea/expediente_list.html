@@ -28,9 +28,9 @@ Expedientes
 
     <div class="row">
       <div class="col-sm-12">
-        <form class="form-inline float-right" action="." method="get">
+        <form class="d-flex float-end" action="." method="get">
           <div class="input-group mb-2">
-            <fieldset class="form-group">
+            <fieldset class="mb-3">
               <div class="form-check mx-2">
                 <label class="form-check-label" for="pendiente">
                   <input class="form-check-input" type="radio" name="estado_expediente" value="pendiente"
@@ -91,16 +91,16 @@ Expedientes
             <tr class="{% if object.pendiente %}table-warning{% endif %}">
               <td>
                 <!-- EXPEDIENTE -->
-                <a href="{{ object.get_absolute_url }}" class="badge badge-dark p-1">{{ object.id }}</a>
+                <a href="{{ object.get_absolute_url }}" class="badge bg-dark p-1">{{ object.id }}</a>
               </td>
               <td>
                 <!-- PERSONAS -->
                 {% if object.cancelado %}
-                <span class="badge badge-danger">CANCELADO</span>&ensp;<small>{{ object.cancelado_por|default:"" }}</small><br>
+                <span class="badge bg-danger">CANCELADO</span>&ensp;<small>{{ object.cancelado_por|default:"" }}</small><br>
                 {% endif %}
                 {% for ep in object.expedientepersona_set.all %}
                 <a href="{{ ep.persona.get_absolute_url }}" title="{{ ep.persona.nombre_completo }}">{{ ep.persona.nombre_completo_elipsis|safe }}</a>
-                {% if ep.comitente %}<span class="badge badge-warning">COMITENTE</span>{% endif %}
+                {% if ep.comitente %}<span class="badge bg-warning text-dark">COMITENTE</span>{% endif %}
                 {% if ep.persona.telefono %}
                 <small>
                   <a href="tel:{{ ep.persona.telefono }}" style="color: unset;">
@@ -123,22 +123,22 @@ Expedientes
               <td>
                 <!-- PARTIDAS -->
                 {% for p in object.partidas_list %}
-                <span class="badge badge-primary p-1">{{ p.partida_api }}</span><br>
+                <span class="badge bg-primary p-1">{{ p.partida_api }}</span><br>
                 {% endfor %}
               </td>
               <td>
                 <!-- PLANO -->
                 {% if object.orden_numero %}
-                <span class="badge badge-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
+                <span class="badge bg-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
                 <small>{{ object.orden_fecha|default:"" }}</small><br>
                 {% endif %}
                 <i class="far fa-fw fa-map"></i>
                 <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
                   {% if object.sin_inscripcion %}
-                  <span class="badge badge-info">NO REQUIERE</span>
+                  <span class="badge bg-info text-dark">NO REQUIERE</span>
                   {% else %}
                   {% if object.duplicado %}Dup.{% endif %}
-                  <span class="font-weight-bold">
+                  <span class="fw-bold">
                     {{ object.inscripcion_numero|default:"PENDIENTE" }}
                   </span>
                   {% endif %}
@@ -162,7 +162,7 @@ Expedientes
             {% empty %}
             <div class="alert alert-info" role="alert">
               <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
-              <span class="sr-only">Información:</span>
+              <span class="visually-hidden">Información:</span>
               No se encontraron registros.
             </div>
             {% endfor %}

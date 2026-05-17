@@ -4,7 +4,7 @@
 {% block title %}Inicio{% endblock %}
 
 {% block page-title %}
-<a href="{% url 'home' %}"><span class="font-weight-bold">GEA</span></a> | Panel principal
+<a href="{% url 'home' %}"><span class="fw-bold">GEA</span></a> | Panel principal
 {% endblock %}
 
 {% block content %}
@@ -23,10 +23,10 @@
         <ul class="list-group list-group-flush">
           {% for e in relev_list|slice:":5" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.fecha_medicion }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
+            <a href="{{ e.get_absolute_url }}" class="badge bg-dark p-1 me-1">{{ e.id }}</a>
             <strong>{{ e.personas.first.apellidos }}</strong> -
             <em>{{ e.lugares.first.nombre }}</em>
           </li>
@@ -42,7 +42,7 @@
   <div class="col-lg-4">
     <div class="card shadow-lg mb-4 border-primary">
       <div class="card-header bg-primary text-white">
-        <span class="float-right">
+        <span class="float-end">
           <a href="{% url 'expedientes' %}?estado_expediente=inscripto" class="btn btn-primary" title="Ver todos">
             <i class="fas fa-fw fa-plus"></i>
           </a>
@@ -57,10 +57,10 @@
         <ul class="list-group list-group-flush">
           {% for e in insc_list|slice:":5" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.inscripcion_fecha }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
+            <a href="{{ e.get_absolute_url }}" class="badge bg-dark p-1 me-1">{{ e.id }}</a>
             <i class="far fa-fw fa-map"></i> <strong>{{ e.inscripcion_numero }}</strong>
           </li>
           {% empty %}
@@ -75,7 +75,7 @@
   <div class="col-lg-4">
     <div class="card shadow-lg mb-4 border-warning">
       <div class="card-header bg-warning text-white">
-        <span class="float-right">
+        <span class="float-end">
           <a href="{% url 'expedientes' %}?estado_expediente=pendiente" class="btn btn-warning" title="Ver todos">
             <i class="fas fa-fw fa-plus"></i>
           </a>
@@ -90,11 +90,11 @@
         <ul class="list-group list-group-flush">
           {% for e in ord_list|slice:":10" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.orden_fecha }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
-            <span class="badge badge-danger">CoPA <strong>{{ e.orden_numero }}</strong></span>
+            <a href="{{ e.get_absolute_url }}" class="badge bg-dark p-1 me-1">{{ e.id }}</a>
+            <span class="badge bg-danger">CoPA <strong>{{ e.orden_numero }}</strong></span>
           </li>
           {% empty %}
           <li class="list-group-item">
@@ -118,10 +118,10 @@
         <ul class="list-group list-group-flush">
           {% for e in open_list|slice:":10" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.created }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
+            <a href="{{ e.get_absolute_url }}" class="badge bg-dark p-1 me-1">{{ e.id }}</a>
             <strong>{{ e.personas.first.apellidos }}</strong> -
             <em>{{ e.lugares.first.nombre }}</em>
           </li>

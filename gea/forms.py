@@ -172,7 +172,7 @@ class ExpedienteForm(forms.ModelForm):
                 Div("orden_numero", css_class="col-md-2"),
                 Div(Field("orden_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
             ),
-            HTML("<span class='lead font-weight-bold mr-3'>Lugares</span>"),
+            HTML("<span class='lead fw-bold me-3'>Lugares</span>"),
             Button(
                 "add-lugar",
                 "&plus; Agregar",
@@ -181,7 +181,7 @@ class ExpedienteForm(forms.ModelForm):
                 onclick="add_form('expedientelugar_set')",
             ),
             Div(Formset("expedientelugar_set"), css_class="table-responsive"),
-            HTML("<span class='lead font-weight-bold mr-3'>Personas</span>"),
+            HTML("<span class='lead fw-bold me-3'>Personas</span>"),
             Button(
                 "add-persona",
                 "&plus; Agregar",
@@ -190,7 +190,7 @@ class ExpedienteForm(forms.ModelForm):
                 onclick="add_form('expedientepersona_set')",
             ),
             Div(Formset("expedientepersona_set"), css_class="table-responsive"),
-            HTML("<span class='lead font-weight-bold mr-3'>Antecedentes</span>"),
+            HTML("<span class='lead fw-bold me-3'>Antecedentes</span>"),
             Button(
                 "add-antecedente",
                 "&plus; Agregar",
@@ -316,7 +316,7 @@ class ExpedienteLugarForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div("expediente", css_class="d-none"),
             Div("lugar", css_class="d-none"),
-            HTML("<span class='lead font-weight-bold mr-3'>Catastro Local</span>"),
+            HTML("<span class='lead fw-bold me-3'>Catastro Local</span>"),
             Button(
                 "add-cl",
                 "&plus; Agregar",
@@ -344,7 +344,7 @@ class PersonaToExpediente(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            HTML("<span class='lead font-weight-normal mr-3'>Personas</span>"),
+            HTML("<span class='lead fw-normal me-3'>Personas</span>"),
             Button(
                 "add-persona",
                 "&plus; Agregar",
@@ -411,7 +411,7 @@ class PartidaToExpediente(forms.Form):
                 Div("partida", css_class="col-lg-2"),
                 Div("subpartida", css_class="col-lg-1"),
             ),
-            HTML("<span class='lead font-weight-normal mr-3'>Catastro</span>"),
+            HTML("<span class='lead fw-normal me-3'>Catastro</span>"),
             Button(
                 "add-catastro",
                 "&plus; Agregar",
@@ -549,7 +549,7 @@ class SolicitudForm(forms.Form):
                     onclick="window.history.back();",
                 ),
                 Submit("save", "Generar Nota"),
-                css_class="float-right",
+                css_class="float-end",
             ),
         )
 
@@ -575,7 +575,7 @@ class VisacionForm(forms.Form):
                     onclick="window.history.back();",
                 ),
                 Submit("save", "Generar Nota"),
-                css_class="float-right",
+                css_class="float-end",
             ),
         )
 

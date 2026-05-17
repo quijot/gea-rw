@@ -5,7 +5,7 @@
 <i class="fas fa-fw fa-map-signs"></i>
 Catastros Locales
 {% if lugar %}
-<span class="h5 ml-3">
+<span class="h5 ms-3">
   {{ lugar }}
   - sección:<strong>{{ seccion|default:"todas" }}</strong>
   - manzana:<strong>{{ manzana|default:"todas" }}</strong>
@@ -24,7 +24,7 @@ Catastros Locales
       <div class="col-lg-1">Lugar</div>
       <div class="dropdown col-lg-4">
         <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="lugar" name="lugar"
-          data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <strong>{{ lugar|default:"Seleccione un Lugar" }}</strong>
         </button>
         <div class="dropdown-menu">
@@ -101,16 +101,16 @@ Catastros Locales
             <tr class="{% if object.pendiente %}table-warning{% endif %}">
               <td>
                 <!-- EXPEDIENTE -->
-                <a href="{{ object.get_absolute_url }}" class="badge badge-dark p-1">{{ object.id }}</a>
+                <a href="{{ object.get_absolute_url }}" class="badge bg-dark p-1">{{ object.id }}</a>
               </td>
               <td>
                 <!-- PERSONAS -->
                 {% if object.cancelado %}
-                <span class="badge badge-danger">CANCELADO</span> <small>{{ object.cancelado_por }}</small><br>
+                <span class="badge bg-danger">CANCELADO</span> <small>{{ object.cancelado_por }}</small><br>
                 {% endif %}
                 {% for ep in object.expedientepersona_set.all %}
                 <a href="{{ ep.persona.get_absolute_url }}" title="{{ ep.persona.nombre_completo }}">{{ ep.persona.nombre_completo_elipsis|safe }}</a>
-                {% if ep.comitente %}<span class="badge badge-warning">COMITENTE</span>{% endif %}
+                {% if ep.comitente %}<span class="badge bg-warning text-dark">COMITENTE</span>{% endif %}
                 {% if ep.persona.telefono %}
                 <small>
                   <a href="tel:{{ ep.persona.telefono }}" style="color: unset;">
@@ -133,22 +133,22 @@ Catastros Locales
               <td>
                 <!-- PARTIDAS -->
                 {% for p in object.partidas_list %}
-                <span class="badge badge-primary p-1">{{ p.partida_completa }}</span><br>
+                <span class="badge bg-primary p-1">{{ p.partida_completa }}</span><br>
                 {% endfor %}
               </td>
               <td>
                 <!-- PLANO -->
                 {% if object.orden_numero %}
-                <span class="badge badge-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
+                <span class="badge bg-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
                 <small>{{ object.orden_fecha|default:"" }}</small><br>
                 {% endif %}
                 <i class="far fa-fw fa-map"></i>
                 <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
                   {% if object.sin_inscripcion %}
-                  <span class="badge badge-info">NO REQUIERE</span>
+                  <span class="badge bg-info text-dark">NO REQUIERE</span>
                   {% else %}
                   {% if object.duplicado %}Dup.{% endif %}
-                  <span class="font-weight-bold">
+                  <span class="fw-bold">
                     {{ object.inscripcion_numero|default:"PENDIENTE" }}
                   </span>
                   {% endif %}
@@ -172,7 +172,7 @@ Catastros Locales
             {% empty %}
             <div class="alert alert-info" role="alert">
               <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
-              <span class="sr-only">Información:</span>
+              <span class="visually-hidden">Información:</span>
               No se encontraron Expedientes.
             </div>
             {% endfor %}
