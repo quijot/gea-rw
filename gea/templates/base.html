@@ -5,16 +5,15 @@
   {% load static %}
   <!-- Required meta tags -->
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GEA | {% block title %}Base{% endblock title %}</title>
 
   {% block css %}
-  <!-- Bootstrap CSS -->
+  <!-- Bootstrap CSS — local (Bootswatch theme o fallback Bootstrap 5) -->
   {% if global_preferences.site__theme %}
   <link href="{% static 'css/bootstrap.'|add:global_preferences.site__theme|add:'.min.css' %}" rel="stylesheet">
   {% else %}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   {% endif %}
 
   <!-- Fontawesome CDN -->
@@ -55,9 +54,7 @@
                 role="alert">
                 {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}<strong>ERROR</strong>:{% endif %}
                 {{ message|safe }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
               </div>
             </div>
           </div>
@@ -69,14 +66,6 @@
           <div class="d-sm-flex align-items-center justify-content-between my-4">
             <h1 class="mb-2">{% block page-title %}{% endblock page-title %}</h1>
             {% block page-heading-buttons %}
-            <!-- Button Group sample
-            <div class="btn-group d-print-none" role="group" aria-label="Actions">
-              <a href="#" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i>
-                Agregar
-              </a>
-            </div>
-            -->
             {% endblock page-heading-buttons %}
           </div>
           {% endblock page-heading %}
@@ -113,17 +102,23 @@
   {% endblock top-button %}
 
   {% block js %}
-  <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+  {% load static %}
+  <!-- Bootstrap 5 bundle — local -->
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <!-- jQuery — mantenido hasta Paso 1.7.5 (django-select2 lo requiere) -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-    crossorigin="anonymous"></script>
 
-  <!-- Messages Fade  -->
+  <!-- Messages Fade — vanilla JS -->
   <script>
-    $(document).ready(function () {
-      $("#messages").fadeTo(5000, 0.9).slideUp();
+    document.addEventListener('DOMContentLoaded', function () {
+      const msgs = document.getElementById('messages');
+      if (msgs) {
+        setTimeout(function () {
+          msgs.style.transition = 'opacity 0.5s';
+          msgs.style.opacity = '0';
+        }, 5000);
+      }
     });
   </script>
   {% endblock js %}

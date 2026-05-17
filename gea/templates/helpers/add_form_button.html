@@ -1,11 +1,23 @@
 <script>
   function add_form(formset) {
-    let total = $("#id_" + formset + "-TOTAL_FORMS").val();
-    let row = $("#" + formset + "_table tr:last")[0]; // find row to copy
-    let table = $("#" + formset + "_table tbody")[0]; // find table to append to
-    let clone = row.cloneNode(true); // copy children too
-    clone.innerHTML = clone.innerHTML.replaceAll("-" + (total - 1) + "-", "-" + total + "-");
-    table.appendChild(clone); // add new row to end of table
-    $("#id_" + formset + "-TOTAL_FORMS").val(++total);
+    const total = document.getElementById('id_' + formset + '-TOTAL_FORMS');
+    const count = parseInt(total.value);
+    const table = document.getElementById(formset + '_table');
+    const emptyRow = table.querySelector('tr.empty-form');
+    const tbody = table.querySelector('tbody');
+
+    const clone = emptyRow.cloneNode(true);
+    clone.innerHTML = clone.innerHTML.replaceAll('__prefix__', count);
+    clone.classList.remove('d-none', 'empty-form');
+    tbody.appendChild(clone);
+
+    // django-select2 escucha formset:added para reinicializar sus widgets
+    // Tom Select (Paso 1.7) reinicializará via el listener de htmx:afterSwap
+    clone.dispatchEvent(new CustomEvent('formset:added', {
+      bubbles: true,
+      detail: { formsetName: formset },
+    }));
+
+    total.value = count + 1;
   }
 </script>
