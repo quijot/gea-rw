@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "crispy_forms",
     "crispy_bootstrap5",
-    "django_select2",
     "django_tomselect",
 ]
 
@@ -100,14 +99,7 @@ DYNAMIC_PREFERENCES = {
 
 CACHES = {
     "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
-    "select2": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL"),
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-    },
 }
-
-SELECT2_CACHE_BACKEND = "select2"
 
 TOMSELECT = {"DEFAULT_CSS_FRAMEWORK": "bootstrap5"}
 
