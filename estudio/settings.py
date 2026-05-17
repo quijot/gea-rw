@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     "dynamic_preferences",
     "django_extensions",
     "crispy_forms",
-    # "crispy_bootstrap4",
+    "crispy_bootstrap5",
     "django_select2",
 ]
 
@@ -88,7 +88,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 LOGIN_REDIRECT_URL = "home"
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5"]
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 CRISPY_FAIL_SILENTLY = not DEBUG
 
 DYNAMIC_PREFERENCES = {

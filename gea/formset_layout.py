@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 
 
 class Formset(LayoutObject):
-    template = "bootstrap4/table_inline_formset.html"
+    template = "bootstrap5/table_inline_formset.html"
 
     def __init__(self, formset_name_in_context, template=None, helper=None):
         self.formset_name_in_context = formset_name_in_context
