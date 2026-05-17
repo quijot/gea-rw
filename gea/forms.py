@@ -4,14 +4,26 @@ from crispy_forms.layout import HTML, Button, Div, Field, Fieldset, Layout, Row,
 from django import forms
 from django.urls import reverse_lazy
 from django_select2 import forms as s2forms
+from django_tomselect.app_settings import TomSelectConfig
+from django_tomselect.widgets import TomSelectModelWidget
 
 from . import gea_vars as gv
 from . import models
 from .formset_layout import Formset
 
 
-class PersonaWidget(s2forms.ModelSelect2Widget):
-    search_fields = ["apellidos__icontains", "nombres__icontains"]
+class PersonaWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_persona",
+                value_field="id",
+                label_field="nombre_completo",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class EPForm(forms.ModelForm):

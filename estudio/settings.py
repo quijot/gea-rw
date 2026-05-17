@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "django_select2",
+    "django_tomselect",
 ]
 
 MIDDLEWARE = [
@@ -107,6 +108,8 @@ CACHES = {
 }
 
 SELECT2_CACHE_BACKEND = "select2"
+
+TOMSELECT = {"DEFAULT_CSS_FRAMEWORK": "bootstrap5"}
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
