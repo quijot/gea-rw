@@ -3,9 +3,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML, Button, Div, Field, Fieldset, Layout, Row, Submit
 from django import forms
 from django.urls import reverse_lazy
-from django_select2 import forms as s2forms
 from django_tomselect.app_settings import TomSelectConfig
-from django_tomselect.widgets import TomSelectModelWidget
+from django_tomselect.widgets import TomSelectModelMultipleWidget, TomSelectModelWidget
 
 from . import gea_vars as gv
 from . import models
@@ -52,8 +51,18 @@ PersonasInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class LugarWidget(s2forms.ModelSelect2Widget):
-    search_fields = ["nombre__icontains"]
+class LugarWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_lugar",
+                value_field="id",
+                label_field="nombre",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class ELForm(forms.ModelForm):
@@ -72,8 +81,18 @@ LugaresInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class AntecedenteWidget(s2forms.ModelSelect2Widget):
-    search_fields = ["id__icontains"]
+class AntecedenteWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_expediente",
+                value_field="id",
+                label_field="id",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class AntForm(forms.ModelForm):
@@ -93,8 +112,18 @@ AntecedentesInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class ObjetosWidget(s2forms.ModelSelect2MultipleWidget):
-    search_fields = ["nombre__icontains"]
+class ObjetosWidget(TomSelectModelMultipleWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_objeto",
+                value_field="id",
+                label_field="nombre",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class ExpedienteForm(forms.ModelForm):
@@ -348,39 +377,18 @@ CatastroInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class SDWidget(s2forms.ModelSelect2Widget):
-    model = models.Sd
-    search_fields = [
-        "nombre__icontains",
-        "ds__nombre__icontains",
-        "ds__dp__nombre__icontains",
-    ]
-
-    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
-        from django.db.models import CharField, F, Q, Value
-        from django.db.models.functions import Cast, Concat, LPad
-
-        if queryset is None:
-            queryset = self.get_queryset()
-        if not term:
-            return queryset
-        queryset = queryset.annotate(
-            _completo=Concat(
-                LPad(Cast(F("ds__dp__dp"), output_field=CharField()), 2, Value("0")),
-                LPad(Cast(F("ds__ds"), output_field=CharField()), 2, Value("0")),
-                LPad(Cast(F("sd"), output_field=CharField()), 2, Value("0")),
-                output_field=CharField(),
-            )
+class SDWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_sd",
+                value_field="id",
+                label_field="label",
+                attrs={"class": "tomselect-init"},
+            ),
         )
-        q = Q()
-        for word in term.split():
-            q &= (
-                Q(nombre__icontains=word)
-                | Q(ds__nombre__icontains=word)
-                | Q(ds__dp__nombre__icontains=word)
-                | Q(_completo__icontains=word)
-            )
-        return queryset.filter(q).distinct()
+        super().__init__(**kwargs)
 
 
 class PartidaToExpediente(forms.Form):
