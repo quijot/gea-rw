@@ -9,6 +9,18 @@
     const clone = emptyRow.cloneNode(true);
     clone.innerHTML = clone.innerHTML.replaceAll('__prefix__', count);
     clone.classList.remove('d-none', 'empty-form');
+
+    // Tom Select inicializó su UI sobre el <select> del empty-form, por lo que
+    // el clone trae arrastrando el .ts-wrapper duplicado. Borramos esos restos
+    // antes de reinicializar para que django-tomselect arranque limpio sobre
+    // el <select> nativo.
+    clone.querySelectorAll('.ts-wrapper').forEach((w) => w.remove());
+    clone.querySelectorAll('select.tomselected').forEach((s) => {
+      s.classList.remove('tomselected', 'ts-hidden-accessible');
+      s.removeAttribute('tabindex');
+      delete s.tomselect;
+    });
+
     tbody.appendChild(clone);
 
     // django-tomselect reinicializa Tom Select en selects clonados al
