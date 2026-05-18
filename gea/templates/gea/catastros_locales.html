@@ -2,7 +2,7 @@
 {% block title %}Catastos Locales{% endblock title %}
 
 {% block page-title %}
-<i class="fas fa-fw fa-map-signs"></i>
+<i class="bi bi-signpost-split-fill"></i>
 Catastros Locales
 {% if lugar %}
 <span class="h5 ms-3">
@@ -101,7 +101,7 @@ Catastros Locales
             <tr class="{% if object.pendiente %}table-warning{% endif %}">
               <td>
                 <!-- EXPEDIENTE -->
-                <a href="{{ object.get_absolute_url }}" class="badge bg-dark p-1">{{ object.id }}</a>
+                <a href="{{ object.get_absolute_url }}"><span class="badge bg-dark p-1">{{ object.id }}</span></a>
               </td>
               <td>
                 <!-- PERSONAS -->
@@ -110,7 +110,7 @@ Catastros Locales
                 {% endif %}
                 {% for ep in object.expedientepersona_set.all %}
                 <a href="{{ ep.persona.get_absolute_url }}" title="{{ ep.persona.nombre_completo }}">{{ ep.persona.nombre_completo_elipsis|safe }}</a>
-                {% if ep.comitente %}<span class="badge bg-warning text-dark">COMITENTE</span>{% endif %}
+                {% if ep.comitente %}<span class="badge bg-warning">COMITENTE</span>{% endif %}
                 {% if ep.persona.telefono %}
                 <small>
                   <a href="tel:{{ ep.persona.telefono }}" style="color: unset;">
@@ -142,10 +142,10 @@ Catastros Locales
                 <span class="badge bg-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
                 <small>{{ object.orden_fecha|default:"" }}</small><br>
                 {% endif %}
-                <i class="far fa-fw fa-map"></i>
+                <i class="bi bi-map"></i>
                 <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
                   {% if object.sin_inscripcion %}
-                  <span class="badge bg-info text-dark">NO REQUIERE</span>
+                  <span class="badge bg-info">NO REQUIERE</span>
                   {% else %}
                   {% if object.duplicado %}Dup.{% endif %}
                   <span class="fw-bold">
@@ -158,20 +158,20 @@ Catastros Locales
               <td>
                 <div class="btn-group">
                   <!-- <a href="{{ object.get_absolute_url }}" class="btn btn-info btn-sm" title="Ver">
-                    <i class="fas fa-fw fa-info"></i>
+                    <i class="bi bi-info"></i>
                   </a> -->
                   <a href="{{ object.get_update_url }}" class="btn btn-primary btn-sm" title="Editar">
-                    <i class="fas fa-fw fa-pen"></i>
+                    <i class="bi bi-pencil-fill"></i>
                   </a>
                   <a href="{{ object.get_delete_url }}" class="btn btn-danger btn-sm" title="Eliminar">
-                    <i class="fas fa-fw fa-trash"></i>
+                    <i class="bi bi-trash-fill"></i>
                   </a>
                 </div>
               </td>
             </tr>
             {% empty %}
             <div class="alert alert-info" role="alert">
-              <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
+              <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
               <span class="visually-hidden">Información:</span>
               No se encontraron Expedientes.
             </div>

@@ -4,7 +4,7 @@
 
 {% block content %}
 <form class="form-horizontal col-lg-6" method="post">{% csrf_token %}
-  <legend><i class="fas fa-fw fa-calculator"></i> Calcular Dígito Verificador API</legend>
+  <legend><i class="bi bi-calculator-fill"></i> Calcular Dígito Verificador API</legend>
   <fieldset>
     <div class="mb-3">
       <table class="table table-condensed table-hover">
@@ -13,7 +13,7 @@
       <div class="well well-sm col-lg-10">
         Resultado: <strong>{{ dv }}</strong>
       </div>
-        <button type="submit" class="btn btn-primary pull-right">Calcular</button>
+        <button type="submit" class="btn btn-primary float-end">Calcular</button>
     </div>
   </fieldset>
 </form>

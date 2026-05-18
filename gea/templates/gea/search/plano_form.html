@@ -4,13 +4,13 @@
 
 {% block content %}
 <form class="form-horizontal col-lg-6" method="post">{% csrf_token %}
-  <legend><i class="fas fa-fw fa-map"></i> Buscar Planos por Número de Inscripción</legend>
+  <legend><i class="bi bi-map-fill"></i> Buscar Planos por Número de Inscripción</legend>
   <fieldset>
     <div class="mb-3">
       <table class="table table-condensed table-hover">
       {{ form.as_table }}
       </table>
-      <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-fw fa-search"></i> Buscar</button>
+      <button type="submit" class="btn btn-primary float-end"><i class="bi bi-search"></i> Buscar</button>
     </div>
   </fieldset>
 </form>

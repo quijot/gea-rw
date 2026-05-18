@@ -20,9 +20,8 @@
   <link rel="stylesheet" href="{% static 'django_tomselect/vendor/tom-select/css/tom-select.bootstrap5.min.css' %}">
   <link rel="stylesheet" href="{% static 'django_tomselect/css/django-tomselect.css' %}">
 
-  <!-- Fontawesome CDN -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-    integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <!-- Bootstrap Icons — local -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
   {% endblock css %}
   {% block extra_css %}{% endblock extra_css %}
   {% block font %}{% endblock font %}
@@ -84,9 +83,9 @@
         <div class="container my-auto">
           <!-- Copyright -->
           <div class="copyright text-center my-auto">
-            <small class="text-muted">
+            <small class="text-body-secondary">
               <strong>GEA</strong> &copy; {% now "Y" %}. Todos los derechos reservados.
-              <a class="text-dark" href="#">GEAdevel</a>
+              <a class="text-body" href="#">GEAdevel</a>
             </small>
           </div>
         </div>
@@ -96,14 +95,14 @@
     <!-- End of Content Wrapper -->
   </div>
   <!-- End of Page Wrapper -->
-  {% block top-button %}
+  {% block top_button %}
   <!-- Scroll to Top Button-->
   <div class="d-flex justify-content-end">
-    <a class="btn btn-outline-primary d-print-none m-3" href="#page-top">
-      <i class="fas fa-angle-up"></i>
+    <a class="btn btn-outline-primary d-print-none m-3" href="#page-top" aria-label="Volver arriba">
+      <i class="bi bi-chevron-up"></i>
     </a>
   </div>
-  {% endblock top-button %}
+  {% endblock top_button %}
 
   {% block js %}
   {% load static %}

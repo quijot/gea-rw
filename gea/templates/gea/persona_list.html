@@ -2,13 +2,13 @@
 {% block title %}Personas{% endblock title %}
 
 {% block page-title %}
-<i class="fas fa-fw fa-users"></i>
+<i class="bi bi-people-fill"></i>
 Personas
 {% endblock %}
 {% block page-heading-buttons %}
 <div class="btn-group shadow">
   <a href="{% url 'persona_create' %}" class="btn btn-success">
-    <i class="fas fa-fw fa-user-plus"></i> Agregar
+    <i class="bi bi-person-plus-fill"></i> Agregar
   </a>
 </div>
 {% endblock %}
@@ -49,8 +49,10 @@ Personas
               </td>
               <td>
                 {% for ep in object.expedientepersona_set.all %}
-                <a href="{{ ep.expediente.get_absolute_url }}" class="badge bg-dark">
-                  <strong>{{ ep.expediente.id }}</strong>
+                <a href="{{ ep.expediente.get_absolute_url }}">
+                  <span class="badge bg-dark">
+                    {{ ep.expediente.id }}
+                  </span>
                 </a>
                 {% empty %}
                 &ndash;
@@ -74,17 +76,17 @@ Personas
               <td>
                 <div class="btn-group">
                   <a href="{{ object.get_update_url }}" class="btn btn-primary btn-sm" title="Editar">
-                    <i class="fas fa-fw fa-pen"></i>
+                    <i class="bi bi-pencil-fill"></i>
                   </a>
                   <a href="{{ object.get_delete_url }}" class="btn btn-danger btn-sm" title="Eliminar">
-                    <i class="fas fa-fw fa-trash"></i>
+                    <i class="bi bi-trash-fill"></i>
                   </a>
                 </div>
               </td>
             </tr>
             {% empty %}
             <div class="alert alert-info" role="alert">
-              <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
+              <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
               <span class="visually-hidden">Información:</span>
               No se encontraron registros.
             </div>

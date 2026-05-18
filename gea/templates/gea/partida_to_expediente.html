@@ -4,12 +4,12 @@
 {% block title %}Partidas{% endblock %}
 
 {% block page-title %}
-<i class="fas fa-file-alt fa-fw"></i>
+<i class="bi bi-file-earmark-text-fill"></i>
 Partida |
 <span class="text-primary">
   {% if partida %}
   Editando
-  <span class="badge bg-dark">{{ expediente }}</span><span class="badge bg-light text-dark fw-light">{{ partida }}</span>
+  <span class="badge bg-dark">{{ expediente }}</span><span class="badge bg-light fw-light">{{ partida }}</span>
   {% else %}
   Agregando a <span class="badge bg-dark">{{ expediente }}</span>
   {% endif %}
