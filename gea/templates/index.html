@@ -4,7 +4,7 @@
 {% block title %}Inicio{% endblock %}
 
 {% block page-title %}
-<a href="{% url 'home' %}"><span class="font-weight-bold">GEA</span></a> | Panel principal
+<a href="{% url 'home' %}"><span class="fw-bold">GEA</span></a> | Panel principal
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
     <div class="card shadow-lg mb-4 border-success">
       <div class="card-header bg-success text-white">
         <h4 class="card-title">
-          <i class="fas fa-fw fa-compass"></i>
+          <i class="bi bi-compass-fill"></i>
           <strong>Relevamientos</strong>
         </h4>
         <span>Últimos 5 de {{ relev_list.count }} relevamientos.</span>
@@ -23,10 +23,10 @@
         <ul class="list-group list-group-flush">
           {% for e in relev_list|slice:":5" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.fecha_medicion }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
+            <a href="{{ e.get_absolute_url }}"><span class="badge bg-dark p-1 me-1">{{ e.id }}</span></a>
             <strong>{{ e.personas.first.apellidos }}</strong> -
             <em>{{ e.lugares.first.nombre }}</em>
           </li>
@@ -42,13 +42,13 @@
   <div class="col-lg-4">
     <div class="card shadow-lg mb-4 border-primary">
       <div class="card-header bg-primary text-white">
-        <span class="float-right">
+        <span class="float-end">
           <a href="{% url 'expedientes' %}?estado_expediente=inscripto" class="btn btn-primary" title="Ver todos">
-            <i class="fas fa-fw fa-plus"></i>
+            <i class="bi bi-plus-lg"></i>
           </a>
         </span>
         <h4 class="card-title">
-          <i class="fas fa-fw fa-map"></i>
+          <i class="bi bi-map-fill"></i>
           <strong>Planos inscriptos</strong>
         </h4>
         <span>Últimos 5 de {{ insc_list.count }} planos inscriptos.</span>
@@ -57,11 +57,11 @@
         <ul class="list-group list-group-flush">
           {% for e in insc_list|slice:":5" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.inscripcion_fecha }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
-            <i class="far fa-fw fa-map"></i> <strong>{{ e.inscripcion_numero }}</strong>
+            <a href="{{ e.get_absolute_url }}"><span class="badge bg-dark p-1 me-1">{{ e.id }}</span></a>
+            <i class="bi bi-map"></i> <strong>{{ e.inscripcion_numero }}</strong>
           </li>
           {% empty %}
           <li class="list-group-item">
@@ -75,13 +75,13 @@
   <div class="col-lg-4">
     <div class="card shadow-lg mb-4 border-warning">
       <div class="card-header bg-warning text-white">
-        <span class="float-right">
+        <span class="float-end">
           <a href="{% url 'expedientes' %}?estado_expediente=pendiente" class="btn btn-warning" title="Ver todos">
-            <i class="fas fa-fw fa-plus"></i>
+            <i class="bi bi-plus-lg"></i>
           </a>
         </span>
         <h4 class="card-title">
-          <i class="fas fa-fw fa-file-signature"></i>
+          <i class="bi bi-file-earmark-medical-fill"></i>
           <strong>Órdenes de trabajo</strong>
         </h4>
         <span>Últimas 10 de {{ ord_list.count }} órdenes pendientes.</span>
@@ -90,11 +90,11 @@
         <ul class="list-group list-group-flush">
           {% for e in ord_list|slice:":10" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.orden_fecha }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
-            <span class="badge badge-danger">CoPA <strong>{{ e.orden_numero }}</strong></span>
+            <a href="{{ e.get_absolute_url }}"><span class="badge bg-dark p-1 me-1">{{ e.id }}</span></a>
+            <span class="badge bg-danger">CoPA <strong>{{ e.orden_numero }}</strong></span>
           </li>
           {% empty %}
           <li class="list-group-item">
@@ -109,7 +109,7 @@
     <div class="card shadow-lg mb-4 border-info">
       <div class="card-header bg-info text-white">
         <h4 class="card-title">
-          <i class="fas fa-fw fa-folder-open"></i>
+          <i class="bi bi-folder2-open"></i>
           <strong>Alta de Expedientes</strong>
         </h4>
         <span>Últimas 10 de {{ open_list.count }} altas.</span>
@@ -118,10 +118,10 @@
         <ul class="list-group list-group-flush">
           {% for e in open_list|slice:":10" %}
           <li class="list-group-item">
-            <span class="badge badge-primary float-right">
+            <span class="badge bg-primary float-end">
               {{ e.created }}
             </span>
-            <a href="{{ e.get_absolute_url }}" class="badge badge-dark p-1 mr-1">{{ e.id }}</a>
+            <a href="{{ e.get_absolute_url }}"><span class="badge bg-dark p-1 me-1">{{ e.id }}</span></a>
             <strong>{{ e.personas.first.apellidos }}</strong> -
             <em>{{ e.lugares.first.nombre }}</em>
           </li>

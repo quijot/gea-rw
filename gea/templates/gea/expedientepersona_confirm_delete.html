@@ -3,7 +3,7 @@
 {% block title %}Desvincular{% endblock %}
 
 {% block page-title %}
-<i class="fas fa-fw fa-user-times text-danger"></i>
+<i class="bi bi-person-x-fill text-danger"></i>
 Persona |
 <span class="text-danger">Desvinculando</span>
 {% endblock %}
@@ -15,9 +15,9 @@ Persona |
       {% csrf_token %}
       <h2 class="pb-4">
         ¿Confirma la desvinculación de <a href="{{ object.persona.get_absolute_url }}" class="text-danger">{{ object.persona }}</a> del Expediente
-        <a href="{{ object.expediente.get_absolute_url }}"><span class="badge badge-dark">{{ object.expediente }}</span></a>?
+        <a href="{{ object.expediente.get_absolute_url }}"><span class="badge bg-dark">{{ object.expediente }}</span></a>?
       </h2>
-      <div class="form-group text-right">
+      <div class="mb-3 text-end">
         <a href="{{ view.get_success_url }}" name="cancel" class="btn btn-dark" id="cancel-id-delete">Cancelar</a>
         <input type="submit" name="delete" value="Desvincular" class="btn btn-danger" id="submit-id-delete">
       </div>

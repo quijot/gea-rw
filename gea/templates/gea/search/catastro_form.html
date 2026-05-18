@@ -4,13 +4,13 @@
 
 {% block content %}
 <form class="form-horizontal col-lg-6" method="post">{% csrf_token %}
-  <legend><i class="fas fa-fw fa-map-signs"></i> Buscar en Catastros Locales</legend>
+  <legend><i class="bi bi-signpost-split-fill"></i> Buscar en Catastros Locales</legend>
   <fieldset>
-    <div class="form-group">
-      <table class="table table-condensed table-hover">
+    <div class="mb-3">
+      <table class="table table-sm table-hover">
       {{ form.as_table }}
       </table>
-      <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-fw fa-search"></i> Buscar</button>
+      <button type="submit" class="btn btn-primary float-end"><i class="bi bi-search"></i> Buscar</button>
     </div>
   </fieldset>
 </form>

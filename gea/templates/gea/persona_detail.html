@@ -2,13 +2,13 @@
 {% block title %}{{ object }}{% endblock title %}
 
 {% block page-title %}
-<i class="fas fa-fw fa-user"></i>
+<i class="bi bi-person-fill"></i>
 {{ object.nombre_completo }}
 {% endblock %}
 {% block page-heading-buttons %}
 <div class="btn-group d-print-none shadow" role="group" aria-label="Actions">
   <a onclick="window.print();" class="d-sm-inline-block btn btn-secondary">
-    <i class="fas fa-fw fa-print text-white-50"></i> Imprimir
+    <i class="bi bi-printer-fill text-white text-opacity-50"></i> Imprimir
   </a>
 </div>
 {% endblock %}
@@ -20,39 +20,39 @@
   <div class="col-md-4">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+        <div class="btn-group btn-group-sm d-print-none float-end" role="group" aria-label="Actions">
           <a href="{{ object.get_update_url }}" class="btn btn-outline-primary" title="Editar">
-            <i class="fas fa-fw fa-sm fa-pen"></i>
+            <i class="bi bi-pencil-fill"></i>
           </a>
           <a href="{{ object.get_delete_url }}" class="btn btn-outline-danger" title="Eliminar">
-            <i class="fas fa-fw fa-sm fa-trash"></i>
+            <i class="bi bi-trash-fill"></i>
           </a>
         </div>
-        <i class="fas fa-fw fa-address-book"></i>
-        <span class="lead font-weight-bold">{{ object.nombre_completo }}</span>
-        <div class="font-weight-light">
+        <i class="bi bi-journal-bookmark-fill"></i>
+        <span class="lead fw-bold">{{ object.nombre_completo }}</span>
+        <div class="fw-light">
           {% if object.nombre_alternativo %}
           también <em>{{ object.nombre_alternativo }}</em><br>
           {% endif %}
         </div>
       </div>
       <div class="card-body">
-        <div class="font-weight-light">
+        <div class="fw-light">
           {% if object.telefono %}
-          <i class="fas fa-fw fa-phone"></i>
+          <i class="bi bi-telephone-fill"></i>
           <a href="tel:{{ object.telefono }}">{{ object.telefono }}</a><br>
           {% endif %}
           {% if object.email %}
-          <i class="far fa-fw fa-envelope"></i>
+          <i class="bi bi-envelope"></i>
           <a href="mailto:{{ object.email }}">{{ object.email }}</a><br>
           {% endif %}
-          <i class="far fa-fw fa-id-card"></i>
+          <i class="bi bi-person-vcard"></i>
           {% if object.documento_completo %}
           {{ object.documento_completo }} /
           {% endif %}
           CUIT {{ object.cuit_link }}<br>
           {% if object.domicilio_completo %}
-          <i class="fas fa-fw fa-map-marker"></i>
+          <i class="bi bi-geo-alt-fill"></i>
           {{ object.domicilio_completo }}
           {% endif %}
         </div>
@@ -63,8 +63,8 @@
   <div class="col-md-8">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <i class="fas fa-fw fa-folder-open"></i>
-        <span class="lead font-weight-bold">Expedientes ({{ object.expedientepersona_set.count }})</span>
+        <i class="bi bi-folder2-open"></i>
+        <span class="lead fw-bold">Expedientes ({{ object.expedientepersona_set.count }})</span>
       </div>
       <div class="card-body">
         <ul class="list-group">
@@ -73,17 +73,17 @@
             <div class="row">
               <div class="col-lg-1">
                 <a href="{{ ep.expediente.get_absolute_url }}">
-                  <span class="badge badge-dark py-1 px-2">
+                  <span class="badge bg-dark py-1 px-2">
                     {{ ep.expediente.id }}
                   </span>
                 </a>
               </div>
               <div class="col-lg-3">
                 {% if ep.comitente %}
-                <span class="badge badge-warning">COMITENTE</span>
+                <span class="badge bg-warning">COMITENTE</span>
                 {% endif %}
                 {% if ep.propietario %}
-                <span class="badge badge-primary">
+                <span class="badge bg-primary">
                   {% if ep.nuda_propiedad %}
                   NUDO PROPIETARIO
                   {% else %}
@@ -95,25 +95,25 @@
                 </span>
                 {% endif %}
                 {% if ep.poseedor %}
-                <span class="badge badge-danger">POSEEDOR</span>
+                <span class="badge bg-danger">POSEEDOR</span>
                 {% endif %}
                 {% if ep.sucesor %}
-                <span class="badge badge-info">SUCESOR</span>
+                <span class="badge bg-info">SUCESOR</span>
                 {% endif %}
                 {% if ep.sucesion %}
-                <span class="badge badge-info">HOY SUCESORES</span>
+                <span class="badge bg-info">HOY SUCESORES</span>
                 {% endif %}
                 {% if ep.usufructo %}
-                <span class="badge badge-warning">USUFRUCTO</span>
+                <span class="badge bg-warning">USUFRUCTO</span>
                 {% endif %}
               </div>
               <div class="col-lg-8">
-                <a href="{{ ep.get_delete_url }}" class="btn btn-sm btn-outline-danger float-right">
-                  <i class="fas fa-fw fa-user-times fa-sm" title="Desvincular"></i>
+                <a href="{{ ep.get_delete_url }}" class="btn btn-sm btn-outline-danger float-end">
+                  <i class="bi bi-person-x-fill" title="Desvincular"></i>
                 </a>
-                <span class="font-weight-bold">
+                <span class="fw-bold">
                   <a href="{{ ep.expediente.plano_ruta|default:'#' }}" style="color: unset;">
-                    <i class="far fa-fw fa-map"></i>
+                    <i class="bi bi-map"></i>
                     {% if ep.duplicado %}Dup.{% endif %}
                     {{ ep.expediente.inscripcion_numero|default:"¡PENDIENTE!" }}
                   </a>
@@ -121,9 +121,9 @@
                 &nbsp;
                 {{ ep.expediente.lugares_str|default:"<em>Sin lugar</em>" }}
                 <br>
-                <span class="badge badge-danger p-1">CoPA {{ ep.expediente.orden_numero|default:"S/N" }}</span>
+                <span class="badge bg-danger p-1">CoPA {{ ep.expediente.orden_numero|default:"S/N" }}</span>
                 {% for p in ep.expediente.partidas_list %}
-                <span class="badge badge-primary p-1">{{ p }}</span>
+                <span class="badge bg-primary p-1">{{ p }}</span>
                 {% endfor %}
               </div>
             </div>

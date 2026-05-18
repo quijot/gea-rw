@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import environ
@@ -25,8 +26,8 @@ INSTALLED_APPS = [
     "dynamic_preferences",
     "django_extensions",
     "crispy_forms",
-    # "crispy_bootstrap4",
-    "django_select2",
+    "crispy_bootstrap5",
+    "django_tomselect",
 ]
 
 MIDDLEWARE = [
@@ -38,6 +39,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_tomselect.middleware.TomSelectMiddleware",
 ]
 
 ROOT_URLCONF = "estudio.urls"
@@ -54,6 +56,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "dynamic_preferences.processors.global_preferences",
+                "django_tomselect.context_processors.tomselect",
             ],
         },
     },
@@ -88,7 +91,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 LOGIN_REDIRECT_URL = "home"
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5"]
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 CRISPY_FAIL_SILENTLY = not DEBUG
 
 DYNAMIC_PREFERENCES = {
@@ -98,14 +102,14 @@ DYNAMIC_PREFERENCES = {
 
 CACHES = {
     "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
-    "select2": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL"),
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-    },
 }
 
-SELECT2_CACHE_BACKEND = "select2"
+TOMSELECT = {"DEFAULT_CSS_FRAMEWORK": "bootstrap5"}
+
+# django-tomselect emite warnings repetitivos cuando label_field es un campo virtual
+# (no DB) — funcionalmente correcto pero ruidoso. Subir el nivel a ERROR.
+logging.getLogger("django_tomselect.autocompletes").setLevel(logging.ERROR)
+logging.getLogger("django_tomselect.widgets").setLevel(logging.ERROR)
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

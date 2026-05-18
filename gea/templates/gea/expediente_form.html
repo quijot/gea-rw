@@ -4,12 +4,12 @@
 {% block title %}Expediente {{ object }}{% endblock %}
 
 {% block page-title %}
-<i class="fas fa-folder-open fa-fw"></i>
+<i class="bi bi-folder2-open"></i>
 Expediente |
 <span class="text-primary">
   {% if object %}
   Editando
-  <span class="badge badge-dark">{{ object }}</span>
+  <span class="badge bg-dark">{{ object }}</span>
   {% else %}
   Agregando
   {% endif %}
@@ -27,19 +27,10 @@ Expediente |
 {% block extra_css %}
 <!-- DatePicker CSS -->
 {% include "helpers/datepicker.css.html" %}
-<style>
-  .form-check {display: revert;}
-</style>
 {% endblock extra_css %}
 
 {% block extra_js %}
 {{ form.media.js }}
-<!-- Select2 config -->
-<script>
-  $.fn.select2.defaults.set( "theme", "bootstrap4" );
-</script>
-<!-- Select2 Internationalization -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/i18n/es.js"></script>
 <!-- DatePicker JS -->
 {% include "helpers/datepicker.js.html" %}
 <!-- Add Form to Formset -->

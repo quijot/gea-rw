@@ -3,7 +3,7 @@
 {% block title %}Expediente{% endblock %}
 
 {% block page-title %}
-<i class="fas fa-fw fa-folder-minus text-danger"></i>
+<i class="bi bi-folder-minus text-danger"></i>
 Expediente |
 <span class="text-danger">Eliminando</span>
 {% endblock %}
@@ -14,10 +14,10 @@ Expediente |
     <form method="post">
       {% csrf_token %}
       <h2 class="pb-4">
-        ¿Confirma la eliminación de <span class="badge badge-danger">{{ object }}</span>?
+        ¿Confirma la eliminación de <span class="badge bg-danger">{{ object }}</span>?
       </h2>
       {% if object.personas.count or object.expedientepartida_set.count %}
-      <h3 class="lead text-danger font-weight-bold">¡ATENCIÓN!</h3>
+      <h3 class="lead text-danger fw-bold">¡ATENCIÓN!</h3>
       <p>Se DESVINCULARÁN del Expediente:</p>
       <ul>
         {% for ep in object.personas.all %}
@@ -26,11 +26,11 @@ Expediente |
       </ul>
       <ul>
         {% for p in object.partidas_list %}
-        <li><span class="badge badge-primary">{{ p.partida_api }}</span></li>
+        <li><span class="badge bg-primary">{{ p.partida_api }}</span></li>
         {% endfor %}
       </ul>
       {% endif %}
-      <div class="form-group text-right">
+      <div class="mb-3 text-end">
         <a href="{{ object.get_absolute_url }}" name="cancel" class="btn btn-dark" id="cancel-id-delete">Cancelar</a>
         <input type="submit" name="delete" value="Eliminar" class="btn btn-danger" id="submit-id-delete">
       </div>

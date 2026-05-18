@@ -38,7 +38,7 @@ class SiteTheme(ChoicePreference):
     default = "cosmo"
     required = False
     choices = [
-        ("", "Bootstrap 4.6"),
+        ("", "Bootstrap 5.3"),
         ("cerulean", "Bootswatch Cerulean"),
         ("cosmo", "Bootswatch Cosmo (DEFAULT)"),
         ("cyborg", "Bootswatch Cyborg"),
@@ -60,21 +60,6 @@ class SiteTheme(ChoicePreference):
         ("superhero", "Bootswatch Superhero"),
         ("united", "Bootswatch United"),
         ("yeti", "Bootswatch Yeti"),
-        ("bubblegum", "HackerThemes Bubblegum"),
-        ("business-tycoon", "HackerThemes Business Tycoon"),
-        ("charming", "HackerThemes Charming"),
-        ("daydream", "HackerThemes Daydream"),
-        ("executive-suite", "HackerThemes Executive Suite"),
-        ("good-news", "HackerThemes Good News"),
-        ("growth", "HackerThemes Growth"),
-        ("harbor", "HackerThemes Harbor"),
-        ("hello-world", "HackerThemes Hello World"),
-        ("neon-glow", "HackerThemes Neon Glow"),
-        ("pleasant", "HackerThemes Pleasant"),
-        ("retro", "HackerThemes Retro"),
-        ("vibrant-sea", "HackerThemes Vibrant Sea"),
-        ("wizardry", "HackerThemes Wizardry"),
-        ("creative", "StartBootstrap Creative")
     ]
 
 

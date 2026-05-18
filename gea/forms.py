@@ -3,15 +3,26 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML, Button, Div, Field, Fieldset, Layout, Row, Submit
 from django import forms
 from django.urls import reverse_lazy
-from django_select2 import forms as s2forms
+from django_tomselect.app_settings import TomSelectConfig
+from django_tomselect.widgets import TomSelectModelMultipleWidget, TomSelectModelWidget
 
 from . import gea_vars as gv
 from . import models
 from .formset_layout import Formset
 
 
-class PersonaWidget(s2forms.ModelSelect2Widget):
-    search_fields = ["apellidos__icontains", "nombres__icontains"]
+class PersonaWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_persona",
+                value_field="id",
+                label_field="nombre_completo",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class EPForm(forms.ModelForm):
@@ -40,8 +51,18 @@ PersonasInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class LugarWidget(s2forms.ModelSelect2Widget):
-    search_fields = ["nombre__icontains"]
+class LugarWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_lugar",
+                value_field="id",
+                label_field="nombre",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class ELForm(forms.ModelForm):
@@ -60,8 +81,18 @@ LugaresInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class AntecedenteWidget(s2forms.ModelSelect2Widget):
-    search_fields = ["id__icontains"]
+class AntecedenteWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_expediente",
+                value_field="id",
+                label_field="id",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class AntForm(forms.ModelForm):
@@ -81,8 +112,18 @@ AntecedentesInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class ObjetosWidget(s2forms.ModelSelect2MultipleWidget):
-    search_fields = ["nombre__icontains"]
+class ObjetosWidget(TomSelectModelMultipleWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_objeto",
+                value_field="id",
+                label_field="nombre",
+                attrs={"class": "tomselect-init"},
+            ),
+        )
+        super().__init__(**kwargs)
 
 
 class ExpedienteForm(forms.ModelForm):
@@ -123,7 +164,7 @@ class ExpedienteForm(forms.ModelForm):
                 Row(
                     Div("id", css_class="col-md-2"),
                     Div(Field("fecha_medicion", css_class="date", id="datepicker"), css_class="col-md-2"),
-                    Div("objetos", css_class="col-md-8 table-responsive"),
+                    Div("objetos", css_class="col-md-8"),
                 ),
             ),
             Row(
@@ -131,7 +172,7 @@ class ExpedienteForm(forms.ModelForm):
                 Div("orden_numero", css_class="col-md-2"),
                 Div(Field("orden_fecha", css_class="date", id="datepicker"), css_class="col-md-2"),
             ),
-            HTML("<span class='lead font-weight-bold mr-3'>Lugares</span>"),
+            HTML("<span class='lead fw-bold me-3'>Lugares</span>"),
             Button(
                 "add-lugar",
                 "&plus; Agregar",
@@ -139,8 +180,8 @@ class ExpedienteForm(forms.ModelForm):
                 title="Agregar otro Lugar",
                 onclick="add_form('expedientelugar_set')",
             ),
-            Div(Formset("expedientelugar_set"), css_class="table-responsive"),
-            HTML("<span class='lead font-weight-bold mr-3'>Personas</span>"),
+            Div(Formset("expedientelugar_set")),
+            HTML("<span class='lead fw-bold me-3'>Personas</span>"),
             Button(
                 "add-persona",
                 "&plus; Agregar",
@@ -148,8 +189,8 @@ class ExpedienteForm(forms.ModelForm):
                 title="Agregar otra Persona",
                 onclick="add_form('expedientepersona_set')",
             ),
-            Div(Formset("expedientepersona_set"), css_class="table-responsive"),
-            HTML("<span class='lead font-weight-bold mr-3'>Antecedentes</span>"),
+            Div(Formset("expedientepersona_set")),
+            HTML("<span class='lead fw-bold me-3'>Antecedentes</span>"),
             Button(
                 "add-antecedente",
                 "&plus; Agregar",
@@ -157,7 +198,7 @@ class ExpedienteForm(forms.ModelForm):
                 title="Agregar otro Antecedente",
                 onclick="add_form('antecedente_set')",
             ),
-            Div(Formset("antecedente_set"), css_class="table-responsive"),
+            Div(Formset("antecedente_set")),
             FormActions(
                 Button(
                     "cancel",
@@ -275,7 +316,7 @@ class ExpedienteLugarForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div("expediente", css_class="d-none"),
             Div("lugar", css_class="d-none"),
-            HTML("<span class='lead font-weight-bold mr-3'>Catastro Local</span>"),
+            HTML("<span class='lead fw-bold me-3'>Catastro Local</span>"),
             Button(
                 "add-cl",
                 "&plus; Agregar",
@@ -303,7 +344,7 @@ class PersonaToExpediente(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            HTML("<span class='lead font-weight-normal mr-3'>Personas</span>"),
+            HTML("<span class='lead fw-normal me-3'>Personas</span>"),
             Button(
                 "add-persona",
                 "&plus; Agregar",
@@ -336,39 +377,18 @@ CatastroInlineFormSet = forms.inlineformset_factory(
 )
 
 
-class SDWidget(s2forms.ModelSelect2Widget):
-    model = models.Sd
-    search_fields = [
-        "nombre__icontains",
-        "ds__nombre__icontains",
-        "ds__dp__nombre__icontains",
-    ]
-
-    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
-        from django.db.models import CharField, F, Q, Value
-        from django.db.models.functions import Cast, Concat, LPad
-
-        if queryset is None:
-            queryset = self.get_queryset()
-        if not term:
-            return queryset
-        queryset = queryset.annotate(
-            _completo=Concat(
-                LPad(Cast(F("ds__dp__dp"), output_field=CharField()), 2, Value("0")),
-                LPad(Cast(F("ds__ds"), output_field=CharField()), 2, Value("0")),
-                LPad(Cast(F("sd"), output_field=CharField()), 2, Value("0")),
-                output_field=CharField(),
-            )
+class SDWidget(TomSelectModelWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            "config",
+            TomSelectConfig(
+                url="autocomplete_sd",
+                value_field="id",
+                label_field="label",
+                attrs={"class": "tomselect-init"},
+            ),
         )
-        q = Q()
-        for word in term.split():
-            q &= (
-                Q(nombre__icontains=word)
-                | Q(ds__nombre__icontains=word)
-                | Q(ds__dp__nombre__icontains=word)
-                | Q(_completo__icontains=word)
-            )
-        return queryset.filter(q).distinct()
+        super().__init__(**kwargs)
 
 
 class PartidaToExpediente(forms.Form):
@@ -391,7 +411,7 @@ class PartidaToExpediente(forms.Form):
                 Div("partida", css_class="col-lg-2"),
                 Div("subpartida", css_class="col-lg-1"),
             ),
-            HTML("<span class='lead font-weight-normal mr-3'>Catastro</span>"),
+            HTML("<span class='lead fw-normal me-3'>Catastro</span>"),
             Button(
                 "add-catastro",
                 "&plus; Agregar",
@@ -529,7 +549,7 @@ class SolicitudForm(forms.Form):
                     onclick="window.history.back();",
                 ),
                 Submit("save", "Generar Nota"),
-                css_class="float-right",
+                css_class="float-end",
             ),
         )
 
@@ -555,7 +575,7 @@ class VisacionForm(forms.Form):
                     onclick="window.history.back();",
                 ),
                 Submit("save", "Generar Nota"),
-                css_class="float-right",
+                css_class="float-end",
             ),
         )
 

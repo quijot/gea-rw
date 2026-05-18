@@ -126,3 +126,4 @@ backup
 .vscode
 graphify*
 .env
+.claude

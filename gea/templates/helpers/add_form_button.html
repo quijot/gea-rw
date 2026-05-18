@@ -1,11 +1,35 @@
 <script>
   function add_form(formset) {
-    let total = $("#id_" + formset + "-TOTAL_FORMS").val();
-    let row = $("#" + formset + "_table tr:last")[0]; // find row to copy
-    let table = $("#" + formset + "_table tbody")[0]; // find table to append to
-    let clone = row.cloneNode(true); // copy children too
-    clone.innerHTML = clone.innerHTML.replaceAll("-" + (total - 1) + "-", "-" + total + "-");
-    table.appendChild(clone); // add new row to end of table
-    $("#id_" + formset + "-TOTAL_FORMS").val(++total);
+    const total = document.getElementById('id_' + formset + '-TOTAL_FORMS');
+    const count = parseInt(total.value);
+    const table = document.getElementById(formset + '_table');
+    const emptyRow = table.querySelector('tr.empty-form');
+    const tbody = table.querySelector('tbody');
+
+    const clone = emptyRow.cloneNode(true);
+    clone.innerHTML = clone.innerHTML.replaceAll('__prefix__', count);
+    clone.classList.remove('d-none', 'empty-form');
+
+    // Tom Select inicializó su UI sobre el <select> del empty-form, por lo que
+    // el clone trae arrastrando el .ts-wrapper duplicado. Borramos esos restos
+    // antes de reinicializar para que django-tomselect arranque limpio sobre
+    // el <select> nativo.
+    clone.querySelectorAll('.ts-wrapper').forEach((w) => w.remove());
+    clone.querySelectorAll('select.tomselected').forEach((s) => {
+      s.classList.remove('tomselected', 'ts-hidden-accessible');
+      s.removeAttribute('tabindex');
+      delete s.tomselect;
+    });
+
+    tbody.appendChild(clone);
+
+    // django-tomselect reinicializa Tom Select en selects clonados al
+    // recibir el evento formset:added (ver tomselect_setup.html).
+    clone.dispatchEvent(new CustomEvent('formset:added', {
+      bubbles: true,
+      detail: { formsetName: formset },
+    }));
+
+    total.value = count + 1;
   }
 </script>

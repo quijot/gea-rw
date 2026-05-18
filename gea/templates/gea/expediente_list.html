@@ -2,13 +2,13 @@
 {% block title %}Expedientes{% endblock title %}
 
 {% block page-title %}
-<i class="fas fa-fw fa-folder"></i>
+<i class="bi bi-folder-fill"></i>
 Expedientes
 {% endblock %}
 {% block page-heading-buttons %}
 <div class="btn-group shadow">
   <a href="{% url 'expediente_create' %}" class="btn btn-success">
-    <i class="fas fa-fw fa-folder-plus"></i> Agregar
+    <i class="bi bi-folder-plus"></i> Agregar
   </a>
 </div>
 {% endblock %}
@@ -28,9 +28,9 @@ Expedientes
 
     <div class="row">
       <div class="col-sm-12">
-        <form class="form-inline float-right" action="." method="get">
+        <form class="d-flex float-end" action="." method="get">
           <div class="input-group mb-2">
-            <fieldset class="form-group">
+            <fieldset class="mb-3">
               <div class="form-check mx-2">
                 <label class="form-check-label" for="pendiente">
                   <input class="form-check-input" type="radio" name="estado_expediente" value="pendiente"
@@ -62,11 +62,9 @@ Expedientes
                 </label>
               </div>
             </fieldset>
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-sm btn-info">
-                <i class="fas fa-fw fa-filter"></i>
-              </button>
-            </div>
+            <button type="submit" class="btn btn-sm btn-info">
+              <i class="bi bi-funnel-fill"></i>
+            </button>
           </div>
         </form>
       </div>
@@ -74,8 +72,8 @@ Expedientes
 
     <div class="row">
       <!-- Data -->
-      <div class="col-sm-12">
-        <table class="table table-sm table-hover table-responsive-md">
+      <div class="col-sm-12 table-responsive-md">
+        <table class="table table-sm table-hover">
           <thead>
             <tr>
               <th>Expediente</th>
@@ -91,16 +89,16 @@ Expedientes
             <tr class="{% if object.pendiente %}table-warning{% endif %}">
               <td>
                 <!-- EXPEDIENTE -->
-                <a href="{{ object.get_absolute_url }}" class="badge badge-dark p-1">{{ object.id }}</a>
+                <a href="{{ object.get_absolute_url }}"><span class="badge bg-dark p-1">{{ object.id }}</span></a>
               </td>
               <td>
                 <!-- PERSONAS -->
                 {% if object.cancelado %}
-                <span class="badge badge-danger">CANCELADO</span>&ensp;<small>{{ object.cancelado_por|default:"" }}</small><br>
+                <span class="badge bg-danger">CANCELADO</span>&ensp;<small>{{ object.cancelado_por|default:"" }}</small><br>
                 {% endif %}
                 {% for ep in object.expedientepersona_set.all %}
                 <a href="{{ ep.persona.get_absolute_url }}" title="{{ ep.persona.nombre_completo }}">{{ ep.persona.nombre_completo_elipsis|safe }}</a>
-                {% if ep.comitente %}<span class="badge badge-warning">COMITENTE</span>{% endif %}
+                {% if ep.comitente %}<span class="badge bg-warning">COMITENTE</span>{% endif %}
                 {% if ep.persona.telefono %}
                 <small>
                   <a href="tel:{{ ep.persona.telefono }}" style="color: unset;">
@@ -123,22 +121,22 @@ Expedientes
               <td>
                 <!-- PARTIDAS -->
                 {% for p in object.partidas_list %}
-                <span class="badge badge-primary p-1">{{ p.partida_api }}</span><br>
+                <span class="badge bg-primary p-1">{{ p.partida_api }}</span><br>
                 {% endfor %}
               </td>
               <td>
                 <!-- PLANO -->
                 {% if object.orden_numero %}
-                <span class="badge badge-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
+                <span class="badge bg-danger">CoPA {{ object.orden_numero|default:"S/N" }}</span>
                 <small>{{ object.orden_fecha|default:"" }}</small><br>
                 {% endif %}
-                <i class="far fa-fw fa-map"></i>
+                <i class="bi bi-map"></i>
                 <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
                   {% if object.sin_inscripcion %}
-                  <span class="badge badge-info">NO REQUIERE</span>
+                  <span class="badge bg-info">NO REQUIERE</span>
                   {% else %}
                   {% if object.duplicado %}Dup.{% endif %}
-                  <span class="font-weight-bold">
+                  <span class="fw-bold">
                     {{ object.inscripcion_numero|default:"PENDIENTE" }}
                   </span>
                   {% endif %}
@@ -148,21 +146,21 @@ Expedientes
               <td>
                 <div class="btn-group">
                   <!-- <a href="{{ object.get_absolute_url }}" class="btn btn-info btn-sm" title="Ver">
-                    <i class="fas fa-fw fa-info"></i>
+                    <i class="bi bi-info"></i>
                   </a> -->
                   <a href="{{ object.get_update_url }}" class="btn btn-primary btn-sm" title="Editar">
-                    <i class="fas fa-fw fa-pen"></i>
+                    <i class="bi bi-pencil-fill"></i>
                   </a>
                   <a href="{{ object.get_delete_url }}" class="btn btn-danger btn-sm" title="Eliminar">
-                    <i class="fas fa-fw fa-trash"></i>
+                    <i class="bi bi-trash-fill"></i>
                   </a>
                 </div>
               </td>
             </tr>
             {% empty %}
             <div class="alert alert-info" role="alert">
-              <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
-              <span class="sr-only">Información:</span>
+              <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+              <span class="visually-hidden">Información:</span>
               No se encontraron registros.
             </div>
             {% endfor %}

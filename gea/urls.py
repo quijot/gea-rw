@@ -1,8 +1,14 @@
 from django.urls import path
 
-from . import views
+from . import autocomplete, views
 
 urlpatterns = [
+    # Autocomplete
+    path("autocomplete/persona/", autocomplete.PersonaAutocomplete.as_view(), name="autocomplete_persona"),
+    path("autocomplete/lugar/", autocomplete.LugarAutocomplete.as_view(), name="autocomplete_lugar"),
+    path("autocomplete/expediente/", autocomplete.ExpedienteAutocomplete.as_view(), name="autocomplete_expediente"),
+    path("autocomplete/objeto/", autocomplete.ObjetoAutocomplete.as_view(), name="autocomplete_objeto"),
+    path("autocomplete/sd/", autocomplete.SdAutocomplete.as_view(), name="autocomplete_sd"),
     # Inicio
     path("", views.Home.as_view(), name="home"),
     # About

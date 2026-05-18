@@ -2,34 +2,34 @@
 {% block title %}{{ object }}{% endblock title %}
 
 {% block page-title %}
-<i class="fas fa-fw fa-folder-open"></i>
-Expediente <span class="badge badge-dark">{{ object }}</span>
+<i class="bi bi-folder2-open"></i>
+Expediente <span class="badge bg-dark">{{ object }}</span>
 {% endblock %}
 {% block page-heading-buttons %}
 <div class="btn-group d-print-none shadow" role="group" aria-label="Actions">
   <div class="btn-group" role="group" aria-label="Notas">
-    <button id="btnGroupDrop" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">Generar</button>
+    <button id="btnGroupDrop" type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown"
+      aria-expanded="false">Generar</button>
     <div class="dropdown-menu" aria-labelledby="btnGroupDrop">
       <a class="dropdown-item" href="{% url 'caratula' object.id  %}">
-        <i class="far fa-fw fa-file-alt"></i> Carátula de Plano
+        <i class="bi bi-file-earmark-text"></i> Carátula de Plano
       </a>
       <a class="dropdown-item" href="{% url 'solicitud' object.id  %}">
-        <i class="fas fa-fw fa-file-signature"></i> Solicitud de Inscripción
+        <i class="bi bi-file-earmark-medical-fill"></i> Solicitud de Inscripción
       </a>
       <a class="dropdown-item" href="{% url 'visacion' object.id  %}">
-        <i class="far fa-fw fa-file"></i> Visación Municipal
+        <i class="bi bi-file-earmark"></i> Visación Municipal
       </a>
     </div>
   </div>
   <a onclick="window.print();" class="d-sm-inline-block btn btn-secondary">
-    <i class="fas fa-fw fa-print text-white-50"></i> Imprimir
+    <i class="bi bi-printer-fill text-white text-opacity-50"></i> Imprimir
   </a>
   <!-- <a href="{{ object.get_delete_url }}" class="d-sm-inline-block btn btn-danger" title="Eliminar">
-    <i class="fas fa-fw fa-trash text-white-50"></i> Eliminar
+    <i class="bi bi-trash-fill text-white text-opacity-50"></i> Eliminar
   </a>
   <a href="{{ object.get_update_url }}" class="btn btn-primary" title="Editar">
-    <i class="fas fa-fw fa-pen text-white-50"></i> Editar
+    <i class="bi bi-pencil-fill text-white text-opacity-50"></i> Editar
   </a> -->
 </div>
 {% endblock %}
@@ -41,22 +41,22 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
   <div class="col-md-4">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+        <div class="btn-group btn-group-sm d-print-none float-end" role="group" aria-label="Actions">
           <a href="{{ object.get_update_url }}" class="btn btn-outline-primary" title="Editar">
-            <i class="fas fa-fw fa-sm fa-pen"></i>
+            <i class="bi bi-pencil-fill"></i>
           </a>
           <a href="{{ object.get_delete_url }}" class="btn btn-outline-danger" title="Eliminar">
-            <i class="fas fa-fw fa-sm fa-trash"></i>
+            <i class="bi bi-trash-fill"></i>
           </a>
         </div>
-        <i class="fas fa-fw fa-folder"></i>
-        <span class="lead font-weight-bold">Expediente Nº {{ object }}</span>
-        <div class="font-weight-light">
-          <span class="font-weight-bold">
+        <i class="bi bi-folder-fill"></i>
+        <span class="lead fw-bold">Expediente Nº {{ object }}</span>
+        <div class="fw-light">
+          <span class="fw-bold">
             <a href="{{ object.plano_ruta|default:'#' }}" style="color: unset;">
-              <i class="far fa-fw fa-map"></i>
+              <i class="bi bi-map"></i>
               {% if object.sin_inscripcion %}
-              <span class="badge badge-info">NO REQUIERE</span>
+              <span class="badge bg-info">NO REQUIERE</span>
               {% else %}
               {% if object.duplicado %}Dup.{% endif %}
               {{ object.inscripcion_numero|default:"<span class='text-warning'>¡PENDIENTE!</span>" }}
@@ -65,31 +65,31 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           </span>&nbsp;
           <small>{{ object.inscripcion_fecha|default:"" }}</small>
           <a href="{{ object.get_update_plano_url }}" title="Editar inscripción SCIT">
-            <span class="badge badge-light d-print-none" style="background-color:transparent">
-              <i class="fas fa-fw fa-pen"></i> Plano
+            <span class="badge bg-light d-print-none" style="background-color:transparent">
+              <i class="bi bi-pencil-fill"></i> Plano
             </span>
           </a>
         </div>
       </div>
-      <div class="card-body font-weight-light">
+      <div class="card-body fw-light">
         <div class="mb-4">
           {% for o in object.objetos.all %}
           {{ o }}
           {% empty %}
           <a href="{{ object.get_update_url }}" title="Agregar Objeto">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-plus text-success"></i> Agregar Objeto</span></a>
+            <span class="badge bg-light d-print-none">
+              <i class="bi bi-plus-lg text-success"></i> Agregar Objeto</span></a>
           {% endfor %}
         </div>
         <div class="mb-4">
           {% for el in object.expedientelugar_set.all %}
           {{ el.lugar }}
           <a href="{{ el.get_update_url }}" title="Editar Catastro Local">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-pen"></i> Catastro</span></a>
+            <span class="badge bg-light d-print-none">
+              <i class="bi bi-pencil-fill"></i> Catastro</span></a>
           <a href="{{ el.get_delete_url }}" title="Eliminar Lugar">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-times text-danger"></i></span></a>
+            <span class="badge bg-light d-print-none">
+              <i class="bi bi-x-lg text-danger"></i></span></a>
           <br>
           <small>
             {% for cl in el.catastros_locales_list %}
@@ -98,19 +98,19 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           </small>
           {% empty %}
           <a href="{{ object.get_update_url }}" title="Agregar Lugar">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-plus text-success"></i> Agregar Lugar</span></a>
+            <span class="badge bg-light d-print-none">
+              <i class="bi bi-plus-lg text-success"></i> Agregar Lugar</span></a>
           {% endfor %}
         </div>
         <div class="mb-4">
           {% for ep in object.expedientepartida_set.all %}
-          <span class="badge badge-primary p-1">{{ ep.partida.partida_api }}</span>
+          <span class="badge bg-primary p-1">{{ ep.partida.partida_api }}</span>
           <a href="{{ ep.get_update_url }}" title="Editar Partida asociada">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-pen"></i> SCIT</span></a>
+            <span class="badge bg-light d-print-none">
+              <i class="bi bi-pencil-fill"></i> SCIT</span></a>
           <a href="{{ ep.get_delete_url }}" title="Eliminar Partida asociada">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-times text-danger"></i></span></a>
+            <span class="badge bg-light d-print-none">
+              <i class="bi bi-x-lg text-danger"></i></span></a>
           <small>
             {% for c in ep.catastro_set.all %}
             <br>{{ c }}
@@ -120,11 +120,11 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           <br>
           {% endfor %}
           <a href="{% url 'partida_to_expediente' object.id %}" title="Asociar nueva Partida de Impuesto Inmobiliario">
-            <span class="badge badge-light d-print-none">
-              <i class="fas fa-fw fa-plus text-success"></i> Agregar Partida</span></a>
+            <span class="badge bg-light d-print-none">
+              <i class="bi bi-plus-lg text-success"></i> Agregar Partida</span></a>
         </div>
         <div class="mb-4">
-          <span class="badge badge-danger p-1 mr-1">CoPA {{ object.orden_numero|default:"S/N" }}</span>
+          <span class="badge bg-danger p-1 me-1">CoPA {{ object.orden_numero|default:"S/N" }}</span>
           <small>{{ object.orden_fecha|default:"" }}</small>
         </div>
         <hr>
@@ -134,12 +134,12 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           <br>
           {% for a in object.antecedente_set.all %}
           {% if a.expediente_modificado %}
-          <span class="badge badge-dark p-1 mr-1">{{ a.expediente_modificado.id }}</span>
-          <span class="font-weight-bold">
+          <span class="badge bg-dark p-1 me-1">{{ a.expediente_modificado.id }}</span>
+          <span class="fw-bold">
             <a href="{{ a.expediente_modificado.plano_ruta|default:'#' }}" style="color: unset;">
-              <i class="far fa-fw fa-map"></i>
+              <i class="bi bi-map"></i>
               {% if a.expediente_modificado.sin_inscripcion %}
-              <span class="badge badge-info">NO REQUIERE</span>
+              <span class="badge bg-info">NO REQUIERE</span>
               {% else %}
               {% if a.expediente_modificado.duplicado %}Dup.{% endif %}
               {{ a.expediente_modificado.inscripcion_numero|default:"<span class='text-warning'>¡PENDIENTE!</span>" }}
@@ -148,8 +148,8 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
           </span>
           <small>/{{ a.expediente_modificado.inscripcion_fecha.year|default:"" }}</small>&nbsp;
           {% else %}
-          <span class="font-weight-bold">
-            <i class="far fa-fw fa-map"></i>
+          <span class="fw-bold">
+            <i class="bi bi-map"></i>
             {{ a.inscripcion_numero }}
           </span>&nbsp;
           {% endif %}
@@ -174,13 +174,13 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
   <div class="col-md-8">
     <div class="card bg-light shadow mb-2">
       <div class="card-header">
-        <!-- <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+        <!-- <div class="btn-group btn-group-sm d-print-none float-end" role="group" aria-label="Actions">
           <a href="{% url 'persona_to_expediente' object.id %}" class="btn btn-outline-primary" title="Agregar/Editar">
-            <i class="fas fa-fw fa-sm fa-pen"></i>
+            <i class="bi bi-pencil-fill"></i>
           </a>
         </div> -->
-        <i class="fas fa-fw fa-sm fa-users"></i>
-        <span class="lead font-weight-bold">Personas ({{ object.expedientepersona_set.count }})</span>
+        <i class="bi bi-people-fill"></i>
+        <span class="lead fw-bold">Personas ({{ object.expedientepersona_set.count }})</span>
       </div>
       <div class="card-body">
         <ul class="list-group">
@@ -192,26 +192,26 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
                 <br>
                 <small>
                   {% if ep.persona.telefono %}
-                  <i class="fas fa-fw fa-phone"></i>
+                  <i class="bi bi-telephone-fill"></i>
                   <a href="tel:{{ ep.persona.telefono }}">{{ ep.persona.telefono }}</a>
                   {% endif %}
                   {% if ep.persona.email %}
-                  <i class="far fa-fw fa-envelope"></i>
+                  <i class="bi bi-envelope"></i>
                   <a href="mailto:{{ ep.persona.email }}">{{ ep.persona.email }}</a><br>
                   {% endif %}
                 </small>
               </div>
               <div class="col-lg-6">
-                <div class="btn-group btn-group-sm d-print-none float-right" role="group" aria-label="Actions">
+                <div class="btn-group btn-group-sm d-print-none float-end" role="group" aria-label="Actions">
                   <a href="{{ ep.get_delete_url }}" class="btn btn-outline-danger">
-                    <i class="fas fa-fw fa-sm fa-trash" title="Desvincular"></i>
+                    <i class="bi bi-trash-fill" title="Desvincular"></i>
                   </a>
                 </div>
                 {% if ep.comitente %}
-                <span class="badge badge-warning">COMITENTE</span>
+                <span class="badge bg-warning">COMITENTE</span>
                 {% endif %}
                 {% if ep.propietario %}
-                <span class="badge badge-primary">
+                <span class="badge bg-primary">
                   {% if ep.nuda_propiedad %}
                   NUDO PROPIETARIO
                   {% else %}
@@ -223,16 +223,16 @@ Expediente <span class="badge badge-dark">{{ object }}</span>
                 </span>
                 {% endif %}
                 {% if ep.poseedor %}
-                <span class="badge badge-danger">POSEEDOR</span>
+                <span class="badge bg-danger">POSEEDOR</span>
                 {% endif %}
                 {% if ep.sucesor %}
-                <span class="badge badge-info">SUCESOR</span>
+                <span class="badge bg-info">SUCESOR</span>
                 {% endif %}
                 {% if ep.sucesion %}
-                <span class="badge badge-info">HOY SUCESORES</span>
+                <span class="badge bg-info">HOY SUCESORES</span>
                 {% endif %}
                 {% if ep.usufructo %}
-                <span class="badge badge-warning">USUFRUCTO</span>
+                <span class="badge bg-warning">USUFRUCTO</span>
                 {% endif %}
               </div>
             </div>
