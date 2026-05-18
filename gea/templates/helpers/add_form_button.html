@@ -11,8 +11,8 @@
     clone.classList.remove('d-none', 'empty-form');
     tbody.appendChild(clone);
 
-    // django-select2 escucha formset:added para reinicializar sus widgets
-    // Tom Select (Paso 1.7) reinicializará via el listener de htmx:afterSwap
+    // django-tomselect reinicializa Tom Select en selects clonados al
+    // recibir el evento formset:added (ver tomselect_setup.html).
     clone.dispatchEvent(new CustomEvent('formset:added', {
       bubbles: true,
       detail: { formsetName: formset },
