@@ -164,7 +164,7 @@ class ExpedienteForm(forms.ModelForm):
                 Row(
                     Div("id", css_class="col-md-2"),
                     Div(Field("fecha_medicion", css_class="date", id="datepicker"), css_class="col-md-2"),
-                    Div("objetos", css_class="col-md-8 table-responsive"),
+                    Div("objetos", css_class="col-md-8"),
                 ),
             ),
             Row(
@@ -180,7 +180,7 @@ class ExpedienteForm(forms.ModelForm):
                 title="Agregar otro Lugar",
                 onclick="add_form('expedientelugar_set')",
             ),
-            Div(Formset("expedientelugar_set"), css_class="table-responsive"),
+            Div(Formset("expedientelugar_set")),
             HTML("<span class='lead fw-bold me-3'>Personas</span>"),
             Button(
                 "add-persona",
@@ -189,7 +189,7 @@ class ExpedienteForm(forms.ModelForm):
                 title="Agregar otra Persona",
                 onclick="add_form('expedientepersona_set')",
             ),
-            Div(Formset("expedientepersona_set"), css_class="table-responsive"),
+            Div(Formset("expedientepersona_set")),
             HTML("<span class='lead fw-bold me-3'>Antecedentes</span>"),
             Button(
                 "add-antecedente",
@@ -198,7 +198,7 @@ class ExpedienteForm(forms.ModelForm):
                 title="Agregar otro Antecedente",
                 onclick="add_form('antecedente_set')",
             ),
-            Div(Formset("antecedente_set"), css_class="table-responsive"),
+            Div(Formset("antecedente_set")),
             FormActions(
                 Button(
                     "cancel",

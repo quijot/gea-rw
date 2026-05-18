@@ -1,4 +1,5 @@
-from crispy_forms.layout import TEMPLATE_PACK, LayoutObject
+from crispy_forms.layout import LayoutObject
+from crispy_forms.utils import TEMPLATE_PACK
 from django.template.loader import render_to_string
 
 
@@ -12,7 +13,7 @@ class Formset(LayoutObject):
         if template:
             self.template = template
 
-    def render(self, form, form_style, context, template_pack=TEMPLATE_PACK):
+    def render(self, form, context, template_pack=TEMPLATE_PACK, **kwargs):
         formset = context[self.formset_name_in_context]
         return render_to_string(
             self.template,

@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import environ
@@ -38,6 +39,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_tomselect.middleware.TomSelectMiddleware",
 ]
 
 ROOT_URLCONF = "estudio.urls"
@@ -54,6 +56,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "dynamic_preferences.processors.global_preferences",
+                "django_tomselect.context_processors.tomselect",
             ],
         },
     },
@@ -102,6 +105,11 @@ CACHES = {
 }
 
 TOMSELECT = {"DEFAULT_CSS_FRAMEWORK": "bootstrap5"}
+
+# django-tomselect emite warnings repetitivos cuando label_field es un campo virtual
+# (no DB) — funcionalmente correcto pero ruidoso. Subir el nivel a ERROR.
+logging.getLogger("django_tomselect.autocompletes").setLevel(logging.ERROR)
+logging.getLogger("django_tomselect.widgets").setLevel(logging.ERROR)
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
