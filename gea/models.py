@@ -116,7 +116,7 @@ class Pago(models.Model):
 
 class Dp(models.Model):
     dp = models.IntegerField(primary_key=True)
-    nombre = models.CharField(max_length=50, verbose_name="nombre depto", db_index=True)
+    nombre = models.CharField(max_length=50, verbose_name="nombre depto")
     habitantes = models.IntegerField(blank=True)
     superficie = models.IntegerField(blank=True)
     cabecera = models.CharField(max_length=50, blank=True)
@@ -140,8 +140,8 @@ class Ds(models.Model):
     id = models.AutoField(primary_key=True)
     # dp = models.ForeignKey(Dp, db_column="dp", on_delete=models.PROTECT)
     dp = models.ForeignKey(Dp, on_delete=models.PROTECT)
-    ds = models.IntegerField(db_index=True)
-    nombre = models.CharField(max_length=50, verbose_name="nombre distrito", db_index=True)
+    ds = models.IntegerField()
+    nombre = models.CharField(max_length=50, verbose_name="nombre distrito")
 
     @cached_property
     def distrito(self):
@@ -163,7 +163,7 @@ class Ds(models.Model):
 class Sd(models.Model):
     id = models.AutoField(primary_key=True)
     ds = models.ForeignKey(Ds, db_column="ds", on_delete=models.PROTECT)
-    sd = models.IntegerField(db_index=True)
+    sd = models.IntegerField()
     nombre = models.CharField("nombre subdistrito", max_length=50, blank=True)
 
     @cached_property
@@ -453,7 +453,7 @@ class ExpedientePersona(models.Model):
 
 class Partida(models.Model):
     sd = models.ForeignKey("SD", db_column="sd", blank=True, null=True, default=None, on_delete=models.SET_NULL)
-    pii = models.IntegerField("partida", db_index=True, validators=[MaxValueValidator(999999)])
+    pii = models.IntegerField("partida", validators=[MaxValueValidator(999999)])
     subpii = models.IntegerField("subpartida", default=0, validators=[MaxValueValidator(9999)])
     identificador = models.CharField(max_length=30, db_index=True, editable=False, blank=True, default="")
 
